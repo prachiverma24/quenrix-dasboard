@@ -1,144 +1,186 @@
-<!-- Tailwind CSS classes have been removed and migrated to generate-ats-resume.component.css -->
 <div class="app-container">
-  
-  <div *ngIf="isLoading()" style="text-align: center; padding: 50px; color: #4338CA;">
-      <i class="fas fa-spinner fa-spin" style="font-size: 2rem;"></i>
-      <p style="margin-top: 10px;">Loading ATS Resume Data...</p>
-      <p *ngIf="isDashboardEmbed" style="margin-top: 10px; color: #F43F5E; font-weight: 600;">Trying to download your Resume....</p>
-  </div>
-  
-  <!-- Resume Container -->
-  <div id="resume-content" *ngIf="resumeData && !isLoading()">
-    
-    <div class="resume-page">
-    
-        <!-- Header Section -->
-        <header>
-          <h1>{{ resumeData.full_name }}</h1>
-          
-          <div class="contact-info">
-            <span *ngIf="resumeData.location"><i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i> {{ resumeData.location }}</span>
-            <span *ngIf="resumeData.phone"><i class="fas fa-phone-alt" style="margin-right: 5px;"></i> {{ resumeData.phone }}</span>
-            <span *ngIf="resumeData.email"><i class="fas fa-envelope" style="margin-right: 5px;"></i> {{ resumeData.email }}</span>
-            
-            <span *ngIf="resumeData.linkedin">
-              <i class="fab fa-linkedin" style="margin-right: 5px;"></i> <a [href]="resumeData.linkedin" target="_blank">LinkedIn</a>
-            </span>
-            <span *ngIf="resumeData.portfolio">
-              <i class="fab fa-github" style="margin-right: 5px;"></i> <a [href]="resumeData.portfolio" target="_blank">Portfolio/GitHub</a>
-            </span>
-          </div>
-        </header>
 
-        <!-- Professional Summary -->
-        <!-- FIX: Removed ** characters and cleaned up text -->
-        <section *ngIf="resumeData.full_name">
-          <h2>Professional Summary</h2>
-          <p>
-            {{ resumeData.experience_type }} candidate with a strong foundation in 
-            <span *ngIf="resumeData.skills.length > 0">{{ getSkillNames() }}</span>.
-            Proficient in full-stack development methodologies and leveraging modern software development practices. Seeking opportunities to apply technical skills in a challenging environment.
-          </p>
-        </section>
-        
-        <!-- Skills Section -->
-        <!-- FIX: Hide section if no skills exist -->
-        <section *ngIf="resumeData.skills && resumeData.skills.length > 0">
-          <h2>Technical Skills</h2>
-          <div class="skill-grid">
-            <ul class="skill-list" *ngIf="skillColumn1.length > 0">
-              <li *ngFor="let skill of skillColumn1" class="skill-item">
-                <span class="skill-bullet">•</span> {{ skill.name }}
-                <span *ngIf="skill.level" style="font-size: 0.7rem; color: #6b7280; margin-left: 5px;">({{ skill.level }})</span>
-              </li>
-            </ul>
-            <ul class="skill-list col-2-start" *ngIf="skillColumn2.length > 0">
-              <li *ngFor="let skill of skillColumn2" class="skill-item">
-                <span class="skill-bullet">•</span> {{ skill.name }}
-                <span *ngIf="skill.level" style="font-size: 0.7rem; color: #6b7280; margin-left: 5px;">({{ skill.level }})</span>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- Experience Section -->
-        <!-- FIX: Logic update - Only show this section if there is actual experience data. 
-             Hides completely for Freshers with no experience added. -->
-        <section *ngIf="resumeData.experience && resumeData.experience.length > 0">
-          <h2>Professional Experience</h2>
-          
-          <ul class="experience-list">
-            <li *ngFor="let exp of resumeData.experience" class="experience-item">
-              <div class="title-row">
-                <strong>{{ exp.title }} | {{ exp.company }}</strong>
-                <span>{{ exp.start_date }} to {{ exp.end_date || 'Present'}}</span>
-              </div>
-              <p>
-                {{ exp.description }}
-              </p>
-            </li>
-          </ul>
-        </section>
-
-        <!-- Projects Section -->
-        <!-- FIX: Only show if projects exist -->
-        <section *ngIf="resumeData.projects && resumeData.projects.length > 0">
-          <h2>Selected Projects</h2>
-          <ul class="project-list">
-            <li *ngFor="let project of resumeData.projects">
-              <strong>{{ project.title }}</strong> 
-              <span *ngIf="project.tech_used"> – <span class="tech-used">Tech: {{ project.tech_used }}</span></span>
-              <span *ngIf="project.url"> 
-                <a [href]="project.url" target="_blank" class="project-link">(GitHub)</a>
-              </span>
-              <br>
-              <span class="project-desc">{{ project.description }}</span>
-            </li>
-          </ul>
-        </section>
-
-        <!-- Education Section -->
-        <section class="last-section" *ngIf="resumeData.education && resumeData.education.length > 0">
-          <h2>Education</h2>
-          <div *ngFor="let edu of resumeData.education" class="education-item">
-            <div class="title-row">
-              <p>
-                <!-- FIX: Removed ** and replaced with strong tag for clean bolding -->
-                <strong>{{ edu.degree }}</strong> from {{ edu.institution }} 
-              </p>
-              <span *ngIf="edu.start_year"> ({{ edu.start_year }} - {{ edu.end_year || 'Present' }})</span>
-            </div>
-            <p class="grade">Grade/CGPA: <span>{{ edu.grade }}</span></p>
-          </div>
-        </section>
-    
-    </div> <!-- End .resume-page -->
-  </div> <!-- End #resume-content -->
-  
-  <!-- No Data State -->
-  <div *ngIf="!resumeData && !isLoading()" style="text-align: center; padding: 50px; background-color: #ffffff; border-radius: 12px; max-width: 800px; margin: 50px auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-      <h3 style="color: #F43F5E; font-size: 1.5rem;"><i class="fas fa-exclamation-triangle" style="margin-right: 10px;"></i> Profile Incomplete</h3>
-      <p style="color: #64748B; margin-top: 15px;">Your ATS Resume cannot be generated because your profile data is missing or incomplete.</p>
-      <button (click)="backToDashboard()" class="action-button btn-primary" style="background-color: #4338CA; margin-top: 20px;">
-        <i class="fas fa-tachometer-alt" style="margin-right: 5px;"></i> Go to Dashboard / Setup Form
-      </button>
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Analyzing Profile & Generating Resume...</p>
   </div>
 
-  <!-- Action Buttons -->
-  <div class="print-hidden" *ngIf="resumeData">
-    <div class="action-buttons-container" *ngIf="isButtonContainerVisible()">
-      <button (click)="backToDashboard()" class="action-button btn-secondary" style="border-color: #4338CA; color: #4338CA;">
-        <span class="text-xl mr-2">←</span> Close
-      </button>
-      <button (click)="printResume()" class="action-button btn-secondary">
-        <span class="text-xl mr-2">🖨️</span> Print
-      </button>
-      <button (click)="downloadResume()" class="action-button btn-primary">
-        <span class="text-xl mr-2">⬇️</span> Download PDF
-      </button>
+  <!-- TOP CONTROL PANEL -->
+  <div class="resume-controls print-hidden" *ngIf="resumeData && !isLoading()">
+
+    <!-- ATS Score Gauge -->
+    <div class="ats-score-box">
+      <div class="score-ring-wrap">
+        <svg viewBox="0 0 52 52" class="score-svg">
+          <circle class="score-track" cx="26" cy="26" r="22"/>
+          <circle class="score-fill"
+            cx="26" cy="26" r="22"
+            [style.stroke-dashoffset]="getScoreDashOffset()"
+            [style.stroke]="getScoreColor()"/>
+        </svg>
+        <div class="score-number">{{ atsScore() }}%</div>
+      </div>
+      <div class="score-text">
+        <h3>ATS Resume Score</h3>
+        <p *ngIf="atsScore() >= 80" style="color:#059669">Excellent! Ready for recruiters.</p>
+        <p *ngIf="atsScore() >= 50 && atsScore() < 80" style="color:#d97706">Good, but can be improved.</p>
+        <p *ngIf="atsScore() < 50" style="color:#dc2626">Add more details to boost score.</p>
+      </div>
     </div>
-    <button (click)="toggleButtonContainer()" class="btn-toggle">
-        {{ isButtonContainerVisible() ? 'Hide Actions' : 'Show Actions' }}
+
+    <!-- Template Selector -->
+    <div class="template-selector">
+      <label><i class="fas fa-magic"></i> Choose Template</label>
+      <div class="template-scroll">
+        <button *ngFor="let t of templates"
+                class="tmpl-btn"
+                [class.active]="selectedTemplate() === t.id"
+                (click)="changeTemplate(t.id)">
+          {{ t.name }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUME PREVIEW -->
+  <div id="resume-content" [ngClass]="'resume-wrap ' + selectedTemplate()" *ngIf="resumeData && !isLoading()">
+    <div class="resume-page" id="pdf-content-area">
+
+      <!-- Header -->
+      <header class="resume-header">
+        <h1>{{ resumeData.full_name }}</h1>
+        <div class="contact-info">
+          <span *ngIf="resumeData.email"><i class="fas fa-envelope"></i> {{ resumeData.email }}</span>
+          <span *ngIf="resumeData.phone"><i class="fas fa-phone-alt"></i> {{ resumeData.phone }}</span>
+          <span *ngIf="resumeData.location"><i class="fas fa-map-marker-alt"></i> {{ resumeData.location }}</span>
+          <span *ngIf="resumeData.linkedin">
+            <i class="fab fa-linkedin"></i>
+            <a [href]="resumeData.linkedin" target="_blank">{{ resumeData.linkedin }}</a>
+          </span>
+          <span *ngIf="resumeData.portfolio">
+            <i class="fab fa-github"></i>
+            <a [href]="resumeData.portfolio" target="_blank">{{ resumeData.portfolio }}</a>
+          </span>
+        </div>
+      </header>
+
+      <!-- Professional Summary -->
+      <section *ngIf="resumeData.full_name">
+        <h2>Professional Summary</h2>
+        <p class="desc-text">
+          {{ resumeData.experience_type === 'Experienced' ? 'Experienced' : 'Fresher' }}
+          professional with expertise in
+          <strong>{{ getSkillNames() }}</strong>.
+          Strong foundation in software development and problem-solving.
+          Passionate about building scalable solutions and leveraging technology
+          to solve complex problems.
+        </p>
+      </section>
+
+      <!-- Skills -->
+      <section *ngIf="resumeData.skills && resumeData.skills.length > 0">
+        <h2>Technical Skills</h2>
+        <div class="skill-grid">
+          <ul class="skill-list" *ngIf="skillColumn1.length > 0">
+            <li *ngFor="let skill of skillColumn1" class="skill-item">
+              <span class="skill-bullet">•</span>
+              <strong>{{ skill.name }}</strong>
+              <span *ngIf="skill.level" class="skill-level">({{ skill.level }})</span>
+            </li>
+          </ul>
+          <ul class="skill-list" *ngIf="skillColumn2.length > 0">
+            <li *ngFor="let skill of skillColumn2" class="skill-item">
+              <span class="skill-bullet">•</span>
+              <strong>{{ skill.name }}</strong>
+              <span *ngIf="skill.level" class="skill-level">({{ skill.level }})</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Experience -->
+      <section *ngIf="resumeData.experience && resumeData.experience.length > 0">
+        <h2>Professional Experience</h2>
+        <ul class="experience-list">
+          <li *ngFor="let exp of resumeData.experience" class="experience-item">
+            <div class="title-row">
+              <strong>{{ exp.title }} | {{ exp.company }}</strong>
+              <span>{{ exp.start_date }} – {{ exp.end_date || 'Present' }}</span>
+            </div>
+            <div *ngIf="exp.location" class="exp-location">{{ exp.location }}</div>
+            <ng-container *ngIf="getExpBullets(exp.description).length > 0; else plainDesc">
+              <ul class="exp-bullets">
+                <li *ngFor="let bullet of getExpBullets(exp.description)">{{ bullet }}</li>
+              </ul>
+            </ng-container>
+            <ng-template #plainDesc>
+              <p class="desc-text">{{ exp.description }}</p>
+            </ng-template>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Projects -->
+      <section *ngIf="resumeData.projects && resumeData.projects.length > 0">
+        <h2>Projects</h2>
+        <ul class="project-list">
+          <li *ngFor="let project of resumeData.projects">
+            <div class="title-row">
+              <strong>{{ project.title }}</strong>
+              <span *ngIf="project.url">
+                <a [href]="project.url" target="_blank"><i class="fas fa-external-link-alt"></i> View</a>
+              </span>
+            </div>
+            <div *ngIf="project.tech_used" class="tech-row">
+              <span class="tech-label">Tech:</span> {{ project.tech_used }}
+            </div>
+            <p class="desc-text">{{ project.description }}</p>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Education -->
+      <section *ngIf="resumeData.education && resumeData.education.length > 0">
+        <h2>Education</h2>
+        <ul class="experience-list">
+          <li *ngFor="let edu of resumeData.education" class="experience-item edu-item">
+            <div class="title-row">
+              <strong>{{ edu.degree }}</strong>
+              <span *ngIf="edu.start_year">{{ edu.start_year }} – {{ edu.end_year || 'Present' }}</span>
+            </div>
+            <p class="desc-text">
+              {{ edu.institution }}
+              <span *ngIf="edu.grade" class="edu-grade">(Grade: {{ edu.grade }})</span>
+            </p>
+          </li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!resumeData && !isLoading()" class="empty-state">
+    <div class="empty-icon"><i class="fas fa-file-excel"></i></div>
+    <h3>Profile Incomplete</h3>
+    <p>We need your details to generate an ATS-friendly resume. Please complete your profile setup first.</p>
+    <button (click)="backToDashboard()" class="action-button btn-primary">
+      <i class="fas fa-user-edit"></i> Go to Profile Setup
     </button>
   </div>
+
+  <!-- Floating Action Buttons -->
+  <div class="print-hidden action-buttons-container" *ngIf="resumeData && !isLoading()">
+    <button (click)="backToDashboard()" class="action-button btn-secondary">
+      <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <button (click)="printResume()" class="action-button btn-secondary">
+      <i class="fas fa-print"></i> Print
+    </button>
+    <button (click)="downloadResume()" class="action-button btn-primary" id="download-btn">
+      <i class="fas fa-download"></i> Download PDF
+    </button>
+  </div>
+
 </div>

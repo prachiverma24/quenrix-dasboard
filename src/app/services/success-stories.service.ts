@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface SuccessStory {
   id?: number;
@@ -19,8 +20,8 @@ export interface SuccessStory {
 export class SuccessStoriesService {
   
   // API Endpoints
-  private apiUrl = '/api/success-stories/'; 
-  private uploadUrlApi = '/api/get-upload-urls/'; 
+  private apiUrl = `${environment.apiBaseUrl}/success-stories/`; 
+  private uploadUrlApi = `${environment.apiBaseUrl}/get-upload-urls/`;
 
   constructor(private http: HttpClient) { }
 

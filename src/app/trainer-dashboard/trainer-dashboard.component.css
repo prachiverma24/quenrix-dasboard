@@ -85,6 +85,13 @@ header {
     min-height: calc(100vh - 80px); 
 }
 
+/* YAHAN FIX HAI: Resume Component ko container ke bahar nikalne se rokne ke liye */
+.main-content {
+    min-width: 0; 
+    width: 100%;
+    max-width: 100%;
+}
+
 /* ================= LEFT SIDEBAR (Desktop) ================= */
 .sidebar {
     height: auto;
@@ -805,4 +812,3 @@ header {
 .success { background: #10b981; }
 .error { background: #ef4444; }
 .warning { background: #f59e0b; }
-

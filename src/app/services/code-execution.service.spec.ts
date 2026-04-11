@@ -1,16 +1,22 @@
-import { TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
-import { CodeExecutionService } from './code-execution.service';
+@Injectable({
+  providedIn: 'root'
+})
+export class CodeExecutionService {
 
-describe('CodeExecutionService', () => {
-  let service: CodeExecutionService;
+  private API_URL = `${environment.apiBaseUrl}/execute/`;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(CodeExecutionService);
-  });
+  constructor(private http: HttpClient) {}
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+  runCode(payload: {
+    language: string;
+    code: string;
+    input?: string;
+  }): Observable<any> {
+    return this.http.post(this.API_URL, payload);
+  }
+}

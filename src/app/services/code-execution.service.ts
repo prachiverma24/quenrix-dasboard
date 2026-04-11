@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment'; // ✅ Environment import kiya gaya hai
 
 @Injectable({
   providedIn: 'root'
 })
 export class CodeExecutionService {
 
-  private API_URL = 'http://localhost:8000/api/execute/';
+  // ✅ FIXED: Hardcoded 'http://localhost:8000/api/execute/' hata kar environment variable use kiya hai
+  private API_URL = `${environment.apiBaseUrl}/execute/`;
 
   constructor(private http: HttpClient) {}
 

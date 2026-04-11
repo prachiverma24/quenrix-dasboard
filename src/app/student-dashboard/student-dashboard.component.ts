@@ -63,7 +63,7 @@ interface AvailableExam {
   subjectid: number;
   batch: { batchId: number, batchName: string }; 
   subject: { subjectid: number, subjectname: string }; 
-  durationMinutes: number; 
+  durationMinutes: number | null; // null = could not be derived (bad start/end data)
   totalQuestions: number; 
 }
 
@@ -156,7 +156,7 @@ export class StudentDashboardComponent implements OnInit, OnDestroy {
   examToAttend: AvailableExam | null = null; 
   upcomingExams: AvailableExam[] = []; 
   
-  // --- Filters (Now Lazy Loaded) ---
+  // --- Filters ---
   studentAssignedBatches: StudentBatchDetails[] = []; 
   availableCourses: FilterCourse[] = []; 
   availableBatches: FilterBatch[] = []; 
@@ -177,13 +177,11 @@ export class StudentDashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // 1. Initial UI Setup (Synchronous/Fast)
     this.updateClock();
     this.timeSubscription = interval(1000).subscribe(() => this.updateClock());
     this.initCalendarData();
     this.initializeShorts();
 
-    // 2. Targeted Data Fetching (Optimized)
     this.fetchStudentDataFromStorage().subscribe({
       next: () => {
         this.fetchExamsAndFilter();
@@ -266,47 +264,84 @@ export class StudentDashboardComponent implements OnInit, OnDestroy {
       this.studentProfileData.student_id = loginData.userId;
   }
 
+  // ✅ Debug logs added to help trace empty exam issues
   fetchExamsAndFilter(): void {
-    this.isLoadingExams = true;
-    this.examService.listAllExams().pipe(
-        finalize(() => {
-            this.isLoadingExams = false;
-            this.cdr.detectChanges();
-        })
-    ).subscribe(exams => {
-        this.allExams = (exams as any[]).map(exam => ({
-            examId: exam.examid,
-            examName: exam.examname,
-            start_datetime: exam.start_datetime,
-            end_datetime: exam.end_datetime,
-            is_active: exam.is_active ?? true,
-            courseid: exam.courseid,
-            batchid: exam.batchid,
-            subjectid: exam.subjectid || 0,
-            batch: exam.batch || { batchId: exam.batchid, batchName: `Batch ${exam.batchid}` },
-            subject: exam.subject || { subjectid: exam.subjectid || 0, subjectname: 'General' },
-            durationMinutes: exam.durationMinutes || 60,
-            totalQuestions: exam.totalQuestions || 0
-        }));
-        
-        this.applyExamFiltering();
-    });
+      if (!this.selectedCourseId || !this.selectedBatchId) {
+          console.warn("[Debug] Cannot fetch exams: Missing Course ID or Batch ID.");
+          this.upcomingExams = [];
+          this.isLoadingExams = false;
+          return;
+      }
+
+      this.isLoadingExams = true;
+      console.log(`[Debug] Fetching exams for Course: ${this.selectedCourseId}, Batch: ${this.selectedBatchId}`);
+
+      this.examService.fetchStudentExams(this.selectedCourseId, this.selectedBatchId).pipe(
+          finalize(() => {
+              this.isLoadingExams = false;
+              this.cdr.detectChanges();
+          })
+      ).subscribe({
+          next: (exams) => {
+              if (Array.isArray(exams) && exams.length === 0) {
+                  console.warn(`[Debug] Django Backend returned 0 active exams for Course: ${this.selectedCourseId}, Batch: ${this.selectedBatchId}. Please check if is_active is True and end_datetime is valid in DB.`);
+              } else {
+                  console.log(`[Debug] Successfully fetched ${exams.length} exams.`);
+              }
+
+              this.allExams = (exams as any[]).map(exam => {
+                  // Calculate actual duration from start and end datetime (no hardcoded fallback)
+                  const startMs = new Date(exam.start_datetime).getTime();
+                  const endMs   = new Date(exam.end_datetime).getTime();
+                  const durationMinutes = (startMs && endMs && endMs > startMs)
+                      ? Math.round((endMs - startMs) / 60000)
+                      : null; // null signals "duration unknown" — do NOT silently default to 60
+
+                  return {
+                      examId: exam.examid,
+                      examName: exam.examname,
+                      start_datetime: exam.start_datetime,
+                      end_datetime: exam.end_datetime,
+                      is_active: exam.is_active ?? true,
+                      courseid: exam.courseid,
+                      batchid: exam.batchid,
+                      subjectid: exam.subjectid,
+                      batch: {
+                          batchId: exam.batchid,
+                          batchName: exam.batch_name   // backend must return batch_name
+                      },
+                      subject: {
+                          subjectid: exam.subjectid,
+                          subjectname: exam.subject_name  // backend must return subject_name
+                      },
+                      durationMinutes,                 // derived from start/end — no hardcoding
+                      totalQuestions: exam.total_questions  // backend must return total_questions
+                  };
+              });
+              
+              this.applyExamFiltering();
+          },
+          error: (err) => {
+              console.error('[Error] Failed to fetch student exams:', err);
+              this.allExams = [];
+              this.applyExamFiltering();
+          }
+      });
   }
 
   private applyExamFiltering(): void {
-    const now = new Date().getTime();
-    const filtered = this.selectedBatchId 
-        ? this.allExams.filter(e => e.batchid === this.selectedBatchId)
-        : this.allExams;
+      this.upcomingExams = this.allExams;
 
-    this.upcomingExams = filtered.filter(e => new Date(e.end_datetime).getTime() > now);
-
-    const examCard = this.quickAccessCards.find(c => c.route === 'exams');
-    if (examCard) {
-        examCard.subText = this.upcomingExams.length > 0 
-            ? `Next: ${this.upcomingExams[0].examName}` 
-            : 'No exams scheduled';
-    }
+      const examCard = this.quickAccessCards.find(c => c.route === 'exams');
+      if (examCard) {
+          if (this.upcomingExams.length > 0) {
+              examCard.subText = `Next: ${this.upcomingExams[0].examName}`;
+              examCard.value = `${this.upcomingExams.length} Exam${this.upcomingExams.length !== 1 ? 's' : ''}`;
+          } else {
+              examCard.subText = `No exams for Batch ${this.selectedBatchId}`;
+              examCard.value = `0 Exams`;
+          }
+      }
   }
 
   updateClock(): void {
@@ -439,7 +474,6 @@ export class StudentDashboardComponent implements OnInit, OnDestroy {
     if (!userId) return;
     this.resumeService.getResumeData(userId).subscribe({
         next: (res: any) => {
-            // Handle cases where name might be split
             let fetchedName = res.full_name;
             if (!fetchedName && (res.firstName || res.lastName)) {
                 fetchedName = `${res.firstName || ''} ${res.lastName || ''}`.trim();
@@ -447,14 +481,12 @@ export class StudentDashboardComponent implements OnInit, OnDestroy {
 
             this.isProfileComplete = !!fetchedName && res.education?.length > 0;
 
-            // ✅ Force Update: Sync Dashboard Name with Resume Name if available
             if (fetchedName) {
                 this.studentName = fetchedName;
                 this.profileInitial = this.getProfileInitial(this.studentName);
                 this.studentProfileData.full_name = this.studentName;
-                this.cdr.detectChanges(); // Force UI update
+                this.cdr.detectChanges();
                 
-                // Optional: Update local storage so next reload is faster with correct name
                 const stored = window.localStorage.getItem('STUDENT_DATA');
                 if (stored) {
                     const parsed = JSON.parse(stored);
@@ -474,10 +506,48 @@ export class StudentDashboardComponent implements OnInit, OnDestroy {
   goToProfileSetupForm() { window.location.href = 'setup-profile'; }
   triggerProfileUpload() { this.fileInputRef.nativeElement.click(); }
   onProfileImageSelected(e: any) { /* Image handling */ }
-  openExamModal() { this.showExamModal = true; this.fetchExamsAndFilter(); }
-  closeExamModal() { this.showExamModal = false; }
+  
+  openExamModal() { 
+    this.showExamModal = true; 
+    this.selectedExamId = null; 
+    this.fetchExamsAndFilter(); 
+  }
+  
+  closeExamModal() { 
+    this.showExamModal = false; 
+    this.selectedExamId = null; 
+  }
+  
   closeJoinMeetingModal() { this.showJoinMeetingModal = false; }
-  startExam() { /* Start exam logic */ }
-  onExamFinished(e: any) { this.activePage = 'dashboard'; }
+
+  startExam(): void {
+    if (!this.selectedExamId) {
+      this.showMessage('Please select an exam first.', 'warning');
+      return;
+    }
+
+    const exam = this.upcomingExams.find(e => e.examId === this.selectedExamId);
+    if (!exam) {
+      this.showMessage('Selected exam not found. Please try again.', 'error');
+      return;
+    }
+
+    this.examToAttend = exam;
+    this.showExamModal = false;
+
+    setTimeout(() => {
+      this.activePage = 'attend-exam';
+      this.cdr.detectChanges(); 
+    }, 50);
+  }
+
+  onExamFinished(e: any): void { 
+    this.activePage = 'dashboard';
+    this.examToAttend = null;
+    this.selectedExamId = null;
+    this.cdr.detectChanges();
+    this.showMessage('Exam completed! Welcome back.', 'success');
+  }
+  
   updateFilterOptions() { /* Sync dropdowns */ }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 interface AttemptResult {
   attemptid: number;
@@ -25,7 +26,7 @@ interface DetailedAnswer {
 })
 export class examAPi {
   // ✅ FIXED: Hardcoded IP hata diya gaya hai Proxy compatibility ke liye
-  private baseUrl = '/api/';
+  private baseUrl = `${environment.apiBaseUrl}/`;
 
   constructor(private http: HttpClient) {}
 
@@ -39,6 +40,12 @@ export class examAPi {
   
   fetchStudentExams(courseId: number, batchId: number): Observable<any> {
     const apiUrl = `${this.baseUrl}exams/student-exams/${courseId}/${batchId}/`;
+    return this.http.get(apiUrl);
+  }
+
+  // NEW METHOD: ONLY FETCHES UPCOMING & ONGOING EXAMS (Filters out past exams)
+  fetchActiveStudentExams(courseId: number, batchId: number): Observable<any> {
+    const apiUrl = `${this.baseUrl}exams/student-active-exams/${courseId}/${batchId}/`;
     return this.http.get(apiUrl);
   }
   
@@ -92,5 +99,17 @@ export class examAPi {
   fetchDetailedAnswers(attemptId: number): Observable<DetailedAnswer[]> {
     const apiUrl = `${this.baseUrl}exams/results/answers/${attemptId}/`;
     return this.http.get<DetailedAnswer[]>(apiUrl);
+  }
+
+  generateQuestions(payload: {
+    subject: string;
+    topic: string;
+    question_type: string;
+    count: number;
+  }): Observable<{ questions: any[] }> {
+    return this.http.post<{ questions: any[] }>(
+      `${this.baseUrl}exams/generate-questions/`,
+      payload
+    );
   }
 }

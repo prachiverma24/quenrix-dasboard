@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface JobCreatePayload {
     jobtitle: string;
@@ -32,7 +33,7 @@ export interface Job {
 })
 export class CreateJobService {
   // ✅ FIXED: Hardcoded IP hata diya hai
-  private apiUrl = '/api/jobs';
+  private apiUrl = `${environment.apiBaseUrl}/jobs`;
   private createJobEndpoint = `${this.apiUrl}/create-job/`; 
   private listJobsEndpoint = `${this.apiUrl}/list-jobs/`;
 
