@@ -10,6 +10,7 @@ export interface Note {
   subject: string;
   pdf_url: string;
   uploaded_at: string;
+  preview_content?: string;
 }
 
 @Injectable({

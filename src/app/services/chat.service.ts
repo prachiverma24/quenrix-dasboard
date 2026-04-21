@@ -2,15 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface ChatResponse {
+  reply: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'http://127.0.0.1:8000/api/chat/';
+  // Using relative URL keeps it compatible with dev proxy and deployed environments.
+  private apiUrl = '/api/chat/';
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(message: string): Observable<any> {
-    return this.http.post<any>(this.apiUrl, { message });
+  sendMessage(message: string): Observable<ChatResponse> {
+    return this.http.post<ChatResponse>(this.apiUrl, { message });
   }
 }

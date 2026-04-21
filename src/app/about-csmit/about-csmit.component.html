@@ -1,6 +1,9 @@
 <!-- About CSMIT Full-Page Panel/Modal (Uses a full-screen, center-aligned scrollable design) -->
 <div class="about-modal-overlay" [class.open]="isVisible" (click)="onClose()">
   <div class="about-modal-content" (click)="$event.stopPropagation()">
+        <span class="ambient-orb orb-1"></span>
+        <span class="ambient-orb orb-2"></span>
+        <span class="ambient-orb orb-3"></span>
     
     <!-- Close Button -->
     <button class="modal-close-btn" (click)="onClose()">
@@ -15,64 +18,116 @@
             <!-- Letterhead look: Use a strong line/border effect -->
             <div class="letter-header-line"></div>
             
-            <p class="pre-title">OUR LEGACY, YOUR FUTURE</p>
+            <p class="pre-title">{{ t('about.preTitle') }}</p>
             <h1 class="about-title">
-                <span class="title-line-1">Redefining Tech Education</span>
-                <span class="title-line-2">for the Digital Age.</span>
+                <span class="title-line-1">{{ t('about.title1') }}</span>
+                <span class="title-line-2">{{ t('about.title2') }}</span>
             </h1>
             <p class="about-description">
-                CSMIT (Chatrapati Shivaji Maharaj Information Technology) is more than an institute; it's a launchpad for world-class careers. We combine intensive, hands-on training with cutting-edge professional development to transform aspiring learners into industry-ready leaders.
+                {{ t('about.desc') }}
             </p>
             <div class="key-stats-grid">
                 <div class="stat-card">
                     <span class="stat-value">10+</span>
-                    <span class="stat-label">Years of Excellence</span>
+                    <span class="stat-label">{{ t('about.years') }}</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-value">5000+</span>
-                    <span class="stat-label">Trained Professionals</span>
+                    <span class="stat-label">{{ t('about.trained') }}</span>
                 </div>
                 <!-- Placement Rate Stat ko hata diya gaya hai, user ki request par -->
                 <div class="stat-card">
                     <span class="stat-value">30+</span>
-                    <span class="stat-label">Global Certifications</span>
+                    <span class="stat-label">{{ t('about.certs') }}</span>
                 </div>
             </div>
         </section>
+
+        <div class="section-divider"></div>
 
         <!-- 2. FOUNDATION/MISSION SECTION -->
         <section class="section-mission">
-            <h2 class="section-sub-title">Our Philosophy: Learn, Build, Succeed</h2>
+            <h2 class="section-sub-title">{{ t('about.philosophy') }}</h2>
             <div class="mission-points-grid">
                 <div class="mission-card">
                     <div class="mission-icon">💡</div>
-                    <h3>Industry Aligned Syllabus</h3>
-                    <p>We update our curriculum every six months based on inputs from FAANG engineers, ensuring you learn only the most relevant, in-demand technologies.</p>
+                    <h3>{{ t('about.syllabusTitle') }}</h3>
+                    <p>{{ t('about.syllabusDesc') }}</p>
                 </div>
                 <div class="mission-card">
                     <div class="mission-icon">🤝</div>
-                    <h3>Global Collaborations</h3>
-                    <p>CSMIT actively partners with international tech organizations to provide real-world training environments and internship opportunities for our students.</p>
+                    <h3>{{ t('about.collabTitle') }}</h3>
+                    <p>{{ t('about.collabDesc') }}</p>
                 </div>
                 <div class="mission-card">
                     <div class="mission-icon">⚙️</div>
-                    <h3>Hands-on Project Focus</h3>
-                    <p>Every course culminates in large-scale capstone projects, giving you a portfolio that proves your capabilities to potential employers.</p>
+                    <h3>{{ t('about.projectsTitle') }}</h3>
+                    <p>{{ t('about.projectsDesc') }}</p>
                 </div>
             </div>
         </section>
 
+        <section class="section-story-rhythm">
+            <article class="story-row">
+                <div class="story-copy">
+                    <p class="story-kicker">{{ t('about.ethos') }}</p>
+                    <h3>{{ t('about.ethosTitle') }}</h3>
+                    <p>{{ t('about.ethosDesc') }}</p>
+                </div>
+                <div class="story-visual visual-code">⚡</div>
+            </article>
+
+            <article class="story-row reverse">
+                <div class="story-copy">
+                    <p class="story-kicker">{{ t('about.velocity') }}</p>
+                    <h3>{{ t('about.velocityTitle') }}</h3>
+                    <p>{{ t('about.velocityDesc') }}</p>
+                </div>
+                <div class="story-visual visual-growth">📊</div>
+            </article>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section-ai-innovation">
+            <div class="ai-heading-wrap">
+                <p class="ai-kicker">{{ t('about.aiKicker') }}</p>
+                <h2 class="section-sub-title ai-title">{{ t('about.aiTitle') }}</h2>
+                <p class="ai-subtitle">{{ t('about.aiSub') }}</p>
+            </div>
+
+            <div class="ai-capability-grid">
+                <article class="ai-capability-card">
+                    <div class="capability-icon">🧠</div>
+                    <h3>{{ t('about.aiMapTitle') }}</h3>
+                    <p>{{ t('about.aiMapDesc') }}</p>
+                </article>
+                <article class="ai-capability-card">
+                    <div class="capability-icon">🤖</div>
+                    <h3>{{ t('about.aiInterviewTitle') }}</h3>
+                    <p>{{ t('about.aiInterviewDesc') }}</p>
+                </article>
+                <article class="ai-capability-card">
+                    <div class="capability-icon">📈</div>
+                    <h3>{{ t('about.aiProgressTitle') }}</h3>
+                    <p>{{ t('about.aiProgressDesc') }}</p>
+                </article>
+            </div>
+        </section>
+
+    <div class="section-divider"></div>
+
         <!-- 3. TRAINER DETAILS SECTION -->
         <section class="section-trainers">
-            <h2 class="section-sub-title">Meet Our Mentors</h2>
-            <p class="trainer-subtitle">Learn directly from senior professionals who have built systems at top MNCs.</p>
+            <h2 class="section-sub-title">{{ t('about.mentors') }}</h2>
+            <p class="trainer-subtitle">{{ t('about.mentorsSub') }}</p>
             <div class="trainers-grid">
                 <div class="trainer-card" *ngFor="let trainer of trainers">
                     <img [src]="trainer.image" [alt]="trainer.name" class="trainer-photo">
                     <h3 class="trainer-name">{{ trainer.name }}</h3>
                     <p class="trainer-specialization">{{ trainer.specialization }}</p>
                     <div class="trainer-details">
-                        <span class="experience">Exp: {{ trainer.experience }}</span>
+                        <span class="experience">{{ t('about.experience', { value: trainer.experience }) }}</span>
                         <span class="rating">⭐ {{ trainer.rating }}</span>
                     </div>
                 </div>
@@ -81,7 +136,7 @@
         
         <div class="letter-footer-line"></div>
         <p class="letter-signature">
-            Committed to Excellence.
+            {{ t('about.signature') }}
         </p>
 
     </div>

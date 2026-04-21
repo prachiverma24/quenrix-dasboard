@@ -1,0 +1,77 @@
+<section class="demo-classes-section">
+  <div class="container">
+    <div class="section-heading">
+      <h2 class="section-title">{{ t('demo.title') }}</h2>
+      <p class="section-subtitle">{{ t('demo.subtitle') }}</p>
+    </div>
+    <div class="demo-grid">
+      <article
+        class="demo-card"
+        *ngFor="let video of demoVideos"
+        [class.is-expanded]="expandedCards[video.youtubeVideoId]"
+      >
+        <div class="demo-card-inner">
+          <div class="demo-card-face demo-card-front">
+            <div class="thumbnail-container" (click)="openModal(video.youtubeVideoId)">
+              <img
+                [src]="video.thumbnailUrl"
+                [alt]="video.title"
+                class="thumbnail-image"
+                loading="lazy"
+                (error)="onThumbnailError($event, video)"
+              >
+              <div class="thumbnail-overlay">
+                <div class="play-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
+              <span class="video-duration">{{ video.duration }}</span>
+            </div>
+
+            <div class="video-info">
+              <h3 class="video-title">{{ video.title }}</h3>
+              <p class="video-instructor">{{ t('demo.instructor') }}: {{ video.instructor }}</p>
+              <p class="video-short-description">{{ video.shortDescription }}</p>
+
+              <p class="video-full-description" *ngIf="expandedCards[video.youtubeVideoId]">
+                {{ video.fullDescription }}
+              </p>
+
+              <div class="video-actions">
+                <button
+                  type="button"
+                  class="read-more-btn"
+                  (click)="toggleReadMore(video.youtubeVideoId, $event)">
+                  {{ expandedCards[video.youtubeVideoId] ? t('demo.showLess') : t('demo.readMore') }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="video-modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="video-modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header-actions">
+      <button class="back-btn" (click)="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        Back
+      </button>
+    </div>
+    <div class="video-wrapper">
+      <iframe
+        [src]="selectedVideoUrl"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</div>
