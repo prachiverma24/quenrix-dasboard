@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 interface UserRegistrationData {
   username: string; 
@@ -20,7 +21,7 @@ export interface User {
 })
 export class UserService {
   
-  private apiUrl = '/api/users';
+  private apiUrl = `${environment.apiBaseUrl}/users`;
   
   private registerEndpoint = `${this.apiUrl}/register/`; 
   private allUsersEndpoint = `${this.apiUrl}/all/`;

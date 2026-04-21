@@ -7,7 +7,7 @@
     <header *ngIf="activePage !== 'attend-exam'">
       <div class="logo-search">
         <div class="logo">
-          <img src="assets/logo.jpg" alt="Logo" class="institute-logo">
+          <img src="assets/logo.webp" alt="Logo" class="institute-logo">
         </div>
         <div class="search-wrapper">
           <input type="search" placeholder="Search Courses, Assignments..." [formControl]="searchControl" />
@@ -179,7 +179,7 @@
     <ng-container *ngIf="activePage === 'attend-exam'">
         <app-attend-exam 
             [examId]="examToAttend?.examId || null" 
-            [durationMinutes]="examToAttend?.durationMinutes || 60"
+            [durationMinutes]="examToAttend?.durationMinutes ?? 0"
             [examName]="examToAttend?.examName || 'Assessment'"
             (examFinished)="onExamFinished($event)">
         </app-attend-exam>
@@ -204,9 +204,9 @@
                             <span class="exam-subject-tag">{{ exam.subject.subjectname }}</span>
                             <h4>{{ exam.examName }}</h4>
                             <div class="exam-meta-row">
-                                <span><i class="far fa-clock"></i> {{ exam.durationMinutes }} Min</span>
+                                <span><i class="far fa-clock"></i> {{ exam.durationMinutes !== null ? exam.durationMinutes + ' Min' : 'N/A' }}</span>
                                 <span class="dot"></span>
-                                <span><i class="fas fa-list-ol"></i> {{ exam.totalQuestions }} Qs</span>
+                                <span><i class="fas fa-list-ol"></i> {{ exam.totalQuestions !== null ? exam.totalQuestions + ' Qs' : '—' }}</span>
                             </div>
                         </div>
                     </div>

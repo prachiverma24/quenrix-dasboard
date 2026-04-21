@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 // --- Interfaces based on your Serializers ---
 
@@ -41,9 +42,7 @@ export interface Solution {
   providedIn: 'root'
 })
 export class DoubtService {
-  // ✅ FIXED: Base URL updated to include 'doubts/'
-  // Yeh ab 'http://127.0.0.1:8000/api/doubts/list-doubts/' par request karega
-  private baseUrl = 'http://127.0.0.1:8000/api/doubts/'; 
+  private baseUrl = `${environment.apiBaseUrl}/doubts/`;
 
   constructor(private http: HttpClient) { }
 

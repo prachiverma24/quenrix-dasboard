@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment'; // ✅ Environment import kiya
 
 // --- Interfaces ---
 interface AdminFormData {
@@ -23,7 +24,8 @@ interface AdminApiPayload {
     image_url: string;         
 }
 
-const API_BASE_URL = '/api/admins/';
+// ✅ FIXED: environment.apiBaseUrl use kiya
+const API_BASE_URL = `${environment.apiBaseUrl}/admins/`;
 
 @Injectable({
   providedIn: 'root'
@@ -32,13 +34,8 @@ export class AdminApiService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Transforms internal AdminFormData to the backend's expected AdminApiPayload.
-   * (No logic change)
-   */
   private transformToPayload(data: AdminFormData): AdminApiPayload {
     const experienceYears = data.experienceYears ?? 0;
-
     return {
       csmit_id: data.id, 
       full_name: `${data.firstName} ${data.lastName}`, 
@@ -49,10 +46,6 @@ export class AdminApiService {
     };
   }
   
-  /**
-   * Transforms API response data back to the internal AdminFormData structure.
-   * (No logic change)
-   */
   private transformFromApi(apiData: any): AdminFormData {
       const parts = apiData.full_name ? apiData.full_name.split(' ') : [];
       const lastName = parts.length > 1 ? parts.pop() || '' : ''; 
@@ -69,8 +62,6 @@ export class AdminApiService {
       };
   }
 
-  // --- CRUD Operations ---
-  
   getAdmins(): Observable<AdminFormData[]> {
     return this.http.get<any[]>(API_BASE_URL).pipe(
         map(apiDataArray => apiDataArray.map(data => this.transformFromApi(data)))
@@ -79,7 +70,6 @@ export class AdminApiService {
 
   createAdmin(adminData: AdminFormData): Observable<any> {
     const payload = this.transformToPayload(adminData);
-    console.log('Admin POST Payload:', payload); 
     return this.http.post<any>(API_BASE_URL, payload);
   }
 

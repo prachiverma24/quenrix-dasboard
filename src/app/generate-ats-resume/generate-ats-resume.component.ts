@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, Input } from '@angular/core';
-import { ResumeService, StudentInfo } from '../services/create-resume.service'; 
+import { ResumeService, StudentInfo } from '../services/create-resume.service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiService } from '../services/api.service';
@@ -9,248 +9,294 @@ import { ApiService } from '../services/api.service';
   templateUrl: './generate-ats-resume.component.html',
   styleUrls: ['./generate-ats-resume.component.css']
 })
-export class GenerateAtsResumeComponent implements OnInit{
+export class GenerateAtsResumeComponent implements OnInit {
 
-  @Input() isDashboardEmbed: boolean = false; 
+  @Input() isDashboardEmbed: boolean = false;
 
-  resumeData: StudentInfo | null = null; 
-  skillColumn1: { name: string, level?: string }[] = [];
-  skillColumn2: { name: string, level?: string }[] = [];
-  isButtonContainerVisible = signal(true); 
+  resumeData: StudentInfo | null = null;
+  skillColumn1: { name: string; level?: string }[] = [];
+  skillColumn2: { name: string; level?: string }[] = [];
+
   isLoading = signal(true);
+  atsScore = signal(0);
+  selectedTemplate = signal('theme-classic');
+
+  templates = [
+    { id: 'theme-classic',   name: 'Classic'    },
+    { id: 'theme-modern',    name: 'Modern Blue' },
+    { id: 'theme-minimal',   name: 'Minimal'    },
+    { id: 'theme-executive', name: 'Executive'  },
+    { id: 'theme-tech',      name: 'Hacker'     },
+    { id: 'theme-creative',  name: 'Creative'   },
+    { id: 'theme-twocol',    name: 'Two Column' },
+    { id: 'theme-startup',   name: 'Startup'    },
+    { id: 'theme-academic',  name: 'Academic'   },
+    { id: 'theme-elegant',   name: 'Elegant'    },
+  ];
 
   constructor(
     private resumeService: ResumeService,
     private router: Router,
-    private apiService: ApiService 
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
+    const savedTheme = localStorage.getItem('preferred_resume_theme');
+    if (savedTheme) this.selectedTemplate.set(savedTheme);
     this.fetchResumeData();
   }
+
+  // ─── Template & Score helpers ────────────────────────────────────────────────
+
+  changeTemplate(themeId: string): void {
+    this.selectedTemplate.set(themeId);
+    localStorage.setItem('preferred_resume_theme', themeId);
+  }
+
+  /** Stroke offset for SVG ring (circumference = 2πr = 2π*22 ≈ 138.23) */
+  getScoreDashOffset(): number {
+    const circumference = 138.23;
+    return circumference - (this.atsScore() / 100) * circumference;
+  }
+
+  getScoreColor(): string {
+    const s = this.atsScore();
+    if (s >= 80) return '#059669';
+    if (s >= 50) return '#d97706';
+    return '#dc2626';
+  }
+
+  // ─── ATS Score Algorithm ─────────────────────────────────────────────────────
+
+  private calculateAtsScore(data: StudentInfo): void {
+    let score = 0;
+
+    // Personal info — 20 pts
+    if (data.full_name)                    score += 5;
+    if (data.email)                        score += 5;
+    if (data.phone)                        score += 5;
+    if (data.linkedin || data.portfolio)   score += 5;
+
+    // Skills — 25 pts
+    const sl = data.skills?.length ?? 0;
+    if (sl >= 8)      score += 25;
+    else if (sl >= 4) score += 18;
+    else if (sl > 0)  score += 10;
+
+    // Experience — 30 pts
+    if (data.experience && data.experience.length > 0) {
+      score += 25;
+      if (data.experience[0].description?.length > 50) score += 5;
+    }
+
+    // Education — 15 pts
+    if (data.education && data.education.length > 0) score += 15;
+
+    // Projects — 15 pts
+    const pl = data.projects?.length ?? 0;
+    if (pl >= 2)     score += 15;
+    else if (pl === 1) score += 10;
+
+    this.atsScore.set(Math.min(score, 100));
+  }
+
+  // ─── Data fetching ───────────────────────────────────────────────────────────
 
   private fetchResumeData(): void {
     const loginData = this.apiService.getStoredStudentData();
     const userId = loginData?.userId;
-    
+
     if (!userId) {
-        this.isLoading.set(false);
-        this.backToDashboard(); 
-        return;
+      this.isLoading.set(false);
+      this.backToDashboard();
+      return;
     }
-    
+
     this.resumeService.getResumeData(userId).subscribe({
       next: (apiResponse: any) => {
         this.isLoading.set(false);
         if (apiResponse && (apiResponse.firstName || apiResponse.full_name)) {
-            this.resumeData = this.transformApiData(apiResponse);
-            this.divideSkillsIntoColumns(this.resumeData.skills); 
-            if (this.isDashboardEmbed) this.downloadResume();
+          this.resumeData = this.transformApiData(apiResponse);
+          this.divideSkillsIntoColumns(this.resumeData.skills);
+          this.calculateAtsScore(this.resumeData);
+          if (this.isDashboardEmbed) this.downloadResume();
         } else {
-            this.loadFallbackData(userId); 
+          this.loadFallbackData(userId);
         }
       },
-      error: (error: HttpErrorResponse) => {
+      error: (_err: HttpErrorResponse) => {
         this.isLoading.set(false);
         this.loadFallbackData(userId);
       }
     });
   }
 
-  // --- ROBUST DATA TRANSFORMER ---
+  // ─── Data Transformation ─────────────────────────────────────────────────────
+
   private transformApiData(data: any): StudentInfo {
-    
-    // 1. Deduplicate Skills
-    const rawSkills = data.skills || [];
-    const uniqueSkillsMap = new Map();
-    rawSkills.forEach((skill: any) => {
-        const name = skill.name || skill.skillName || '';
-        if (name && !uniqueSkillsMap.has(name.toLowerCase())) {
-            uniqueSkillsMap.set(name.toLowerCase(), {
-                name: name,
-                level: skill.level || skill.proficiency || ''
-            });
-        }
+    // Deduplicate skills
+    const uniqueSkillsMap = new Map<string, { name: string; level?: string }>();
+    (data.skills || []).forEach((skill: any) => {
+      const name: string = skill.name || skill.skillName || '';
+      if (name && !uniqueSkillsMap.has(name.toLowerCase())) {
+        uniqueSkillsMap.set(name.toLowerCase(), {
+          name,
+          level: skill.level || skill.proficiency || ''
+        });
+      }
     });
-    const cleanedSkills = Array.from(uniqueSkillsMap.values());
 
     return {
-        full_name: data.full_name || `${data.firstName || ''} ${data.lastName || ''}`.trim(),
-        email: data.email || '',
-        phone: data.phone || '',
-        location: data.location || data.address || '',
-        linkedin: data.linkedin || (data.linkedinId ? `https://linkedin.com/in/${data.linkedinId}` : ''),
-        portfolio: data.portfolio || (data.githubId ? `https://github.com/${data.githubId}` : ''),
-        experience_type: data.experience_type || (data.experience && data.experience.length > 0 ? 'Experienced' : 'Fresher'),
-        
-        education: (data.education || []).map((edu: any) => ({
-            degree: edu.degree || edu.qualification || '', 
-            institution: edu.institution || edu.university || '', 
-            start_year: edu.start_year || (edu.joined_on ? edu.joined_on.substring(0, 4) : ''),
-            end_year: edu.end_year || (edu.left_on ? edu.left_on.substring(0, 4) : 'Present'),
-            grade: edu.grade || (edu.marks ? `${edu.marks} ${edu.marking_system || ''}` : '')
-        })),
+      full_name: data.full_name || `${data.firstName || ''} ${data.lastName || ''}`.trim(),
+      email: data.email || '',
+      phone: data.phone || '',
+      location: data.location || data.address || '',
+      linkedin: data.linkedin || (data.linkedinId ? `https://linkedin.com/in/${data.linkedinId}` : ''),
+      portfolio: data.portfolio || (data.githubId ? `https://github.com/${data.githubId}` : ''),
+      experience_type: data.experience_type || (data.experience?.length > 0 ? 'Experienced' : 'Fresher'),
 
-        // 2. Fix [object Object] in Experience using recursive helper
-        experience: (data.experience || []).map((exp: any) => {
-            const rawDesc = exp.description || exp.worked_on || '';
-            const cleanDesc = this.extractTextFromAny(rawDesc); // Use helper function
+      education: (data.education || []).map((edu: any) => ({
+        degree:      edu.degree || edu.qualification || '',
+        institution: edu.institution || edu.university || '',
+        start_year:  edu.start_year || edu.joined_on?.substring(0, 4) || '',
+        end_year:    edu.end_year   || edu.left_on?.substring(0, 4) || 'Present',
+        grade:       edu.grade      || (edu.marks ? `${edu.marks} ${edu.marking_system || ''}` : '')
+      })),
 
-            return {
-                title: exp.title || exp.position || '', 
-                company: exp.company || '',
-                start_date: exp.start_date || (exp.joined_on ? exp.joined_on.substring(0, 7) : ''), 
-                end_date: exp.end_date || (exp.left_on ? exp.left_on.substring(0, 7) : 'Present'),
-                description: cleanDesc
-            };
-        }),
+      experience: (data.experience || []).map((exp: any) => ({
+        title:       exp.title    || exp.position || '',
+        company:     exp.company  || '',
+        start_date:  exp.start_date || exp.joined_on?.substring(0, 7) || '',
+        end_date:    exp.end_date   || exp.left_on?.substring(0, 7)   || 'Present',
+        location:    exp.location || '',
+        description: this.extractTextFromAny(exp.description || exp.worked_on || '')
+      })),
 
-        skills: cleanedSkills,
+      skills: Array.from(uniqueSkillsMap.values()),
 
-        // 3. Fix [object Object] in Projects using recursive helper
-        projects: (data.projects || []).map((proj: any) => {
-            const rawDesc = proj.description || proj.descriptions || '';
-            const cleanDesc = this.extractTextFromAny(rawDesc);
-
-            const rawTech = proj.tech_used || proj.techStack || '';
-            const cleanTech = this.extractTextFromAny(rawTech, 'techName'); // Prioritize techName key
-
-            return {
-                title: proj.title || proj.projectName || '',
-                url: proj.url || proj.githubLink || '',
-                tech_used: cleanTech,
-                description: cleanDesc
-            };
-        })
+      projects: (data.projects || []).map((proj: any) => ({
+        title:       proj.title       || proj.projectName || '',
+        url:         proj.url         || proj.githubLink  || '',
+        tech_used:   this.extractTextFromAny(proj.tech_used || proj.techStack || '', 'techName'),
+        description: this.extractTextFromAny(proj.description || proj.descriptions || '')
+      }))
     };
   }
 
-  /**
-   * 🔥 SUPER ROBUST HELPER FUNCTION 🔥
-   * Recursively extracts text strings from nested JSON/Arrays/Objects.
-   * This guarantees that [object Object] is never shown.
-   */
-  private extractTextFromAny(val: any, preferredKey: string = ''): string {
+  private extractTextFromAny(val: any, preferredKey = ''): string {
     if (val === null || val === undefined) return '';
-    
-    // 1. Handle String
     if (typeof val === 'string') {
-        const trimmed = val.trim();
-        // Check if it looks like JSON array or object and parse it
-        if ((trimmed.startsWith('[') && trimmed.endsWith(']')) || (trimmed.startsWith('{') && trimmed.endsWith('}'))) {
-            try {
-                const parsed = JSON.parse(trimmed);
-                return this.extractTextFromAny(parsed, preferredKey);
-            } catch (e) {
-                // Ignore parse errors, treat as string
-            }
-        }
-        // If the string itself is literally "[object Object]", return empty to hide ugliness
-        if (trimmed === '[object Object]') return '';
-        return trimmed;
+      const t = val.trim();
+      if ((t.startsWith('[') && t.endsWith(']')) || (t.startsWith('{') && t.endsWith('}'))) {
+        try { return this.extractTextFromAny(JSON.parse(t), preferredKey); } catch {}
+      }
+      return t === '[object Object]' ? '' : t;
     }
-
-    // 2. Handle Array (Join all items)
     if (Array.isArray(val)) {
-        return val.map(item => this.extractTextFromAny(item, preferredKey))
-                  .filter(s => s && s.trim().length > 0)
-                  .join('. ');
+      return val.map(i => this.extractTextFromAny(i, preferredKey)).filter(s => s.trim()).join('. ');
     }
-
-    // 3. Handle Object (Search for known keys)
     if (typeof val === 'object') {
-        // Try preferred key first
-        if (preferredKey && val[preferredKey]) {
-             return this.extractTextFromAny(val[preferredKey]);
-        }
-
-        // Try standard keys known to be used in DB
-        const knownKeys = ['worked_on', 'description', 'descriptions', 'techName', 'name', 'techname', 'title', 'detail'];
-        for (const key of knownKeys) {
-            if (val[key]) return this.extractTextFromAny(val[key]);
-        }
-
-        // FALLBACK: If no known key matches, join ALL string values found in the object
-        // This handles cases where key might be 'desc' or 'summary' etc.
-        const allValues = Object.values(val)
-            .map(v => this.extractTextFromAny(v)) // Recurse
-            .filter(s => s && s.length > 0 && s !== '[object Object]');
-        
-        if (allValues.length > 0) return allValues.join('. ');
-        
-        return '';
+      if (preferredKey && val[preferredKey]) return this.extractTextFromAny(val[preferredKey]);
+      for (const key of ['worked_on', 'description', 'descriptions', 'techName', 'name', 'techname', 'title']) {
+        if (val[key]) return this.extractTextFromAny(val[key]);
+      }
+      return Object.values(val).map(v => this.extractTextFromAny(v)).filter(s => s && s !== '[object Object]').join('. ');
     }
-
     return String(val);
   }
 
   private loadFallbackData(userId: string): void {
-      if (typeof window !== 'undefined' && window.localStorage) {
-          const storedData = window.localStorage.getItem('STUDENT_DATA') || window.sessionStorage.getItem('STUDENT_DATA');
-          if (storedData) {
-              const loginData = JSON.parse(storedData);
-              const rawInfo = loginData.info || loginData;
-              if (rawInfo && (rawInfo.education?.length > 0 || rawInfo.firstName)) {
-                  this.resumeData = this.transformApiData(rawInfo); 
-                  this.divideSkillsIntoColumns(this.resumeData.skills);
-                  this.isLoading.set(false);
-                  if (this.isDashboardEmbed) this.downloadResume();
-                  return; 
-              }
-          }
+    if (typeof window !== 'undefined') {
+      const raw = window.localStorage.getItem('STUDENT_DATA') || window.sessionStorage.getItem('STUDENT_DATA');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        const info = parsed.info || parsed;
+        if (info && (info.education?.length > 0 || info.firstName)) {
+          this.resumeData = this.transformApiData(info);
+          this.divideSkillsIntoColumns(this.resumeData.skills);
+          this.calculateAtsScore(this.resumeData);
+          this.isLoading.set(false);
+          if (this.isDashboardEmbed) this.downloadResume();
+          return;
+        }
       }
-      this.isLoading.set(false);
-      window.location.href = 'setup-profile'; 
+    }
+    this.isLoading.set(false);
+    window.location.href = 'setup-profile';
   }
 
-  private divideSkillsIntoColumns(skills: { name: string, level?: string }[]): void {
-    if (skills && skills.length > 0) {
-      const middleIndex = Math.ceil(skills.length / 2);
-      this.skillColumn1 = skills.slice(0, middleIndex);
-      this.skillColumn2 = skills.slice(middleIndex);
+  // ─── UI helpers ──────────────────────────────────────────────────────────────
+
+  private divideSkillsIntoColumns(skills: { name: string; level?: string }[]): void {
+    if (skills?.length > 0) {
+      const mid = Math.ceil(skills.length / 2);
+      this.skillColumn1 = skills.slice(0, mid);
+      this.skillColumn2 = skills.slice(mid);
     } else {
-        this.skillColumn1 = []; this.skillColumn2 = [];
+      this.skillColumn1 = [];
+      this.skillColumn2 = [];
     }
   }
 
   getSkillNames(): string {
-    if (this.resumeData && this.resumeData.skills && this.resumeData.skills.length > 0) {
-        return this.resumeData.skills.map(s => s.name).join(', ');
-    }
-    return '';
+    return this.resumeData?.skills?.slice(0, 5).map(s => s.name).join(', ') || '';
   }
 
-  toggleButtonContainer(): void { this.isButtonContainerVisible.update(visible => !visible); }
+  /** Split pipe-separated description into bullet array */
+  getExpBullets(desc: string): string[] {
+    if (!desc) return [];
+    return desc.split('|').map(b => b.trim()).filter(Boolean);
+  }
+
+  // ─── Actions ─────────────────────────────────────────────────────────────────
+
   printResume(): void { window.print(); }
+
   backToDashboard(): void { window.location.href = 'student-dashboard'; }
-  
+
   downloadResume(): void {
-    const resumeElement = document.getElementById('resume-content'); 
-    if (!resumeElement) return;
+    const resumeEl = document.getElementById('resume-content');
+    if (!resumeEl) return;
+
+    const btn = document.getElementById('download-btn') as HTMLButtonElement;
+    const originalText = btn?.innerHTML || '';
+    if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...'; btn.disabled = true; }
+
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-    script.onload = () => { this.generatePdf(resumeElement); };
+    script.onload = () => {
+      this.generatePdf(resumeEl, () => {
+        if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+      });
+    };
+    script.onerror = () => {
+      alert('PDF library failed to load. Use browser Print → Save as PDF instead.');
+      if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+    };
     document.body.appendChild(script);
   }
 
-  private generatePdf(resumeElement: HTMLElement): void {
-     const html2pdf = (window as any).html2pdf;
-     if (!html2pdf) return;
-     const originalBodyMargin = document.body.style.margin;
-     const originalBodyOverflow = document.body.style.overflow;
-     document.body.style.margin = '0';
-     document.body.style.overflow = 'hidden';
-    const opt: any = { 
-        margin: 0, 
-        filename: `${this.resumeData?.full_name?.replace(' ', '_') || 'Student'}_ATS_Resume.pdf`,
-        image: { type: 'jpeg' as 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, logging: false, dpi: 300, letterRendering: true, useCORS: true, ignoreElements: (element: HTMLElement) => element.classList.contains('print-hidden')}, 
-        jsPDF: { unit: 'mm', format: [210, 297], orientation: 'portrait' },
-        pagebreak: { mode: 'css' }
-    };
-    html2pdf().from(resumeElement).set(opt).save().then(() => {
-        document.body.style.margin = originalBodyMargin;
-        document.body.style.overflow = originalBodyOverflow;
+  private generatePdf(el: HTMLElement, callback: () => void): void {
+    const html2pdf = (window as any).html2pdf;
+    if (!html2pdf) return;
+
+    const savedMargin = document.body.style.margin;
+    const savedOverflow = document.body.style.overflow;
+    document.body.style.margin = '0';
+    document.body.style.overflow = 'hidden';
+
+    const filename = `${this.resumeData?.full_name?.replace(/\s+/g, '_') || 'Student'}_ATS_Resume.pdf`;
+
+    html2pdf().from(el).set({
+      margin: 0,
+      filename,
+      image:      { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, logging: false, dpi: 300, letterRendering: true, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF:      { unit: 'in', format: 'letter', orientation: 'portrait' }
+    }).save().then(() => {
+      document.body.style.margin = savedMargin;
+      document.body.style.overflow = savedOverflow;
+      callback();
     });
   }
 }

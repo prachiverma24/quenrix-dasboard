@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-upload-career',
@@ -34,7 +35,8 @@ export class UploadCareerComponent {
       skills: this.jobData.skills.split(',').map(s => s.trim())
     };
 
-    const apiUrl = 'http://localhost:8000/api/careers/jobs/';
+    // Replaced hardcoded IP with environment variable
+    const apiUrl = `${environment.apiBaseUrl}/careers/jobs/`;
 
     this.http.post(apiUrl, payload).subscribe({
       next: (response) => {

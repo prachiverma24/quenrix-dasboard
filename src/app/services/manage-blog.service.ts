@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,7 @@ export class ManageBlogService {
   
   private http = inject(HttpClient);
   
-  // ✅ FIXED: Hardcoded IP hata diya hai taaki Ngrok/Proxy kaam kare
-  private baseUrl = '/api/blog';
+  private baseUrl = `${environment.apiBaseUrl}/blog`;
 
   constructor() { }
 
