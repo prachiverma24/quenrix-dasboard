@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, switchMap, map } from 'rxjs';
-const API_BASE_URL = '/api'; 
+import { environment } from 'src/environments/environment';
+const API_BASE_URL = environment.apiBaseUrl;
 
 export interface Job {
   id?: number; 

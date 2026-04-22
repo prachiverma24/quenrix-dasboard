@@ -14,9 +14,9 @@ export class CreateUserComponent implements OnInit {
   roleid: number = 1; 
 
   roles = [
-    { id: 1, name: 'Admin' },
-    { id: 2, name: 'Trainer' },
-    { id: 3, name: 'Student' }
+    { id: 4, name: 'Admin' },
+    { id: 5, name: 'Trainer' },
+    { id: 6, name: 'Student' }
   ];
   
   // Flags for loading state and password visibility

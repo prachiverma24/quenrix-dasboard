@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 export interface TrainerFormData {
   id: string; 
@@ -24,8 +25,7 @@ interface TrainerApiPayload {
     image_url: string;
 }
 
-// ✅ FIXED: Hardcoded IP hata diya hai taaki Proxy/Ngrok ke sath chale
-const API_BASE_URL = '/api/trainers/';
+const API_BASE_URL = `${environment.apiBaseUrl}/trainers/`;
 
 @Injectable({
   providedIn: 'root'

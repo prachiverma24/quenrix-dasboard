@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators'; 
+import { environment } from 'src/environments/environment';
 
 // --- INTERFACES ---
 export interface SkillMaster { id: number; skillName: string; }
@@ -43,7 +44,7 @@ export class ResumeService {
   
   private http = inject(HttpClient);
 
-  private BASE_RESUME_URL = '/api/resume/';
+  private BASE_RESUME_URL = `${environment.apiBaseUrl}/resume/`;
   
   private CREATE_RESUME_URL = `${this.BASE_RESUME_URL}create-resume/`;
   private GET_RESUME_URL = `${this.BASE_RESUME_URL}get-resume/`; 

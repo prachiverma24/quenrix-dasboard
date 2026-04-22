@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface InquiryPayload {
   id?: number; 
@@ -15,7 +16,7 @@ export interface InquiryPayload {
   providedIn: 'root'
 })
 export class InquiryService {
-  private baseUrl = '/api/inquiries'; 
+  private baseUrl = `${environment.apiBaseUrl}/inquiries`;
   
   private http = inject(HttpClient);
 

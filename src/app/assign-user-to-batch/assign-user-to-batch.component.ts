@@ -31,8 +31,8 @@ export class AssignUserToBatchComponent implements OnInit {
   // UI States
   loading: boolean = true;
 
-  private ROLE_ID_TRAINER = 2;
-  private ROLE_ID_STUDENT = 3;
+  private ROLE_ID_TRAINER = 5;
+  private ROLE_ID_STUDENT = 6;
 
   constructor(
     private fb: FormBuilder,

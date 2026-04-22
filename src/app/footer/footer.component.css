@@ -589,6 +589,7 @@ app-chatbot {
     }
     .chat-popup-container.moved-up { bottom: 150px; }
 }
+<<<<<<< HEAD
 
 @media (max-width: 480px) {
     .container {
@@ -636,3 +637,5 @@ app-chatbot {
         bottom: 132px;
     }
 }
+=======
+>>>>>>> origin/main

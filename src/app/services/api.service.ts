@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable, inject } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 // --- Interfaces for Data Models ---
 export interface User {
@@ -67,7 +68,7 @@ export class ApiService {
   private http = inject(HttpClient); 
 
   // Base URL configuration (Using relative path for proxy)
-  private baseUrl = '/api/'; 
+  private baseUrl = `${environment.apiBaseUrl}/`; 
   private readonly STORAGE_KEY = 'cshub_student_login_data';
 
   /** Login data se userId nikalne ke liye helper */

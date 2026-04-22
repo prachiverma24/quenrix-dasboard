@@ -3,18 +3,19 @@ import { NgForm } from '@angular/forms';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { examAPi } from '../services/createexam.service';
-import { Router } from '@angular/router'; 
-import { AlertService } from '../services/alert.service'; // Import AlertService
+import { Router } from '@angular/router';
+import { AlertService } from '../services/alert.service';
 
-// Interfaces
+// ── Interfaces ────────────────────────────────────────────────────────────────
+
 interface Course {
-  courseid: number; 
-  coursename: string; 
+  courseid: number;
+  coursename: string;
 }
 
 interface Batch {
   batchId: number;
-  batchName: string; 
+  batchName: string;
 }
 
 interface Subject {
@@ -25,25 +26,39 @@ interface Subject {
 interface SubjectAPIResponse {
   course_id: number;
   course_name: string;
-  subjects: Subject[]; 
+  subjects: Subject[];
 }
 
 interface Question {
   questionText: string;
   questionType: string;
   options: string[];
-  correctOption?: number; 
+  correctOption?: number;
   points: number;
 }
 
 interface ExamMetadata {
   examName: string;
-  courseid: number | null; 
+  courseid: number | null;
   batchId: number | null;
   subjectId: number | null;
   start: string;
   end: string;
 }
+
+// ── Quenrix Bot interfaces ────────────────────────────────────────────────────
+
+export type BotQuestionType = 'mcq' | 'descriptive' | 'coding';
+
+interface BotConfig {
+  topic: string;
+  questionType: BotQuestionType;
+  count: number;
+}
+
+type BotState = 'idle' | 'generating' | 'preview' | 'confirm';
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 @Component({
   selector: 'app-createexam',
@@ -51,15 +66,14 @@ interface ExamMetadata {
   styleUrls: ['./createexam.component.css']
 })
 export class CreateExamComponent implements OnInit {
-  // Step 1 State
+
+  // ── Step state ──────────────────────────────────────────────────────────────
   step: 1 | 2 = 1;
   courses: Course[] = [];
   batches: Batch[] = [];
   subjects: Subject[] = [];
-  
-  // Property to hold the minimum allowed date (current datetime)
   minDate: string = '';
-  
+
   examMetadata: ExamMetadata = {
     examName: '',
     courseid: null,
@@ -69,45 +83,67 @@ export class CreateExamComponent implements OnInit {
     end: ''
   };
 
-  // Step 2 State
   questionTypes = ['mcq', 'discriptive', 'coding'];
   questions: Question[] = [
-    { questionText: '', questionType: 'mcq', options: ['', '', '', ''], correctOption: 0, points: 1 } 
+    { questionText: '', questionType: 'mcq', options: ['', '', '', ''], correctOption: 0, points: 1 }
   ];
 
-  // UI State
   isLoading = false;
-  
+
+  // ── Quenrix Bot state ────────────────────────────────────────────────────────
+  isBotOpen       = false;
+  botState: BotState = 'idle';
+  botErrorMessage = '';
+
+  botConfig: BotConfig = {
+    topic: '',
+    questionType: 'mcq',
+    count: 5
+  };
+
+  botGeneratedQuestions: Question[] = [];
+
+  readonly botQuestionTypeOptions: { label: string; value: BotQuestionType; icon: string; desc: string }[] = [
+    { value: 'mcq',         label: 'MCQ',         icon: '🔘', desc: 'Multiple choice with 4 options' },
+    { value: 'descriptive', label: 'Descriptive',  icon: '✏️', desc: 'Open-ended written answers'    },
+    { value: 'coding',      label: 'Coding',       icon: '💻', desc: 'Programming challenges'         }
+  ];
+
+  // ── Constructor ──────────────────────────────────────────────────────────────
+
   constructor(
     private examService: examAPi,
     private router: Router,
-    private alertService: AlertService // Inject AlertService
+    private alertService: AlertService
   ) {}
 
+  // ── Lifecycle ────────────────────────────────────────────────────────────────
+
   ngOnInit(): void {
-    // Set minDate to current time so past dates are disabled
     this.minDate = this.formatDate(new Date());
-
-    // Initialize start time to now and end time to 1 hour later
     this.examMetadata.start = this.minDate;
-    this.examMetadata.end = this.formatDate(new Date(Date.now() + 60 * 60 * 1000));
-
+    this.examMetadata.end   = this.formatDate(new Date(Date.now() + 60 * 60 * 1000));
     this.fetchCourses();
   }
 
-  // Go Back to Admin Panel
+  // ── Navigation ───────────────────────────────────────────────────────────────
+
   goBack(): void {
-    this.router.navigate(['/admin-panel']); 
+    this.router.navigate(['/admin-panel']);
   }
 
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+
   private formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
+
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  // ── Data fetching ─────────────────────────────────────────────────────────────
 
   fetchCourses(): void {
     this.isLoading = true;
@@ -115,10 +151,8 @@ export class CreateExamComponent implements OnInit {
       next: (res: Course[]) => {
         this.courses = res;
         this.isLoading = false;
-        
-        // --- UPDATED: Removed auto-selection of the first course ---
-        if (this.courses.length === 0) {
-             this.alertService.warning('No courses found. Please ensure data is available on the API.');
+        if (!this.courses.length) {
+          this.alertService.warning('No courses found. Please ensure data is available on the API.');
         }
       },
       error: err => {
@@ -131,89 +165,68 @@ export class CreateExamComponent implements OnInit {
 
   onCourseSelect(): void {
     const courseId = this.examMetadata.courseid;
-    
-    // Reset arrays and selections immediately when course changes
     this.batches = [];
     this.subjects = [];
     this.examMetadata.batchId = null;
     this.examMetadata.subjectId = null;
+    if (!courseId) return;
 
-    if (!courseId) {
-      return;
-    }
-    
-    // Fetch Batches
     this.isLoading = true;
+
     this.examService.fetchBatches(courseId).pipe(
       catchError(err => {
         this.isLoading = false;
         this.alertService.error(`Failed to load batches for course ID: ${courseId}.`);
-        console.error('Error fetching batches:', err);
         return of([]);
       })
-    ).subscribe((res: any[]) => { // Using any[] to map safely
-      // Map response to ensure we have batchName even if API sends 'name'
+    ).subscribe((res: any[]) => {
       this.batches = res.map(b => ({
-          batchId: b.batchId,
-          batchName: b.batchName || b.name || 'Unknown Batch' // Fallback to 'name'
+        batchId:   b.batchId,
+        batchName: b.batchName || b.name || 'Unknown Batch'
       }));
-
-      // --- UPDATED: Removed auto-selection of the first batch ---
-      if (this.batches.length === 0) {
+      if (!this.batches.length) {
         this.alertService.info('No batches available for this course.');
       }
     });
 
-    // Fetch Subjects
-    this.isLoading = true;
     this.examService.fetchSubjects(courseId).pipe(
       catchError(err => {
         this.isLoading = false;
         this.alertService.error(`Failed to load subjects for course ID: ${courseId}.`);
-        console.error('Error fetching subjects:', err);
-        return of([]);
+        return of({ subjects: [] });
       })
     ).subscribe((res: SubjectAPIResponse) => {
-      this.subjects = res.subjects; 
-      
-      // --- UPDATED: Removed auto-selection of the first subject ---
-      this.isLoading = false; 
+      this.subjects = res.subjects;
+      this.isLoading = false;
     });
   }
-  
+
+  // ── Step navigation ───────────────────────────────────────────────────────────
+
   onProceed(form: NgForm): void {
     if (form.invalid) {
       this.alertService.warning('Please fill in all exam details (Step 1).');
       return;
     }
 
-    // --- DATE VALIDATION LOGIC START ---
-    const now = new Date();
-    const startDate = new Date(this.examMetadata.start);
-    const endDate = new Date(this.examMetadata.end);
+    const now   = new Date();
+    const start = new Date(this.examMetadata.start);
+    const end   = new Date(this.examMetadata.end);
 
-    // Check if start date is in the past (allowing a small buffer for "now")
-    if (startDate.getTime() < now.getTime() - 60000) { // 1 minute buffer
-       this.alertService.warning('Start time cannot be in the past. Please choose a correct time.');
-       return;
+    if (start.getTime() < now.getTime() - 60_000) {
+      this.alertService.warning('Start time cannot be in the past. Please choose a future time.');
+      return;
     }
-
-    // Check if end date is before start date
-    if (endDate <= startDate) {
+    if (end <= start) {
       this.alertService.warning('End time must be after the Start time.');
       return;
     }
-    // --- DATE VALIDATION LOGIC END ---
 
     this.step = 2;
   }
-  
+
   onBack(): void {
     this.step = 1;
-  }
-
-  trackByIndex(index: number): number {
-    return index;
   }
 
   addMore(): void {
@@ -221,22 +234,26 @@ export class CreateExamComponent implements OnInit {
       questionText: '',
       questionType: 'mcq',
       options: ['', '', '', ''],
-      correctOption: 0, 
+      correctOption: 0,
       points: 1
     });
   }
-  
+
+  removeQuestion(index: number): void {
+    if (this.questions.length > 1) {
+      this.questions.splice(index, 1);
+    }
+  }
+
+  // ── Submit exam ───────────────────────────────────────────────────────────────
+
   onSubmit(form: NgForm): void {
     if (!form.valid) {
       this.alertService.warning('Please complete all questions before submitting.');
       return;
     }
 
-    const typeMap: Record<string, number> = {
-      mcq: 1,
-      discriptive: 2,
-      coding: 3
-    };
+    const typeMap: Record<string, number> = { mcq: 1, discriptive: 2, coding: 3 };
 
     const formattedQuestions = this.questions.map(q => {
       const base = {
@@ -248,30 +265,25 @@ export class CreateExamComponent implements OnInit {
       if (q.questionType === 'mcq' && q.correctOption !== undefined) {
         return {
           ...base,
-          options: q.options.filter(opt => opt).map((opt, index) => ({ 
+          options: q.options.filter(o => o).map((opt, i) => ({
             option_text: opt,
-            is_correct: index === q.correctOption 
+            is_correct: i === q.correctOption
           }))
         };
       }
       return base;
     });
-    
+
     const { examName, courseid, batchId, subjectId, start, end } = this.examMetadata;
-    
     const payload = {
-      examName,
-      courseId: courseid!, 
-      batchId: batchId!,
-      subjectId: subjectId!, 
-      start,
-      end,
+      examName, courseId: courseid!, batchId: batchId!,
+      subjectId: subjectId!, start, end,
       questions: formattedQuestions
     };
 
     this.isLoading = true;
     this.examService.createExam(payload).subscribe({
-      next: res => {
+      next: () => {
         this.alertService.success('Exam created successfully! Moving back to Step 1.');
         this.resetFormState(form);
       },
@@ -282,15 +294,12 @@ export class CreateExamComponent implements OnInit {
       }
     });
   }
-  
+
   resetFormState(form: NgForm): void {
     this.isLoading = false;
-    
     this.questions = [
       { questionText: '', questionType: 'mcq', options: ['', '', '', ''], correctOption: 0, points: 1 }
     ];
-    
-    // Reset dates to current time
     this.minDate = this.formatDate(new Date());
     this.examMetadata = {
       examName: '',
@@ -300,10 +309,116 @@ export class CreateExamComponent implements OnInit {
       start: this.minDate,
       end: this.formatDate(new Date(Date.now() + 60 * 60 * 1000))
     };
-    
     this.batches = [];
     this.subjects = [];
     this.step = 1;
     this.fetchCourses();
+  }
+
+  // ── Quenrix Bot ───────────────────────────────────────────────────────────────
+
+  openBot(): void {
+    // Pre-fill topic hint from selected subject name (if any)
+    const selectedSubject = this.subjects.find(s => s.subjectid === this.examMetadata.subjectId);
+    if (selectedSubject && !this.botConfig.topic) {
+      this.botConfig.topic = selectedSubject.subjectname;
+    }
+    this.botState       = 'idle';
+    this.botErrorMessage = '';
+    this.botGeneratedQuestions = [];
+    this.isBotOpen = true;
+  }
+
+  closeBot(): void {
+    this.isBotOpen = false;
+    this.botState  = 'idle';
+    this.botErrorMessage = '';
+  }
+
+  get selectedSubjectName(): string {
+    return this.subjects.find(s => s.subjectid === this.examMetadata.subjectId)?.subjectname || '';
+  }
+
+  onBotGenerate(): void {
+    if (!this.botConfig.topic.trim()) {
+      this.botErrorMessage = 'Please enter a topic or prompt to generate questions.';
+      return;
+    }
+    this.botErrorMessage = '';
+    this.botState = 'generating';
+
+    // Map bot type to internal type string
+    const typeMap: Record<BotQuestionType, string> = {
+      mcq: 'mcq',
+      descriptive: 'discriptive',
+      coding: 'coding'
+    };
+
+    const payload = {
+      subject:       this.selectedSubjectName || 'General',
+      topic:         this.botConfig.topic,
+      question_type: this.botConfig.questionType,
+      count:         this.botConfig.count
+    };
+
+    this.examService.generateQuestions(payload).subscribe({
+      next: (res: { questions: any[] }) => {
+        this.botGeneratedQuestions = res.questions.map(q => ({
+          questionText: q.questionText || q.question_text || '',
+          questionType: typeMap[this.botConfig.questionType] || 'mcq',
+          options:      q.options && q.options.length ? q.options : ['', '', '', ''],
+          correctOption: typeof q.correctOption === 'number' ? q.correctOption : 0,
+          points:       q.points || (this.botConfig.questionType === 'mcq' ? 2 : 5)
+        }));
+        this.botState = 'preview';
+      },
+      error: err => {
+        console.error('Quenrix Bot generation error:', err);
+        this.botErrorMessage = 'AI generation failed. Please check your connection or try again.';
+        this.botState = 'idle';
+      }
+    });
+  }
+
+  onBotConfirm(): void {
+    // Replace placeholder or append — smart merge: if only 1 blank question exists, replace it
+    const hasSingleBlank =
+      this.questions.length === 1 &&
+      !this.questions[0].questionText.trim();
+
+    if (hasSingleBlank) {
+      this.questions = [...this.botGeneratedQuestions];
+    } else {
+      this.questions = [...this.questions, ...this.botGeneratedQuestions];
+    }
+
+    this.alertService.success(
+      `${this.botGeneratedQuestions.length} question(s) added by Quenrix Bot!`
+    );
+    this.closeBot();
+
+    // Navigate to step 2 if still on step 1
+    if (this.step === 1) {
+      this.step = 2;
+    }
+  }
+
+  onBotRegenerate(): void {
+    this.botState = 'idle';
+    this.botGeneratedQuestions = [];
+  }
+
+  getTypeLabel(type: string): string {
+    const map: Record<string, string> = {
+      mcq: 'MCQ', discriptive: 'Descriptive', coding: 'Coding'
+    };
+    return map[type] || type;
+  }
+
+  getTypeBadgeClass(type: string): string {
+    const map: Record<string, string> = {
+      mcq: 'badge-mcq', discriptive: 'badge-desc', coding: 'badge-code'
+    };
+    return map[type] || '';
   }
 }

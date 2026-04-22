@@ -17,9 +17,9 @@ export class UserManagementComponent implements OnInit {
 
   // Role definitions for filtering and display
   roles = [
-    { id: 1, name: 'Admin' },
-    { id: 2, name: 'Trainer' },
-    { id: 3, name: 'Student' }
+    { id: 4, name: 'Admin' },
+    { id: 5, name: 'Trainer' },
+    { id: 6, name: 'Student' }
   ];
 
   allUsers: User[] = [];

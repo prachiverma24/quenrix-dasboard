@@ -2,9 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
-// ✅ FIXED: Hardcoded IP hata diya gaya hai. Ab ye proxy.conf.json se handle hoga.
-const API_BASE_URL = '/api';
+const API_BASE_URL = environment.apiBaseUrl;
 
 export interface Subject {
   subjectid?: number;
