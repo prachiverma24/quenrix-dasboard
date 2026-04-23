@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { LanguageService } from '../services/language.service';
 
 interface DemoVideo {
   title: string;
@@ -21,6 +20,7 @@ export class DemoClassesSectionComponent implements OnInit, OnDestroy {
   isModalOpen = false;
   selectedVideoUrl: SafeResourceUrl = '';
   readonly expandedCards: Record<string, boolean> = {};
+  readonly flippedCards: Record<string, boolean> = {};
 
   private readonly ultimateFallbackThumbnail =
     "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360' viewBox='0 0 640 360'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23111827'/%3E%3Cstop offset='100%25' stop-color='%232a1f5f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='640' height='360' fill='url(%23g)'/%3E%3Ccircle cx='320' cy='180' r='38' fill='white' fill-opacity='0.18'/%3E%3Cpolygon points='308,160 308,200 342,180' fill='white'/%3E%3Ctext x='320' y='240' text-anchor='middle' fill='%23d6d6ff' font-family='Arial, sans-serif' font-size='18'%3EVideo preview loading%3C/text%3E%3C/svg%3E";
@@ -102,15 +102,13 @@ export class DemoClassesSectionComponent implements OnInit, OnDestroy {
 
   readonly fallbackStage: Record<string, number> = {};
 
-  constructor(
-    private sanitizer: DomSanitizer,
-    private languageService: LanguageService
-  ) {}
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
     this.demoVideos.forEach((video) => {
       this.fallbackStage[video.youtubeVideoId] = 0;
       this.expandedCards[video.youtubeVideoId] = false;
+      this.flippedCards[video.youtubeVideoId] = false;
     });
   }
 
@@ -134,10 +132,20 @@ export class DemoClassesSectionComponent implements OnInit, OnDestroy {
   toggleReadMore(videoId: string, event: Event): void {
     event.stopPropagation();
     this.expandedCards[videoId] = !this.expandedCards[videoId];
+
+    if (!this.expandedCards[videoId]) {
+      this.flippedCards[videoId] = false;
+    }
   }
 
-  t(key: string): string {
-    return this.languageService.t(key);
+  toggleFlip(videoId: string, event: Event): void {
+    event.stopPropagation();
+    this.flippedCards[videoId] = !this.flippedCards[videoId];
+  }
+
+  showVideoFromCard(videoId: string, event: Event): void {
+    event.stopPropagation();
+    this.openModal(videoId);
   }
 
   onThumbnailError(event: Event, video: DemoVideo): void {

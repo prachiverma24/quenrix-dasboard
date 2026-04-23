@@ -1,18 +1,18 @@
 <section class="demo-classes-section">
   <div class="container">
     <div class="section-heading">
-      <h2 class="section-title">{{ t('demo.title') }}</h2>
-      <p class="section-subtitle">{{ t('demo.subtitle') }}</p>
+      <h2 class="section-title">Watch Our Free Demo Classes</h2>
+      <p class="section-subtitle">Experience world-class teaching before you enroll.</p>
     </div>
     <div class="demo-grid">
       <article
         class="demo-card"
         *ngFor="let video of demoVideos"
-        [class.is-expanded]="expandedCards[video.youtubeVideoId]"
+        [class.is-flipped]="flippedCards[video.youtubeVideoId]"
       >
         <div class="demo-card-inner">
           <div class="demo-card-face demo-card-front">
-            <div class="thumbnail-container" (click)="openModal(video.youtubeVideoId)">
+            <div class="thumbnail-container">
               <img
                 [src]="video.thumbnailUrl"
                 [alt]="video.title"
@@ -32,7 +32,7 @@
 
             <div class="video-info">
               <h3 class="video-title">{{ video.title }}</h3>
-              <p class="video-instructor">{{ t('demo.instructor') }}: {{ video.instructor }}</p>
+              <p class="video-instructor">Instructor: {{ video.instructor }}</p>
               <p class="video-short-description">{{ video.shortDescription }}</p>
 
               <p class="video-full-description" *ngIf="expandedCards[video.youtubeVideoId]">
@@ -44,9 +44,29 @@
                   type="button"
                   class="read-more-btn"
                   (click)="toggleReadMore(video.youtubeVideoId, $event)">
-                  {{ expandedCards[video.youtubeVideoId] ? t('demo.showLess') : t('demo.readMore') }}
+                  {{ expandedCards[video.youtubeVideoId] ? 'Show Less' : 'Read More' }}
                 </button>
               </div>
+            </div>
+          </div>
+
+          <div class="demo-card-face demo-card-back">
+            <h4 class="back-title">{{ video.title }}</h4>
+            <p class="back-text">Ready to watch this demo class? Click below to play full video.</p>
+
+            <div class="back-actions">
+              <button
+                type="button"
+                class="watch-btn"
+                (click)="showVideoFromCard(video.youtubeVideoId, $event)">
+                ▶ Watch Video
+              </button>
+              <button
+                type="button"
+                class="back-side-btn"
+                (click)="toggleFlip(video.youtubeVideoId, $event)">
+                ← Back to Details
+              </button>
             </div>
           </div>
         </div>

@@ -2,23 +2,36 @@
   <div class="hero-container">
     <!-- Left Content Area -->
     <div class="hero-content">
-      <p class="hero-kicker">{{ t('hero.kicker') }}</p>
+      <p class="hero-kicker">Quenrix Career Acceleration Platform</p>
       <h1 class="hero-title">
-        {{ t('hero.titleStart') }} <span class="gradient-text">{{ t('hero.titleHighlight') }}</span>. {{ t('hero.titleEnd') }}
+        Build Skills. Get <span class="gradient-text">Hired</span>. Start Your Tech Career.
       </h1>
       
       <p class="hero-subtitle">
-        {{ t('hero.subtitle') }}
+        Master in-demand programming skills with interactive courses and land your dream job with guaranteed placements. 
+        Join thousands of successful developers who transformed their careers.
       </p>
 
       <!-- Action Buttons -->
       <div class="button-group">
         <button class="btn btn-primary" (click)="onStartAssessment()">
-          <span class="btn-text">{{ t('hero.aboutBtn') }}</span>
+          <span class="btn-text">About Quenrix</span>
           <span class="btn-icon">+</span>
         </button>
       </div>
 
+      <!-- Trust Badge -->
+      <div class="trust-badge">
+        <div class="badge-item">
+          <span class="badge-star">★★★★★</span>
+          <span class="badge-text">4.8/5 rated by learners</span>
+        </div>
+        <div class="badge-divider"></div>
+        <div class="badge-item">
+          <span class="badge-icon">👥</span>
+          <span class="badge-text">10,000+ active learners</span>
+        </div>
+      </div>
     </div>
 
     <!-- Right Code Editor Card Area -->
@@ -34,7 +47,7 @@
           <span class="file-name">app.js</span>
           <div class="live-preview-tag">
             <span class="live-dot"></span>
-              {{ t('hero.livePreview') }}
+            Live Preview
           </div>
         </div>
 
@@ -86,7 +99,7 @@
 
         <!-- Preview Output -->
         <div class="editor-preview">
-          <div class="preview-label">{{ t('hero.output') }}</div>
+          <div class="preview-label">Output:</div>
           <div class="preview-text">
             <span class="preview-console">Hello, Developer!</span>
           </div>

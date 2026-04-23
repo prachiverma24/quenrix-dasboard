@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { UiStateService } from '../services/ui-state.service';
-import { LanguageService } from '../services/language.service';
 
 @Component({
   selector: 'app-hero-section',
@@ -9,7 +8,6 @@ import { LanguageService } from '../services/language.service';
 })
 export class HeroSectionComponent {
   private uiService = inject(UiStateService);
-  private languageService = inject(LanguageService);
 
   // Dummy code snippet for the code editor card
   codeSnippet = `// Create your first HTML page
@@ -25,9 +23,5 @@ displayMessage();`;
   // Navigation to different sections
   onStartAssessment(): void {
     this.uiService.triggerAction('open-about');
-  }
-
-  t(key: string): string {
-    return this.languageService.t(key);
   }
 }

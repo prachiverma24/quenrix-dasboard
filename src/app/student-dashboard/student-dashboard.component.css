@@ -35,7 +35,6 @@ body {
     padding-bottom: 20px;
 }
 
-/* --- EXAM MODE OVERRIDE --- */
 .container.exam-active-mode {
     background: #f8fafc;
     padding: 0;
@@ -51,7 +50,6 @@ body {
     background: #f8fafc;
 }
 
-/* ================= HEADER ================= */
 header {
     position: sticky;
     top: 0;
@@ -93,7 +91,6 @@ header {
     font-weight: 600;
 }
 
-/* ================= GRID LAYOUT SYSTEM ================= */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 140px 1fr 350px; 
@@ -113,15 +110,12 @@ header {
     .premium-profile-card {
         padding: 28px;
     }
-}
-
 .main-content {
     min-width: 0; 
     width: 100%;
     max-width: 100%;
 }
 
-/* ================= LEFT SIDEBAR (Desktop) ================= */
 .sidebar {
     height: auto;
     min-height: 500px;
@@ -288,6 +282,7 @@ header {
     flex-direction: column;
     gap: 8px;
 }
+
 
 .status-badge {
     background: rgba(255, 255, 255, 0.1);
@@ -1020,4 +1015,5 @@ header {
 .btn-primary-gradient:disabled {
     background: #cbd5e1;
     box-shadow: none;
+}
 }

@@ -25,15 +25,6 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     this.uiSubscription = this.uiService.action$.subscribe((payload) => {
       if (payload.action === 'open-about') {
         this.openAboutModal();
-      } else if (payload.action === 'open-courses') {
-        this.currentView = 'courses';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (payload.action === 'navigate-contact') {
-        this.onPageChange('contact');
-      } else if (payload.action === 'navigate-blog') {
-        this.onPageChange('blog');
-      } else if (payload.action === 'navigate-careers') {
-        this.onPageChange('careers');
       }
     });
   }
