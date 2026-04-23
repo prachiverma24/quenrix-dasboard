@@ -242,26 +242,15 @@
   display: flex;
   align-items: center;
   gap: 0.5rem; 
-<<<<<<< HEAD
-  background: linear-gradient(135deg, #6a43c5 0%, #5a34b9 100%);
-  color: white;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 20px rgba(106, 67, 197, 0.35);
-=======
   background: linear-gradient(135deg, var(--accent-color), var(--primary-hover));
   color: white;
   transition: all 0.3s ease;
   box-shadow: 0 10px 20px rgba(79, 53, 201, 0.32);
->>>>>>> origin/main
 }
 .login-btn:hover {
   background: linear-gradient(135deg, #5f37bf 0%, #4f2faa 100%);
   transform: translateY(-2px);
-<<<<<<< HEAD
-  box-shadow: 0 12px 28px rgba(90, 52, 185, 0.45);
-=======
   box-shadow: 0 14px 24px rgba(79, 53, 201, 0.4);
->>>>>>> origin/main
 }
 .login-btn svg { width: 18px; height: 18px; }
 
@@ -420,11 +409,7 @@
 
 .mobile-login-btn {
   text-align: center;
-<<<<<<< HEAD
-  background: linear-gradient(135deg, #6a43c5 0%, #5a34b9 100%);
-=======
   background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
->>>>>>> origin/main
   color: white;
   padding: 14px;
   border-radius: 8px;

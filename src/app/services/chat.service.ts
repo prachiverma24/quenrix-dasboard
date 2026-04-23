@@ -11,12 +11,7 @@ export interface ChatResponse {
   providedIn: 'root'
 })
 export class ChatService {
-<<<<<<< HEAD
-  // Using relative URL keeps it compatible with dev proxy and deployed environments.
-  private apiUrl = '/api/chat/';
-=======
   private apiUrl = `${environment.apiBaseUrl}/chat/`;
->>>>>>> origin/main
 
   constructor(private http: HttpClient) {}
 

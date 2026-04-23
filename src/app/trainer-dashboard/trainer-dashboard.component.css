@@ -85,7 +85,6 @@ header {
     min-height: calc(100vh - 80px); 
 }
 
-<<<<<<< HEAD
 @media (max-width: 1200px) {
     .dashboard-grid {
         grid-template-columns: 120px 1fr 300px;
@@ -96,13 +95,12 @@ header {
     .premium-profile-card {
         padding: 28px;
     }
-=======
-/* YAHAN FIX HAI: Resume Component ko container ke bahar nikalne se rokne ke liye */
+}
+
 .main-content {
     min-width: 0; 
     width: 100%;
     max-width: 100%;
->>>>>>> origin/main
 }
 
 /* ================= LEFT SIDEBAR (Desktop) ================= */
