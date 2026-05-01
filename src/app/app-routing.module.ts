@@ -35,9 +35,8 @@ const routes: Routes = [
   // Guest Routes (Accessible only if NOT logged in)
   { 
     path: '', 
-    component: LandingPageComponent, 
-    pathMatch: 'full',
-    canActivate: [GuestGuard] 
+    redirectTo: 'trainer-dashboard',
+    pathMatch: 'full'
   },
   { 
     path: 'landing-page', 
@@ -63,8 +62,7 @@ const routes: Routes = [
   },
   { 
     path: 'trainer-dashboard', 
-    component: TrainerDashboardComponent,
-    canActivate: [AuthGuard]
+    component: TrainerDashboardComponent
   },
   {path:'setup-profile', component:SetupProfileComponent},
   {path:'trainer-form',component:TrainerFormComponent},

@@ -30,7 +30,8 @@ body {
 .container {
     max-width: 1600px;
     margin: 0 auto;
-    background: linear-gradient(to bottom, rgba(249, 250, 251, 0.98), rgba(255, 255, 255, 0.95));
+    background: #F5F6FA !important;
+    color: #1F2937 !important;
     min-height: 100vh;
     padding-bottom: 20px;
 }
@@ -38,7 +39,7 @@ header {
     position: sticky;
     top: 0;
     height: 70px;
-    background: rgba(255, 255, 255, 0.85);
+    background: white !important;
     backdrop-filter: blur(20px);
     display: flex;
     align-items: center;
@@ -64,13 +65,13 @@ header {
 .search-wrapper input {
     width: 100%; padding: 10px 18px 10px 45px;
     border-radius: 50px; border: 1px solid transparent;
-    background: #f3f4f6; outline: none;
+    background: #F1F2F6 !important; outline: none;
 }
 .search-wrapper i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #6366f1; }
 
 .btn-request {
-    background: linear-gradient(135deg, #f43f5e, #e11d48);
-    color: white; border: none; padding: 10px 24px;
+    background: linear-gradient(135deg, #5B3DF5, #7C5CFF) !important;
+    color: white !important; border: none; padding: 10px 24px;
     border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 8px;
     font-weight: 600;
 }
@@ -97,17 +98,19 @@ header {
     }
 }
 
+/* YAHAN FIX HAI: Resume Component ko container ke bahar nikalne se rokne ke liye */
 .main-content {
     min-width: 0; 
     width: 100%;
     max-width: 100%;
 }
 
+
 /* ================= LEFT SIDEBAR (Desktop) ================= */
 .sidebar {
     height: auto;
     min-height: 500px;
-    background: white;
+    background: #1E1B3A !important;
     backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 20px 10px;
@@ -131,7 +134,7 @@ header {
     flex-direction: column;
     align-items: center;
     padding: 12px 5px;
-    color: #4b5563;
+    color: #6B7280 !important;
     text-decoration: none;
     border-radius: 12px;
     cursor: pointer;
@@ -148,19 +151,19 @@ header {
 }
 
 .sidebar-nav a.active { 
-    background: var(--primary-indigo) !important;
-    color: rgb(233, 54, 54) !important;
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    background: #8B7CF6 !important;
+    color: white !important;
+    border-radius: 12px !important;
 }
 
 .sidebar-nav a.active i,
 .sidebar-nav a.active span {
-    color: rgb(238, 110, 110);
+    color: white !important;
 }
 
 .sidebar-nav a:hover:not(.active) {
-    background: rgba(99, 102, 241, 0.1);
-    color: var(--primary-indigo);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
 }
 
 .sidebar-bottom { 
@@ -185,15 +188,15 @@ header {
 
 /* ================= PREMIUM PROFILE CARD ================= */
 .premium-profile-card {
-    background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%);
-    color: white;
-    border-radius: 24px;
+    background: #FFFFFF !important;
+    color: #1F2937 !important;
+    border-radius: 16px !important;
     padding: 40px;
     margin-bottom: 24px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(67, 56, 202, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+    border: none;
 }
 
 .card-bg-decoration .circle {
@@ -270,8 +273,8 @@ header {
     font-weight: 800;
     margin: 0;
     letter-spacing: -0.5px;
-    color: #ffffff !important;
-    text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+    color: #1F2937 !important;
+    text-shadow: none;
 }
 
 .status-badge {
@@ -291,7 +294,7 @@ header {
 
 .greeting-message {
     font-size: 18px;
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: #6B7280 !important;
     margin: 0;
     font-weight: 500;
 }
@@ -317,13 +320,14 @@ header {
 }
 
 .stat-card {
-    background: #ffffff;
+    background: #FFFFFF !important;
+    color: #1F2937 !important;
     padding: 24px;
-    border-radius: var(--radius-xl);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    border: none !important;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -339,7 +343,7 @@ header {
 .stat-card .title {
     font-size: 14px;
     font-weight: 700;
-    color: var(--gray-600);
+    color: #6B7280 !important;
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -350,7 +354,7 @@ header {
     font-size: 22px;
     font-weight: 800;
     margin: 15px 0;
-    color: var(--gray-900);
+    color: #1F2937 !important;
     z-index: 2;
     line-height: 1.2;
 }
@@ -368,7 +372,7 @@ header {
 .stat-card .footer-info span {
     font-size: 12px;
     font-weight: 600;
-    color: var(--gray-600);
+    color: #6B7280 !important;
 }
 
 .stat-card .footer-info i {
@@ -447,9 +451,10 @@ header {
 
 /* ================= RIGHT SIDEBAR (SCHEDULE) ================= */
 .right-schedule-card {
-    background: rgba(255, 255, 255, 0.9);
+    background: #FFFFFF !important;
+    color: #1F2937 !important;
     backdrop-filter: blur(20px);
-    border-radius: 24px;
+    border-radius: 16px !important;
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -460,8 +465,8 @@ header {
 }
 
 .current-time-display {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    color: white;
+    background: #5B4BDB !important;
+    color: white !important;
     padding: 16px;
     border-radius: 16px;
     text-align: center;
@@ -483,17 +488,17 @@ header {
 .calendar-controls p {
     margin: 0;
     font-weight: 700;
-    color: #374151;
+    color: #1F2937 !important;
     font-size: 15px;
 }
 
 .calendar-controls button {
-    background: #f3f4f6;
+    background: #F1F2F6 !important;
     border: none;
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    color: #6b7280;
+    color: #6B7280 !important;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -503,8 +508,8 @@ header {
 }
 
 .calendar-controls button:hover {
-    background: #e5e7eb;
-    color: #111827;
+    background: #E5E7EB !important;
+    color: #1F2937 !important;
 }
 
 .calendar-weekdays {
@@ -514,7 +519,7 @@ header {
     margin-bottom: 8px;
     font-size: 11px;
     font-weight: 600;
-    color: #9ca3af;
+    color: #6B7280 !important;
     text-transform: uppercase;
 }
 
@@ -534,24 +539,25 @@ header {
     cursor: pointer; 
     font-size: 13px;
     font-weight: 500;
-    color: #4b5563;
+    color: #1F2937 !important;
     transition: all 0.2s;
 }
 
 .calendar-days div:hover:not(.active):not(.inactive) { 
-    background: #f3f4f6; 
+    background: #F1F2F6 !important; 
+    color: #1F2937 !important;
 }
 
 .calendar-days div.active { 
-    background: #6366f1; 
-    color: white; 
+    background: #5B4BDB !important; 
+    color: white !important; 
     font-weight: 600;
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+    box-shadow: none !important;
 }
 
 .schedule-list h5 {
     font-size: 11px;
-    color: #6b7280;
+    color: rgba(255, 255, 255, 0.8) !important;
     margin: 0 0 12px 0;
     font-weight: 600;
     text-transform: uppercase;
@@ -560,15 +566,16 @@ header {
 
 .no-schedule-message {
     font-size: 13px;
-    color: #9ca3af;
+    color: white !important;
     text-align: center;
     padding: 20px 0;
-    background: #f9fafb;
+    background: rgba(255, 255, 255, 0.1) !important;
     border-radius: 12px;
 }
 
 .schedule-item {
-    background: white; 
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
     padding: 14px; 
     border-radius: 14px;
     margin-bottom: 12px; 
@@ -576,7 +583,7 @@ header {
     align-items: center; 
     gap: 14px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03); 
-    border: 1px solid rgba(0,0,0,0.02);
+    border: 1px solid rgba(255,255,255,0.2) !important;
     position: relative;
     overflow: hidden;
 }
@@ -605,15 +612,15 @@ header {
     text-align: center;
     font-size: 11px;
     font-weight: 700;
-    color: #6b7280;
-    background: #f9fafb;
+    color: white !important;
+    background: rgba(255, 255, 255, 0.15) !important;
     padding: 6px;
     border-radius: 8px;
 }
 
 .schedule-item .desc {
     font-size: 13px;
-    color: #374151;
+    color: white !important;
     margin: 0;
     font-weight: 500;
 }
@@ -621,20 +628,20 @@ header {
 .btn-leave { 
     width: 100%; 
     margin-top: 20px; 
-    background: linear-gradient(135deg, #f43f5e, #e11d48); 
-    color: white; 
+    background: linear-gradient(135deg, #5B3DF5, #7C5CFF) !important; 
+    color: white !important; 
     border: none; 
     padding: 12px; 
     border-radius: 12px; 
     cursor: pointer; 
     font-weight: 700; 
     transition: all 0.3s;
-    box-shadow: 0 4px 10px rgba(244, 63, 94, 0.3);
+    box-shadow: 0 4px 10px rgba(91, 61, 245, 0.3);
 }
 
 .btn-leave:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(244, 63, 94, 0.4);
+    box-shadow: 0 6px 15px rgba(91, 61, 245, 0.4);
 }
 
 /* ================= MOBILE VIEW ================= */
