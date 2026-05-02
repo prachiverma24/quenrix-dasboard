@@ -24,8 +24,8 @@
         <a [class.active]="activePage === 'batches'" (click)="setActivePage('batches')">
           <i class="fas fa-users"></i> <span>Batches</span>
         </a>
-        <a [class.active]="activePage === 'shorts'" (click)="setActivePage('shorts')" style="color: #ec4899;">
-          <i class="fas fa-play-circle" style="font-size: 26px;"></i> <span>Shorts</span>
+        <a [class.active]="activePage === 'shorts'" (click)="setActivePage('shorts')">
+          <i class="fas fa-play-circle"></i> <span>Shorts</span>
         </a>
         <a [class.active]="activePage === 'generate-resume'" (click)="goToResumeView()">
           <i class="fas fa-file-alt"></i> <span>Resume</span>
@@ -33,7 +33,7 @@
         <a [class.active]="activePage === 'syntaxshare'" (click)="setActivePage('syntaxshare')">
           <i class="fas fa-comments"></i> <span>Doubt Hub</span>
         </a>
-        <a (click)="logout()" class="logout-link" style="color: #ef4444; margin-top: auto;">
+        <a (click)="logout()" class="logout-link">
           <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
         </a>
       </nav>
@@ -110,12 +110,12 @@
   <!-- Profile Completion Modal -->
   <div *ngIf="showProfileCompletionModal" class="modal-overlay">
     <div class="premium-modal">
-      <div class="modal-header" style="text-align: center; margin-bottom: 20px;">
-        <div class="header-icon" style="font-size: 50px; color: #6366f1; margin-bottom: 15px;">
+      <div class="modal-header">
+        <div class="header-icon">
           <i class="fas fa-user-circle"></i>
         </div>
-        <h2 style="margin: 0; color: #1e293b;">Profile Incomplete!</h2>
-        <p style="color: #64748b; margin-top: 10px;">Please update your details to unlock all features of the trainer dashboard.</p>
+        <h2>Profile Incomplete!</h2>
+        <p>Please update your details to unlock all features of the trainer dashboard.</p>
       </div>
       <div class="modal-footer" style="display: flex; flex-direction: column; gap: 10px;">
         <button class="btn-submit" (click)="goToProfileSetupForm()" style="width: 100%;">
@@ -130,17 +130,17 @@
 
   <!-- Join Meeting Modal -->
   <div *ngIf="showJoinMeetingModal" class="modal-overlay">
-    <div class="premium-exam-modal" style="max-width: 500px; background: white; border-radius: 24px; padding: 25px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 style="margin: 0;"><i class="fas fa-video" style="color: #10B981;"></i> Host Session</h3>
-        <button (click)="closeJoinMeetingModal()" style="border: none; background: #f1f5f9; border-radius: 8px; width: 32px; height: 32px; cursor: pointer;"><i class="fas fa-times"></i></button>
+    <div class="premium-exam-modal">
+      <div class="modal-top">
+        <h3><i class="fas fa-video"></i> Host Session</h3>
+        <button (click)="closeJoinMeetingModal()" class="close-btn"><i class="fas fa-times"></i></button>
       </div>
-      <div *ngFor="let b of selectedBatchDetails" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid #f1f5f9; border-radius: 12px; margin-bottom: 10px;">
-        <div>
-          <div style="font-weight: 700;">{{ b.batch_name }}</div>
-          <div style="font-size: 12px; color: #64748b;">{{ b.timing }} • {{ b.mode }}</div>
+      <div *ngFor="let b of selectedBatchDetails" class="batch-item">
+        <div class="batch-info">
+          <div class="batch-name">{{ b.batch_name }}</div>
+          <div class="batch-time">{{ b.timing }} • {{ b.mode }}</div>
         </div>
-        <button (click)="joinMeeting(b.zoom_join_url)" style="background: #10B981; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 600;">Start</button>
+        <button (click)="joinMeeting(b.zoom_join_url)" class="start-btn">Start</button>
       </div>
     </div>
   </div>

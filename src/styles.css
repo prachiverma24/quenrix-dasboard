@@ -11,7 +11,7 @@ body {
 	padding: 0;
 	min-height: 100%;
 	background: #f6f7fb !important;
-	color: #1f2937;
+	color: #7C5CFF;
 	font-family: 'Inter', sans-serif;
 	color-scheme: light;
 }
@@ -27,7 +27,7 @@ app-root {
 .stats-section,
 .feature-dashboard-section {
 	background-color: #ffffff !important;
-	color: #1f2937 !important;
+	color: #311f37 !important;
 }
 
 /* Keep controls light even when OS/browser is dark */
@@ -42,7 +42,7 @@ input,
 select,
 textarea {
 	background: #ffffff;
-	color: #111827;
+	color: #311f37;
 	border: 1px solid #e5e7eb;
 }
 
@@ -52,10 +52,10 @@ a {
 
 :root {
 	--glass-card-bg:
-		linear-gradient(135deg, rgba(124, 58, 237, 0.28) 0%, rgba(168, 85, 247, 0.2) 42%, rgba(255, 255, 255, 0.52) 100%),
+		linear-gradient(135deg, rgba(147, 7, 142, 0.45) 0%, rgba(175, 34, 194, 0.67) 42%, rgba(255, 255, 255, 0.52) 100%),
 		linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.22));
-	--glass-card-border: rgba(167, 139, 250, 0.42);
-	--glass-card-shadow: 0 22px 55px rgba(88, 28, 135, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+	--glass-card-border: rgba(194, 182, 255, 0.42);
+	--glass-card-shadow: 0 22px 55px rgba(190, 39, 170, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.42);
 	--glass-card-hover-shadow: 0 28px 70px rgba(88, 28, 135, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
@@ -145,703 +145,13 @@ a {
 	box-shadow: var(--glass-card-hover-shadow) !important;
 }
 
-app-trainer-dashboard .container:not(.exam-active-mode) {
-	width: min(100%, 1500px);
-	max-width: 1500px;
-	min-height: 100vh;
-	margin: 0 auto;
-	padding: 22px 28px 34px;
-	background:
-		radial-gradient(circle at 10% 8%, rgba(236, 72, 153, 0.22), transparent 28%),
-		radial-gradient(circle at 82% 10%, rgba(124, 58, 237, 0.25), transparent 30%),
-		radial-gradient(circle at 76% 82%, rgba(14, 165, 233, 0.17), transparent 34%),
-		linear-gradient(135deg, #f9f4ff 0%, #eef4ff 48%, #fff8fe 100%);
-	color: #1f1230;
-	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-}
-
-app-trainer-dashboard .container:not(.exam-active-mode)::before {
-	content: '';
-	position: fixed;
-	inset: 0;
-	pointer-events: none;
-	background-image:
-		linear-gradient(rgba(124, 58, 237, 0.045) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(124, 58, 237, 0.045) 1px, transparent 1px);
-	background-size: 44px 44px;
-	mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.46), transparent 78%);
-}
-
-app-trainer-dashboard .container:not(.exam-active-mode)::after {
-	content: '';
-	position: fixed;
-	inset: -18%;
-	pointer-events: none;
-	background:
-		radial-gradient(circle at 18% 24%, rgba(168, 85, 247, 0.18), transparent 28%),
-		radial-gradient(circle at 78% 18%, rgba(236, 72, 153, 0.14), transparent 26%),
-		radial-gradient(circle at 64% 82%, rgba(14, 165, 233, 0.12), transparent 30%);
-	filter: blur(18px);
-	opacity: 0.8;
-	animation: trainerAmbientDrift 16s ease-in-out infinite alternate;
-}
-
-app-trainer-dashboard header,
-app-trainer-dashboard .sidebar,
-app-trainer-dashboard .premium-profile-card,
-app-trainer-dashboard .stat-card,
-app-trainer-dashboard .right-schedule-card,
-app-trainer-dashboard .current-time-display,
-app-trainer-dashboard .exam-entry-card,
-app-trainer-dashboard .schedule-item,
-app-trainer-dashboard .no-schedule-message,
-app-trainer-dashboard .premium-exam-modal {
-	background:
-		linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.32)),
-		linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(236, 72, 153, 0.08)) !important;
-	border: 1px solid rgba(255, 255, 255, 0.58) !important;
-	box-shadow: 0 24px 70px rgba(75, 29, 124, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.68) !important;
-	backdrop-filter: blur(28px) saturate(165%);
-	-webkit-backdrop-filter: blur(28px) saturate(165%);
-}
-
-app-trainer-dashboard header {
-	top: 18px;
-	height: 74px;
-	border-radius: 28px;
-	padding: 0 26px;
-	transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 260ms ease, background 260ms ease;
-}
-
-app-trainer-dashboard header:hover,
-app-trainer-dashboard .premium-profile-card:hover,
-app-trainer-dashboard .stat-card:hover {
-	transform: translateY(-5px);
-	box-shadow: 0 34px 90px rgba(124, 58, 237, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.72) !important;
-}
-
-app-trainer-dashboard .dashboard-grid {
-	grid-template-columns: 176px minmax(0, 1fr) 320px;
-	gap: 22px;
-	padding: 22px 0 0;
-	max-width: 100%;
-	margin: 0 auto;
-	align-items: start;
-}
-
-app-trainer-dashboard .main-content {
-	min-width: 0;
-	display: grid;
-	gap: 20px;
-}
-
-app-trainer-dashboard .sidebar {
-	top: 114px;
-	min-height: calc(100vh - 148px);
-	border-radius: 28px;
-	padding: 12px;
-}
-
-app-trainer-dashboard .sidebar-nav {
-	gap: 8px;
-}
-
-app-trainer-dashboard .sidebar-nav a {
-	min-height: 48px;
-	flex-direction: row;
-	justify-content: flex-start;
-	gap: 10px;
-	padding: 7px 10px;
-	border-radius: 18px;
-	color: #705a86 !important;
-	font-size: 13px;
-	font-weight: 750;
-	letter-spacing: 0;
-	border: 1px solid transparent;
-	transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1), background 240ms ease, border-color 240ms ease, box-shadow 240ms ease, color 240ms ease;
-}
-
-app-trainer-dashboard .sidebar-nav a i {
-	width: 34px;
-	height: 34px;
-	margin: 0;
-	border-radius: 14px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	color: #7c3aed !important;
-	background: rgba(124, 58, 237, 0.1);
-}
-
-app-trainer-dashboard .sidebar-nav a:hover {
-	transform: translateX(5px);
-	color: #4c1d95 !important;
-	background: rgba(255, 255, 255, 0.52);
-	border-color: rgba(124, 58, 237, 0.18);
-	box-shadow: 0 16px 34px rgba(124, 58, 237, 0.14);
-}
-
-app-trainer-dashboard .sidebar-nav a.active {
-	color: #ffffff !important;
-	background: linear-gradient(135deg, rgba(124, 58, 237, 0.94), rgba(168, 85, 247, 0.84)) !important;
-	box-shadow: 0 18px 38px rgba(124, 58, 237, 0.3) !important;
-}
-
-app-trainer-dashboard .sidebar-nav a.active i,
-app-trainer-dashboard .sidebar-nav a.active span {
-	color: #ffffff !important;
-}
-
-app-trainer-dashboard .search-wrapper input {
-	height: 46px;
-	background: rgba(255, 255, 255, 0.56);
-	border: 1px solid rgba(124, 58, 237, 0.16);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
-	transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
-}
-
-app-trainer-dashboard .search-wrapper input:focus {
-	background: rgba(255, 255, 255, 0.86);
-	border-color: rgba(124, 58, 237, 0.42);
-	box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-app-trainer-dashboard .btn-request,
-app-trainer-dashboard .btn-primary-gradient,
-app-trainer-dashboard .btn-submit {
-	background: linear-gradient(135deg, #7c3aed, #a855f7 54%, #ec4899) !important;
-	border-radius: 17px;
-	font-weight: 800;
-	letter-spacing: 0;
-	transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 240ms ease, filter 240ms ease;
-}
-
-app-trainer-dashboard .btn-request:hover,
-app-trainer-dashboard .btn-primary-gradient:hover:not(:disabled),
-app-trainer-dashboard .btn-submit:hover {
-	transform: translateY(-3px) scale(1.02);
-	filter: saturate(1.08);
-	box-shadow: 0 20px 44px rgba(124, 58, 237, 0.34) !important;
-}
-
-app-trainer-dashboard .premium-profile-card {
-	border-radius: 32px;
-	padding: 34px;
-	margin-bottom: 0;
-	transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 280ms ease;
-}
-
-app-trainer-dashboard .profile-content-wrapper {
-	align-items: center;
-	gap: 24px;
-}
-
-app-trainer-dashboard .profile-text-content {
-	min-width: 0;
-	gap: 9px;
-}
-
-app-trainer-dashboard .premium-profile-card::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	pointer-events: none;
-	background:
-		linear-gradient(135deg, rgba(255, 255, 255, 0.5), transparent 44%),
-		radial-gradient(circle at 82% 22%, rgba(236, 72, 153, 0.24), transparent 32%),
-		radial-gradient(circle at 16% 90%, rgba(14, 165, 233, 0.16), transparent 30%);
-}
-
-app-trainer-dashboard .student-name-text {
-	font-size: clamp(2rem, 3vw, 3.1rem);
-	line-height: 1.04;
-	font-weight: 850;
-	letter-spacing: 0;
-	color: #25123d !important;
-	text-shadow: none;
-}
-
-app-trainer-dashboard .greeting-message {
-	max-width: 58ch;
-	color: rgba(48, 32, 70, 0.78) !important;
-	font-size: 1.02rem;
-	line-height: 1.55;
-}
-
-app-trainer-dashboard .status-badge,
-app-trainer-dashboard .date-badge {
-	background: rgba(255, 255, 255, 0.5);
-	color: #6d28d9;
-	border: 1px solid rgba(124, 58, 237, 0.18);
-	letter-spacing: 0;
-	backdrop-filter: blur(18px);
-	-webkit-backdrop-filter: blur(18px);
-}
-
-app-trainer-dashboard .stats-cards-container {
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 18px;
-}
-
-app-trainer-dashboard .stat-card {
-	min-height: 168px;
-	padding: 22px;
-	border-radius: 26px;
-	transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 280ms ease, border-color 280ms ease;
-}
-
-app-trainer-dashboard .stat-card .title,
-app-trainer-dashboard .schedule-list h5,
-app-trainer-dashboard .calendar-weekdays,
-app-trainer-dashboard .stat-card .value,
-app-trainer-dashboard .right-schedule-header h3,
-app-trainer-dashboard .calendar-controls p,
-app-trainer-dashboard .exam-main-info h4,
-app-trainer-dashboard .header-titles h3 {
-	letter-spacing: 0;
-}
-
-app-trainer-dashboard .stat-card .title {
-	color: rgba(52, 37, 73, 0.7);
-	font-size: 0.82rem;
-}
-
-app-trainer-dashboard .stat-card .value,
-app-trainer-dashboard .right-schedule-header h3,
-app-trainer-dashboard .calendar-controls p,
-app-trainer-dashboard .exam-main-info h4,
-app-trainer-dashboard .header-titles h3 {
-	color: #241036;
-}
-
-app-trainer-dashboard .stat-card .value {
-	margin: 10px 0 18px;
-	font-size: clamp(1.3rem, 1.45vw, 1.7rem);
-	line-height: 1.2;
-}
-
-app-trainer-dashboard .stat-card .footer-info {
-	border-top-color: rgba(124, 58, 237, 0.12);
-	gap: 12px;
-	padding-top: 14px;
-}
-
-app-trainer-dashboard .stat-card .footer-info i {
-	width: 42px;
-	height: 42px;
-	border-radius: 16px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	background: rgba(255, 255, 255, 0.48);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
-}
-
-app-trainer-dashboard .right-schedule-card {
-	top: 114px;
-	border-radius: 30px;
-	padding: 20px;
-	gap: 14px;
-}
-
-app-trainer-dashboard .current-time-display {
-	margin-bottom: 2px;
-	padding: 17px;
-	color: #ffffff;
-	border-radius: 22px;
-}
-
-app-trainer-dashboard .current-time-text {
-	margin: 0;
-}
-
-app-trainer-dashboard .right-schedule-header button,
-app-trainer-dashboard .calendar-controls button,
-app-trainer-dashboard .modal-close-btn,
-app-trainer-dashboard .btn-secondary-outline {
-	background: rgba(255, 255, 255, 0.48);
-	border: 1px solid rgba(124, 58, 237, 0.14);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
-	transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), background 220ms ease, box-shadow 220ms ease;
-}
-
-app-trainer-dashboard .right-schedule-header button:hover,
-app-trainer-dashboard .calendar-controls button:hover,
-app-trainer-dashboard .modal-close-btn:hover,
-app-trainer-dashboard .btn-secondary-outline:hover,
-app-trainer-dashboard .calendar-days div:hover:not(.active):not(.inactive),
-app-trainer-dashboard .schedule-item:hover,
-app-trainer-dashboard .exam-entry-card:hover {
-	transform: translateY(-2px);
-	background: rgba(255, 255, 255, 0.74);
-	box-shadow: 0 14px 30px rgba(124, 58, 237, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
-}
-
-app-trainer-dashboard .calendar-days div {
-	width: 36px;
-	height: 36px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 50%;
-	color: var(--td-muted);
-	font-size: 13px;
-	font-weight: 800;
-	cursor: pointer;
-	transition: background 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
-}
-
-app-trainer-dashboard .calendar-days div:hover:not(.active):not(.inactive) {
-	background: rgba(123,97,255,0.14);
-	color: #fff;
-	transform: translateY(-2px);
-	box-shadow: 0 8px 20px rgba(32,12,74,0.45);
-}
-
-app-trainer-dashboard .calendar-days div.active {
-	background: var(--td-primary) !important;
-	color: #ffffff !important;
-	box-shadow: 0 10px 26px rgba(91,46,180,0.48) !important;
-	transform: translateY(-2px);
-}
-
-app-trainer-dashboard .schedule-item {
-	border-radius: 20px;
-	transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 220ms ease;
-}
-
-app-trainer-dashboard .premium-exam-modal {
-	border-radius: 34px;
-}
-
-app-trainer-dashboard .exam-lobby-overlay,
-app-trainer-dashboard .modal-overlay {
-	background: rgba(38, 20, 61, 0.34);
-	backdrop-filter: blur(22px) saturate(145%);
-	-webkit-backdrop-filter: blur(22px) saturate(145%);
-}
-
-app-trainer-dashboard .premium-profile-card,
-app-trainer-dashboard .stat-card,
-app-trainer-dashboard .right-schedule-card,
-app-trainer-dashboard .current-time-display,
-app-trainer-dashboard .session-row,
-app-trainer-dashboard .no-data {
-	background:
-		linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.3)),
-		radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.72), transparent 38%),
-		linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(236, 72, 153, 0.12)) !important;
-	border: 1px solid rgba(255, 255, 255, 0.68) !important;
-	box-shadow:
-		0 22px 54px rgba(76, 29, 149, 0.18),
-		0 8px 20px rgba(124, 58, 237, 0.1),
-		inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
-	backdrop-filter: blur(34px) saturate(175%);
-	-webkit-backdrop-filter: blur(34px) saturate(175%);
-}
-
-app-trainer-dashboard .premium-profile-card::after,
-app-trainer-dashboard .stat-card::after,
-app-trainer-dashboard .right-schedule-card::after {
-	content: '';
-	position: absolute;
-	inset: 1px;
-	z-index: 0;
-	pointer-events: none;
-	border-radius: inherit;
-	background: linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 42%, rgba(168, 85, 247, 0.12));
-	opacity: 0.72;
-}
-
-app-trainer-dashboard .premium-profile-card,
-app-trainer-dashboard .stat-card,
-app-trainer-dashboard .right-schedule-card {
-	position: relative;
-	overflow: hidden;
-	transform: translateZ(0);
-	transition:
-		transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
-		box-shadow 320ms ease,
-		border-color 320ms ease,
-		background 320ms ease,
-		filter 320ms ease;
-}
-
-app-trainer-dashboard .premium-profile-card {
-	animation: trainerPanelIn 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-app-trainer-dashboard .stat-card {
-	animation: trainerPanelIn 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-app-trainer-dashboard .stat-card:nth-child(2) {
-	animation-delay: 70ms;
-}
-
-app-trainer-dashboard .stat-card:nth-child(3) {
-	animation-delay: 140ms;
-}
-
-app-trainer-dashboard .right-schedule-card {
-	animation: trainerPanelIn 560ms cubic-bezier(0.2, 0.8, 0.2, 1) 90ms both;
-}
-
-app-trainer-dashboard .premium-profile-card:hover,
-app-trainer-dashboard .stat-card:hover,
-app-trainer-dashboard .right-schedule-card:hover {
-	transform: translateY(-7px) scale(1.01);
-	border-color: rgba(196, 181, 253, 0.76) !important;
-	box-shadow:
-		0 34px 84px rgba(76, 29, 149, 0.26),
-		0 0 36px rgba(168, 85, 247, 0.16),
-		inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
-	filter: saturate(1.08);
-}
-
-app-trainer-dashboard .premium-profile-card:hover::after,
-app-trainer-dashboard .stat-card:hover::after,
-app-trainer-dashboard .right-schedule-card:hover::after {
-	opacity: 0.95;
-	background:
-		linear-gradient(120deg, rgba(255, 255, 255, 0.58), transparent 38%, rgba(168, 85, 247, 0.18)),
-		radial-gradient(circle at 76% 8%, rgba(255, 255, 255, 0.44), transparent 26%);
-}
-
-app-trainer-dashboard .premium-profile-card > *,
-app-trainer-dashboard .stat-card > *,
-app-trainer-dashboard .right-schedule-card > * {
-	position: relative;
-	z-index: 1;
-}
-
-app-trainer-dashboard .stat-card:hover .title,
-app-trainer-dashboard .stat-card:hover .value,
-app-trainer-dashboard .stat-card:hover .footer-info {
-	transform: translateY(-2px);
-}
-
-app-trainer-dashboard .stat-card .title,
-app-trainer-dashboard .stat-card .value,
-app-trainer-dashboard .stat-card .footer-info {
-	transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-app-trainer-dashboard .sidebar {
-	background:
-		linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.28)),
-		linear-gradient(180deg, rgba(124, 58, 237, 0.14), rgba(236, 72, 153, 0.08)) !important;
-	box-shadow:
-		0 24px 60px rgba(76, 29, 149, 0.18),
-		inset 0 1px 0 rgba(255, 255, 255, 0.74) !important;
-	animation: trainerPanelIn 520ms cubic-bezier(0.2, 0.8, 0.2, 1) 40ms both;
-}
-
-app-trainer-dashboard .sidebar-nav a {
-	display: grid;
-	grid-template-columns: 36px minmax(0, 1fr);
-	align-items: center;
-	min-height: 50px;
-	column-gap: 11px;
-	padding: 7px 10px 7px 8px;
-	position: relative;
-	isolation: isolate;
-}
-
-app-trainer-dashboard .sidebar-nav a::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	z-index: -1;
-	border-radius: inherit;
-	background: linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.26));
-	border: 1px solid rgba(255, 255, 255, 0.42);
-	opacity: 0;
-	transition: opacity 240ms ease, box-shadow 240ms ease;
-}
-
-app-trainer-dashboard .sidebar-nav a i {
-	width: 36px;
-	height: 36px;
-	border-radius: 15px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 15px;
-	line-height: 1;
-	transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), background 260ms ease, color 260ms ease, box-shadow 260ms ease;
-}
-
-app-trainer-dashboard .sidebar-nav a span {
-	min-width: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	line-height: 1.2;
-}
-
-app-trainer-dashboard .sidebar-nav a:hover {
-	transform: translateX(4px);
-}
-
-app-trainer-dashboard .sidebar-nav a:hover::before {
-	opacity: 1;
-	box-shadow: 0 14px 30px rgba(124, 58, 237, 0.13);
-}
-
-app-trainer-dashboard .sidebar-nav a:hover i {
-	transform: scale(1.06);
-	background: rgba(124, 58, 237, 0.16);
-	box-shadow: 0 10px 22px rgba(124, 58, 237, 0.14);
-}
-
-app-trainer-dashboard .sidebar-nav a.active {
-	background: linear-gradient(135deg, rgba(124, 58, 237, 0.96), rgba(168, 85, 247, 0.9), rgba(236, 72, 153, 0.78)) !important;
-	border-color: rgba(255, 255, 255, 0.46);
-	box-shadow:
-		0 16px 34px rgba(124, 58, 237, 0.34),
-		0 0 28px rgba(168, 85, 247, 0.32),
-		inset 0 1px 0 rgba(255, 255, 255, 0.38) !important;
-}
-
-app-trainer-dashboard .sidebar-nav a.active::before {
-	opacity: 1;
-	background:
-		radial-gradient(circle at 18% 50%, rgba(255, 255, 255, 0.34), transparent 34%),
-		linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent);
-	box-shadow: 0 0 34px rgba(168, 85, 247, 0.24);
-}
-
-app-trainer-dashboard .sidebar-nav a.active i {
-	color: #ffffff !important;
-	background: rgba(255, 255, 255, 0.2);
-	box-shadow: 0 0 22px rgba(255, 255, 255, 0.22);
-	transform: scale(1.04);
-}
-
-app-trainer-dashboard h1,
-app-trainer-dashboard h2,
-app-trainer-dashboard h3,
-app-trainer-dashboard h4,
-app-trainer-dashboard p {
-	margin-top: 0;
-	letter-spacing: 0;
-}
-
-app-trainer-dashboard .student-name-text {
-	font-size: clamp(2.15rem, 3.2vw, 3.35rem);
-	line-height: 1.02;
-	font-weight: 850;
-	color: #201033 !important;
-}
-
-app-trainer-dashboard .greeting-message {
-	max-width: 56ch;
-	font-size: clamp(0.98rem, 1vw, 1.08rem);
-	line-height: 1.62;
-	font-weight: 600;
-	color: rgba(55, 39, 78, 0.76) !important;
-}
-
-app-trainer-dashboard .status-badge {
-	font-size: 0.72rem;
-	line-height: 1;
-	font-weight: 800;
-	text-transform: uppercase;
-}
-
-app-trainer-dashboard .date-badge {
-	font-size: 0.85rem;
-	line-height: 1.25;
-	font-weight: 750;
-}
-
-app-trainer-dashboard .stat-card .title,
-app-trainer-dashboard .schedule-list h5,
-app-trainer-dashboard .calendar-weekdays {
-	font-size: 0.76rem;
-	line-height: 1.2;
-	font-weight: 800;
-	text-transform: uppercase;
-	color: rgba(73, 54, 101, 0.72);
-}
-
-app-trainer-dashboard .stat-card .value {
-	font-size: clamp(1.42rem, 1.7vw, 1.9rem);
-	line-height: 1.14;
-	font-weight: 850;
-	color: #201033;
-}
-
-app-trainer-dashboard .footer-info span,
-app-trainer-dashboard .no-schedule-message,
-app-trainer-dashboard .session-meta {
-	font-size: 0.84rem;
-	line-height: 1.45;
-	font-weight: 650;
-	color: rgba(81, 63, 108, 0.76);
-}
-
-app-trainer-dashboard .current-time-display::before {
-	font-size: 0.72rem;
-	line-height: 1.15;
-	font-weight: 800;
-	letter-spacing: 0;
-}
-
-app-trainer-dashboard .current-time-text {
-	font-size: clamp(1.35rem, 1.7vw, 1.7rem);
-	line-height: 1.1;
-	font-weight: 850;
-}
-
-app-trainer-dashboard .calendar-controls p {
-	font-size: 0.98rem;
-	line-height: 1.25;
-	font-weight: 850;
-}
-
-app-trainer-dashboard .calendar-days div {
-	font-size: 0.8rem;
-	line-height: 1;
-	font-weight: 750;
-}
-
-app-trainer-dashboard .session-modal-title,
-app-trainer-dashboard .modal-header h2 {
-	font-size: clamp(1.25rem, 1.8vw, 1.55rem);
-	line-height: 1.18;
-	font-weight: 850;
-	color: #201033;
-}
-
-app-trainer-dashboard .modal-header p {
-	font-size: 0.95rem;
-	line-height: 1.55;
-	font-weight: 600;
-	color: rgba(81, 63, 108, 0.78);
-}
-
-app-trainer-dashboard .session-name {
-	font-size: 0.98rem;
-	line-height: 1.3;
-	font-weight: 800;
-}
-
-app-trainer-dashboard button,
-app-trainer-dashboard .btn-request,
-app-trainer-dashboard .btn-submit,
-app-trainer-dashboard .btn-cancel,
-app-trainer-dashboard .session-start-btn {
-	font-size: 0.9rem;
-	line-height: 1;
-	font-weight: 800;
-}
+/* Light theme trainer dashboard styles removed to support new dark purple theme */
 
 @keyframes trainerAmbientDrift {
 	from {
 		transform: translate3d(-1.5%, -1%, 0) scale(1);
 	}
+
 	to {
 		transform: translate3d(1.5%, 1%, 0) scale(1.035);
 	}
@@ -852,6 +162,7 @@ app-trainer-dashboard .session-start-btn {
 		opacity: 0;
 		transform: translateY(14px) scale(0.985);
 	}
+
 	to {
 		opacity: 1;
 		transform: translateY(0) scale(1);
@@ -859,6 +170,7 @@ app-trainer-dashboard .session-start-btn {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
 	app-trainer-dashboard .container:not(.exam-active-mode)::after,
 	app-trainer-dashboard .premium-profile-card,
 	app-trainer-dashboard .stat-card,
@@ -942,6 +254,7 @@ app-trainer-dashboard .session-start-btn {
 
 /* If OS/browser is in dark mode, still render our app in light mode */
 @media (prefers-color-scheme: dark) {
+
 	html,
 	body,
 	app-root,
@@ -966,21 +279,18 @@ app-student-dashboard,
 app-trainer-dashboard {
 	display: block;
 	min-height: 100vh;
-	background:
-		radial-gradient(circle at 12% 8%, rgba(124, 92, 255, 0.26), transparent 30%),
-		radial-gradient(circle at 82% 16%, rgba(167, 139, 250, 0.2), transparent 28%),
-		linear-gradient(135deg, #0F0C29 0%, #1B1333 48%, #2A1E5C 100%) !important;
-	color: #FFFFFF;
-	--dashboard-bg-1: #0F0C29;
-	--dashboard-bg-2: #1B1333;
-	--dashboard-bg-3: #2A1E5C;
+	background: #ffffff !important;
+	color: #120C24;
+	--dashboard-bg-1: #120C24;
+	--dashboard-bg-2: #1A1333;
+	--dashboard-bg-3: #ffffff;
 	--dashboard-primary: #7C5CFF;
-	--dashboard-secondary: #A78BFA;
-	--dashboard-card: rgba(255, 255, 255, 0.05);
-	--dashboard-border: rgba(255, 255, 255, 0.08);
-	--dashboard-text: #FFFFFF;
-	--dashboard-muted: #B9B9D3;
-	--dashboard-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+	--dashboard-secondary: #C2B6FF;
+	--dashboard-card: #4B3F8F;
+	--dashboard-border: rgba(255, 255, 255, 0.1);
+	--dashboard-text: #120C24;
+	--dashboard-muted: rgba(255, 255, 255, 0.7);
+	--dashboard-shadow: 0 10px 30px rgba(124, 92, 255, 0.2);
 }
 
 app-student-dashboard .container:not(.exam-active-mode),
@@ -990,11 +300,8 @@ app-trainer-dashboard .container:not(.exam-active-mode) {
 	min-height: 100vh;
 	margin: 0 !important;
 	padding: 0 !important;
-	background:
-		radial-gradient(circle at 8% 12%, rgba(124, 92, 255, 0.22), transparent 30%),
-		radial-gradient(circle at 92% 78%, rgba(167, 139, 250, 0.14), transparent 32%),
-		linear-gradient(135deg, #0F0C29 0%, #1B1333 48%, #2A1E5C 100%) !important;
-	color: var(--dashboard-text) !important;
+	background: #ffffff !important;
+	color: #120C24 !important;
 	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -1011,12 +318,12 @@ app-trainer-dashboard header {
 	height: 76px !important;
 	border-radius: 0 !important;
 	padding: 0 30px !important;
-	background: rgba(15, 12, 41, 0.78) !important;
+	background: #120c24 !important;
 	border: 0 !important;
-	border-bottom: 1px solid var(--dashboard-border) !important;
-	box-shadow: 0 10px 32px rgba(0, 0, 0, 0.22) !important;
-	backdrop-filter: blur(10px) saturate(150%) !important;
-	-webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
 }
 
 app-student-dashboard .dashboard-grid,
@@ -1040,7 +347,7 @@ app-trainer-dashboard .main-content {
 app-student-dashboard .institute-logo,
 app-trainer-dashboard .institute-logo {
 	background: rgba(255, 255, 255, 0.08) !important;
-	border: 1px solid rgba(167, 139, 250, 0.34) !important;
+	border: 1px solid rgba(194, 182, 255, 0.34) !important;
 	box-shadow: 0 0 22px rgba(124, 92, 255, 0.24) !important;
 }
 
@@ -1071,10 +378,10 @@ app-trainer-dashboard .btn-primary-gradient,
 app-student-dashboard .btn-submit,
 app-trainer-dashboard .btn-submit {
 	color: #FFFFFF !important;
-	background: linear-gradient(135deg, #7C5CFF, #A78BFA) !important;
+	background: #6C63A8 !important;
 	border: 0 !important;
 	border-radius: 14px !important;
-	box-shadow: 0 10px 26px rgba(124, 92, 255, 0.34) !important;
+	box-shadow: 0 10px 20px rgba(124, 92, 255, 0.3) !important;
 	transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease !important;
 }
 
@@ -1085,7 +392,7 @@ app-trainer-dashboard .btn-primary-gradient:hover:not(:disabled),
 app-student-dashboard .btn-submit:hover,
 app-trainer-dashboard .btn-submit:hover {
 	transform: translateY(-2px) scale(1.03) !important;
-	box-shadow: 0 0 26px rgba(167, 139, 250, 0.48), 0 12px 30px rgba(0, 0, 0, 0.28) !important;
+	box-shadow: 0 0 26px rgba(194, 182, 255, 0.48), 0 12px 30px rgba(0, 0, 0, 0.28) !important;
 	filter: saturate(1.08);
 }
 
@@ -1138,7 +445,7 @@ app-trainer-dashboard .sidebar-nav a i {
 	align-items: center !important;
 	justify-content: center !important;
 	color: rgba(255, 255, 255, 0.9) !important;
-	background: rgba(167, 139, 250, 0.13) !important;
+	background: rgba(194, 182, 255, 0.13) !important;
 	box-shadow: none !important;
 }
 
@@ -1147,16 +454,16 @@ app-trainer-dashboard .sidebar-nav a:hover {
 	transform: translateY(-2px) !important;
 	color: #FFFFFF !important;
 	background: rgba(255, 255, 255, 0.06) !important;
-	border-color: rgba(167, 139, 250, 0.18) !important;
-	box-shadow: 0 0 18px rgba(167, 139, 250, 0.16) !important;
+	border-color: rgba(194, 182, 255, 0.18) !important;
+	box-shadow: 0 0 18px rgba(194, 182, 255, 0.16) !important;
 }
 
 app-student-dashboard .sidebar-nav a.active,
 app-trainer-dashboard .sidebar-nav a.active {
 	color: #FFFFFF !important;
-	background: linear-gradient(135deg, rgba(124, 92, 255, 0.96), rgba(167, 139, 250, 0.72)) !important;
-	border-color: rgba(255, 255, 255, 0.16) !important;
-	box-shadow: 0 0 24px rgba(124, 92, 255, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+	background: #7C5CFF !important;
+	border-color: rgba(255, 255, 255, 0.1) !important;
+	box-shadow: 0 4px 15px rgba(124, 92, 255, 0.4) !important;
 }
 
 app-student-dashboard .sidebar-nav a.active i,
@@ -1211,7 +518,7 @@ app-trainer-dashboard .right-schedule-card::after {
 	inset: 0;
 	pointer-events: none;
 	border-radius: inherit;
-	background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 46%, rgba(167, 139, 250, 0.08));
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 46%, rgba(194, 182, 255, 0.08));
 	opacity: 0.8;
 }
 
@@ -1222,16 +529,16 @@ app-trainer-dashboard .stat-card:hover,
 app-student-dashboard .right-schedule-card:hover,
 app-trainer-dashboard .right-schedule-card:hover {
 	transform: translateY(-5px) !important;
-	border-color: rgba(167, 139, 250, 0.28) !important;
+	border-color: rgba(194, 182, 255, 0.28) !important;
 	box-shadow: 0 0 28px rgba(124, 92, 255, 0.22), 0 12px 32px rgba(0, 0, 0, 0.34) !important;
 }
 
-app-student-dashboard .premium-profile-card > *,
-app-trainer-dashboard .premium-profile-card > *,
-app-student-dashboard .stat-card > *,
-app-trainer-dashboard .stat-card > *,
-app-student-dashboard .right-schedule-card > *,
-app-trainer-dashboard .right-schedule-card > * {
+app-student-dashboard .premium-profile-card>*,
+app-trainer-dashboard .premium-profile-card>*,
+app-student-dashboard .stat-card>*,
+app-trainer-dashboard .stat-card>*,
+app-student-dashboard .right-schedule-card>*,
+app-trainer-dashboard .right-schedule-card>* {
 	position: relative;
 	z-index: 1;
 }
@@ -1271,8 +578,8 @@ app-student-dashboard .profile-initial-text,
 app-trainer-dashboard .profile-initial-text,
 app-student-dashboard .student-name-text,
 app-trainer-dashboard .student-name-text {
-	color: #FFFFFF !important;
-	text-shadow: 0 2px 18px rgba(0, 0, 0, 0.34) !important;
+	color: #ffffff !important;
+	text-shadow: none !important;
 }
 
 app-student-dashboard .student-name-text,
@@ -1286,11 +593,9 @@ app-student-dashboard .status-badge,
 app-trainer-dashboard .status-badge,
 app-student-dashboard .date-badge,
 app-trainer-dashboard .date-badge {
-	background: rgba(255, 255, 255, 0.07) !important;
-	border: 1px solid rgba(255, 255, 255, 0.1) !important;
-	color: var(--dashboard-secondary) !important;
-	backdrop-filter: blur(10px) !important;
-	-webkit-backdrop-filter: blur(10px) !important;
+	background: rgba(255, 255, 255, 0.2) !important;
+	border: 1px solid rgba(255, 255, 255, 0.3) !important;
+	color: #ffffff !important;
 }
 
 app-student-dashboard .greeting-message,
@@ -1373,7 +678,7 @@ app-trainer-dashboard .header-titles h3 {
 
 app-student-dashboard .stat-card .value,
 app-trainer-dashboard .stat-card .value {
-	color: rgba(255, 255, 255, 0.92) !important;
+	color: #ffffff !important;
 	font-weight: 850 !important;
 }
 
@@ -1385,7 +690,7 @@ app-trainer-dashboard .stat-card .footer-info {
 app-student-dashboard .stat-card .footer-info i,
 app-trainer-dashboard .stat-card .footer-info i {
 	color: var(--dashboard-secondary) !important;
-	background: rgba(167, 139, 250, 0.12) !important;
+	background: rgba(194, 182, 255, 0.12) !important;
 	box-shadow: 0 0 18px rgba(124, 92, 255, 0.12) !important;
 }
 
@@ -1397,11 +702,12 @@ app-trainer-dashboard .right-schedule-card {
 
 app-student-dashboard .current-time-display,
 app-trainer-dashboard .current-time-display {
-	background: linear-gradient(135deg, rgba(124, 92, 255, 0.88), rgba(167, 139, 250, 0.62)) !important;
+	background: #7C5CFF !important;
 	border-radius: 16px !important;
 	padding: 16px !important;
 	margin-bottom: 18px !important;
 	text-align: center !important;
+	color: #ffffff !important;
 }
 
 app-student-dashboard .current-time-text,
@@ -1433,8 +739,8 @@ app-student-dashboard .modal-close-btn:hover,
 app-trainer-dashboard .modal-close-btn:hover,
 app-student-dashboard .btn-secondary-outline:hover,
 app-trainer-dashboard .btn-secondary-outline:hover {
-	background: rgba(167, 139, 250, 0.16) !important;
-	box-shadow: 0 0 18px rgba(167, 139, 250, 0.18) !important;
+	background: rgba(194, 182, 255, 0.16) !important;
+	box-shadow: 0 0 18px rgba(194, 182, 255, 0.18) !important;
 }
 
 app-student-dashboard .calendar-days,
@@ -1461,8 +767,8 @@ app-student-dashboard .calendar-days div:hover:not(.active):not(.inactive),
 app-trainer-dashboard .calendar-days div:hover:not(.active):not(.inactive) {
 	transform: translateY(-2px) !important;
 	color: #FFFFFF !important;
-	background: rgba(167, 139, 250, 0.14) !important;
-	box-shadow: 0 0 18px rgba(167, 139, 250, 0.16) !important;
+	background: rgba(194, 182, 255, 0.14) !important;
+	box-shadow: 0 0 18px rgba(194, 182, 255, 0.16) !important;
 }
 
 app-student-dashboard .calendar-days div.active,
@@ -1519,6 +825,7 @@ app-trainer-dashboard .premium-modal p {
 }
 
 @media (min-width: 901px) and (max-width: 1200px) {
+
 	app-student-dashboard .dashboard-grid,
 	app-trainer-dashboard .dashboard-grid {
 		grid-template-columns: 112px minmax(0, 1fr) 286px !important;
@@ -1563,6 +870,7 @@ app-trainer-dashboard .premium-modal p {
 }
 
 @media (max-width: 900px) {
+
 	app-student-dashboard .dashboard-grid,
 	app-trainer-dashboard .dashboard-grid {
 		grid-template-columns: 122px minmax(0, 1fr) !important;
@@ -1575,6 +883,7 @@ app-trainer-dashboard .premium-modal p {
 }
 
 @media (max-width: 768px) {
+
 	app-student-dashboard .container:not(.exam-active-mode),
 	app-trainer-dashboard .container:not(.exam-active-mode) {
 		padding-bottom: 92px !important;
@@ -1656,4 +965,3 @@ app-trainer-dashboard .premium-modal p {
 		grid-template-columns: 1fr !important;
 	}
 }
-
