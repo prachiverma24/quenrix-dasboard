@@ -1,0 +1,86 @@
+<div class="quenrix-bento-contact">
+  <div class="bento-contact-grid">
+    
+    <!-- Left side Bento Grid for Information -->
+    <div class="bento-info-panel">
+      <div class="bento-info-header">
+        <h1 class="accent-title">Creative Collaboration.</h1>
+        <p class="accent-subtitle">We build elegant software solutions tailored for the modern enterprise ecosystem.</p>
+      </div>
+
+      <div class="bento-metrics-grid">
+        <div class="bento-tile map-tile">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.827222365267!2d78.44541231487676!3d17.43631598804933!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb90ca3650204b%3A0x629197022026131!2sAmeerpet%20Metro%20Station!5e0!3m2!1sen!2sin"
+            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+          <div class="map-overlay">
+            <h4>Global Headquarters</h4>
+            <p>Ameerpet, Hyderabad</p>
+          </div>
+        </div>
+
+        <div class="bento-tile contact-tile tile-email">
+          <div class="tile-icon">??</div>
+          <h4>Email Us</h4>
+          <p>quenrix46@gmail.com</p>
+          <a class="tile-link" href="mailto:quenrix46@gmail.com">Write Message ?</a>
+        </div>
+
+        <div class="bento-tile contact-tile tile-phone">
+          <div class="tile-icon">??</div>
+          <h4>Call Us</h4>
+          <p>+91 93920 96698</p>
+          <a class="tile-link" href="tel:+919392096698">Dial Now ?</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side Bento Form -->
+    <div class="bento-form-panel">
+      <div class="bento-form-card">
+        <div class="form-title-wrap">
+          <h2>Initiate Contact</h2>
+          <p>Fill out the form below and our professional team will assist you shortly.</p>
+        </div>
+
+        <form (ngSubmit)="submitContact()" class="professional-form">
+          <div class="form-row split-row">
+            <div class="form-group">
+              <label for="c-name">Full Name</label>
+              <input type="text" [(ngModel)]="contactForm.name" name="name" required id="c-name" class="bento-input" placeholder="e.g. John Doe">
+            </div>
+            <div class="form-group">
+              <label for="c-email">Email Address</label>
+              <input type="email" [(ngModel)]="contactForm.email" name="email" required id="c-email" class="bento-input" placeholder="john@example.com">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="c-subj">Subject</label>
+              <input type="text" [(ngModel)]="contactForm.subject" name="subject" required id="c-subj" class="bento-input" placeholder="How can we help?">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="c-msg">Message</label>
+              <textarea [(ngModel)]="contactForm.message" name="message" required id="c-msg" class="bento-textarea" rows="5" placeholder="Elaborate on your inquiry..."></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="bento-submit-btn" [disabled]="isSubmitting">
+            <span *ngIf="!isSubmitting">Transmit Protocol</span>
+            <span *ngIf="isSubmitting" class="loading-state">
+              <div class="spin-ring"></div> Processing...
+            </span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+

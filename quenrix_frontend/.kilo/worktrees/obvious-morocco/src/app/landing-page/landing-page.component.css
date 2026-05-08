@@ -1,0 +1,37 @@
+/* Importing Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;600;700&display=swap');
+
+.landing-page {
+  /* Changed background to plain white */
+  background-color: #ffffff;
+  
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif; 
+  position: relative;
+  overflow-x: hidden;
+}
+
+.landing-page > * {
+  max-width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .fade-in-view {
+    animation-duration: 0.35s;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-page {
+    width: 100%;
+  }
+}
+
+.fade-in-view {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

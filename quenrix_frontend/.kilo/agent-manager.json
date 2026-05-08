@@ -1,0 +1,45 @@
+{
+  "worktrees": {
+    "wt-1777052383052-1": {
+      "branch": "childish-basement",
+      "path": "c:\\Users\\nagma\\OneDrive\\Desktop\\nashan\\quenrix_frontend\\.kilo\\worktrees\\childish-basement",
+      "parentBranch": "nagma-branch",
+      "createdAt": "2026-04-24T17:39:43.052Z",
+      "remote": "origin"
+    },
+    "wt-1777470034050-1": {
+      "branch": "prairie-key",
+      "path": "c:\\Users\\nagma\\OneDrive\\Desktop\\nashan\\quenrix_frontend\\.kilo\\worktrees\\prairie-key",
+      "parentBranch": "main",
+      "createdAt": "2026-04-29T13:40:34.050Z",
+      "remote": "origin"
+    },
+    "wt-1777519649883-2": {
+      "branch": "obvious-morocco",
+      "path": "c:\\Users\\nagma\\OneDrive\\Desktop\\nashan\\quenrix_frontend\\.kilo\\worktrees\\obvious-morocco",
+      "parentBranch": "main",
+      "createdAt": "2026-04-30T03:27:29.883Z",
+      "remote": "origin"
+    }
+  },
+  "sessions": {
+    "ses_22687add0ffek0MxFQu063Pxr9": {
+      "worktreeId": "wt-1777470034050-1",
+      "createdAt": "2026-04-29T13:40:36.209Z"
+    },
+    "ses_2239299abffe5Ao8lTNEvlMnVb": {
+      "worktreeId": "wt-1777519649883-2",
+      "createdAt": "2026-04-30T03:27:32.328Z"
+    }
+  },
+  "tabOrder": {
+    "local": [
+      "pending:1"
+    ]
+  },
+  "worktreeOrder": [
+    "wt-1777052383052-1",
+    "wt-1777470034050-1",
+    "wt-1777519649883-2"
+  ]
+}

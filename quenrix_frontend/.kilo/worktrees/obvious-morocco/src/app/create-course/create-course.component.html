@@ -1,0 +1,103 @@
+<!-- Using a wrapper to center properly if needed by :host -->
+<div class="form-card">
+
+    <!-- Back Button -->
+    <button (click)="goBack()" class="back-button" title="Go Back">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M11.03 3.25l-7.75 7.75a.75.75 0 000 1.06l7.75 7.75a.75.75 0 101.06-1.06l-6.47-6.47h13.13a.75.75 0 000-1.5H5.62l6.47-6.47a.75.75 0 00-1.06-1.06z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <!-- Header -->
+    <div class="header-section">
+        <h2>{{ isEditMode ? 'Update Course' : 'Create New Course' }}</h2>
+        <p>{{ isEditMode ? 'Edit the fields below and save your changes.' : 'Enter details to create a new learning track.' }}</p>
+    </div>
+
+    <!-- Form Area -->
+    <form #courseForm="ngForm" (ngSubmit)="onSubmit(courseForm)">
+
+        <!-- Course Name -->
+        <div class="form-group">
+            <label for="courseName" class="input-label">Course Name</label>
+            <input
+                id="courseName"
+                name="courseName"
+                type="text"
+                required
+                minlength="2" 
+                [(ngModel)]="courseData.courseName"
+                #courseName="ngModel"
+                class="input-field"
+                placeholder="e.g. Java, Robotics with ROS"
+            />
+            <div *ngIf="courseName.invalid && (courseName.dirty || courseName.touched)" class="error-message">
+                <span *ngIf="courseName.errors?.['required']">Course Name is required.</span>
+                <span *ngIf="courseName.errors?.['minlength']">Name must be at least 2 characters long.</span>
+            </div>
+        </div>
+
+        <!-- Content URL -->
+        <div class="form-group">
+            <label for="contentUrl" class="input-label">Content URL</label>
+            <input
+                id="contentUrl"
+                name="contentUrl"
+                type="url"
+                required
+                pattern="https?://.+"
+                [(ngModel)]="courseData.contentUrl"
+                #contentUrl="ngModel"
+                class="input-field"
+                placeholder="e.g. https://example.com/materials"
+            />
+            <div *ngIf="contentUrl.invalid && (contentUrl.dirty || contentUrl.touched)" class="error-message">
+                <span *ngIf="contentUrl.errors?.['required']">Content URL is required.</span>
+                <span *ngIf="contentUrl.errors?.['pattern']">Please enter a valid URL (https://...).</span>
+            </div>
+        </div>
+
+        <!-- Subjects -->
+        <div class="form-group">
+            <label for="subjectsInput" class="input-label">Subjects</label>
+            <textarea
+                id="subjectsInput"
+                name="subjectsInput"
+                rows="3"
+                required
+                [(ngModel)]="courseData.subjectsInput"
+                #subjectsInput="ngModel"
+                class="input-field textarea-field"
+                placeholder="e.g. Golang, Python; AI/ML"
+            ></textarea>
+            <div *ngIf="subjectsInput.invalid && (subjectsInput.dirty || subjectsInput.touched)" class="error-message">
+                Subject list is required.
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="submit-button-container">
+            <!-- Cancel Button (Only in Edit Mode) -->
+            <button
+                *ngIf="isEditMode"
+                type="button"
+                (click)="resetFormState(courseForm)"
+                class="submit-button secondary"
+                [disabled]="isSubmitting"
+            >
+                Cancel
+            </button>
+
+            <!-- Main Submit Button -->
+            <button
+                type="submit"
+                [disabled]="courseForm.invalid || isSubmitting"
+                class="submit-button"
+            >
+                <span *ngIf="isSubmitting" class="spinner"></span>
+                <span>{{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Course' : 'Create Course') }}</span>
+            </button>
+        </div>
+
+    </form>
+</div>

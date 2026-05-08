@@ -1,0 +1,97 @@
+<div class="bento-portal-wrapper">
+  <!-- Top Header / Hero -->
+  <header class="bento-header">
+    <div class="header-content">
+      <div class="badge-pill">Knowledge Repository</div>
+      <h1 class="header-title">Dynamic Knowledge Portal</h1>
+      <p class="header-subtitle">Explore a live-updating repository of course materials, documents, and learning resources powered by real-time data.</p>
+    </div>
+    
+    <div class="search-module">
+      <div class="search-bar">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="search-icon"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+        <input 
+          type="text" 
+          placeholder="Search documents, topics, keywords..." 
+          [ngModel]="searchTerm" 
+          (ngModelChange)="onSearchChange($event)"
+        >
+      </div>
+    </div>
+  </header>
+
+  <!-- Bento Grid Main Content -->
+  <main class="bento-container">
+    <!-- Side stats in a bento layout -->
+    <aside class="bento-sidebar">
+      <div class="bento-box stat-box-primary">
+        <div class="bento-icon">KB</div>
+        <div class="bento-stat-val">{{ allDocuments.length }}</div>
+        <p class="bento-stat-label">Total Documents</p>
+      </div>
+      <div class="bento-box stat-box-secondary">
+        <h3>Stay Updated</h3>
+        <p>We systematically sync new syllabus and notes to empower your coursework.</p>
+      </div>
+    </aside>
+
+    <!-- Documents Grid -->
+    <section class="bento-grid-feed">
+      
+      <div class="status-box" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Syncing Documents...</p>
+      </div>
+
+      <div class="status-box empty" *ngIf="!isLoading && filteredDocuments.length === 0">
+        <h3>No Documents Found</h3>
+        <p>Please adjust your search filters.</p>
+      </div>
+
+      <div class="bento-cards-layout" *ngIf="!isLoading && filteredDocuments.length > 0">
+        <!-- Document Card -->
+        <article class="bento-card" *ngFor="let doc of filteredDocuments">
+          <div class="card-top">
+            <span class="tag-date">{{ doc.uploadDate }}</span>
+            <button class="circle-btn" (click)="downloadPdf(doc)" title="Download">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+            </button>
+          </div>
+          
+          <div class="card-mid">
+            <h2 class="doc-title">{{ doc.title }}</h2>
+            <p class="doc-desc">{{ doc.description }}</p>
+          </div>
+
+          <div class="card-bot">
+            <button class="bento-action-btn" (click)="viewPdf(doc)">
+              Read Document
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="pdf-modal-overlay" *ngIf="isPreviewOpen" (click)="closePreviewModal()">
+  <div class="pdf-modal-content" (click)="$event.stopPropagation()">
+    <div class="pdf-header">
+      <h3>{{ previewTitle }}</h3>
+      <button class="close-pdf-btn" (click)="closePreviewModal()">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+    </div>
+    <div class="pdf-body">
+      <iframe [src]="previewUrl" class="pdf-frame" frameborder="0"></iframe>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+

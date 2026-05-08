@@ -1,0 +1,115 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="course-management-view">
+    
+    <!-- Header -->
+    <div class="header-section">
+        <div class="title-group">
+            <h2>Course Catalog</h2>
+            <p>Create, update, and manage course curriculum and details.</p>
+        </div>
+    </div>
+
+    <!-- Controls & Actions -->
+    <div class="controls-row">
+        <!-- Spacer for Layout Balance -->
+        <div class="search-placeholder"></div>
+        
+        <div class="action-group-right">
+            <button class="btn-create" (click)="navigateToCreateCourse()">
+                <i class="fas fa-plus"></i>
+                Create New Course
+            </button>
+            
+            <button class="btn-refresh" (click)="fetchCourses()" title="Sync Courses">
+                <i class="fas fa-sync-alt" [class.fa-spin]="isLoadingCourses()"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Feedback Message -->
+    <div *ngIf="courseMessage()" class="toast-msg" [class.success]="!courseMessage()?.isError" [class.error]="courseMessage()?.isError">
+        <i class="fas" [class.fa-check-circle]="!courseMessage()?.isError" [class.fa-exclamation-triangle]="courseMessage()?.isError"></i>
+        <span>{{ courseMessage()?.text }}</span>
+    </div>
+    
+    <!-- Course Grid -->
+    <div class="course-grid">
+        
+        <!-- Loading State -->
+        <div *ngIf="isLoadingCourses()" class="state-container">
+            <i class="fas fa-circle-notch fa-spin"></i>
+            <p>Loading course data...</p>
+        </div>
+        
+        <!-- Empty State -->
+        <div *ngIf="!isLoadingCourses() && filteredCourses.length === 0" class="state-container">
+            <i class="far fa-folder-open"></i>
+            <p>No courses found matching criteria.</p>
+        </div>
+
+        <!-- Course Cards -->
+        <ng-container *ngIf="!isLoadingCourses() && filteredCourses.length > 0">
+            <div *ngFor="let course of filteredCourses" class="course-card">
+                <div class="card-stripe"></div>
+                
+                <div class="card-content">
+                    <div class="course-header">
+                        <div class="course-info">
+                            <h3>{{ course.courseName }}</h3>
+                            <span class="course-id-badge">ID: {{ course.courseId }}</span>
+                        </div>
+                        <div class="icon-wrapper">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="course-meta">
+                        <div class="meta-item">
+                            <div class="meta-label"><i class="fas fa-link"></i> Content URL</div>
+                            <div class="meta-value">
+                                <a [href]="course.contentUrl" target="_blank" class="url-link">
+                                    {{ course.contentUrl ? (course.contentUrl | slice:0:35) + (course.contentUrl.length > 35 ? '...' : '') : 'No Link Provided' }}
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="meta-item">
+                            <div class="meta-label"><i class="fas fa-layer-group"></i> Subjects</div>
+                            <div class="meta-value subject-tags">
+                                {{ getSubjectsDisplay(course) || 'No subjects assigned' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <button (click)="navigateToEditCourse(course.courseId)" class="btn-action btn-edit">
+                        <i class="far fa-edit"></i> Edit
+                    </button>
+                    <button (click)="showConfirmation(course.courseId, course.courseName)" class="btn-action btn-delete">
+                        <i class="far fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+        
+<!-- Modern Modal -->
+<div *ngIf="isModalOpen()" class="custom-modal-backdrop" (click)="closeModal()">
+    <div class="custom-modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h4>Confirm Deletion</h4>
+        </div>
+        <div class="modal-body">
+            <p>{{ modalData()?.message }}</p>
+            <div class="modal-buttons">
+                <button (click)="closeModal()" class="btn-modal btn-cancel">Cancel</button>
+                <button (click)="confirmAction()" class="btn-modal btn-confirm-delete">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

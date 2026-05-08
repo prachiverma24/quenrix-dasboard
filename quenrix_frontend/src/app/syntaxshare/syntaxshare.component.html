@@ -1,0 +1,131 @@
+<div class="community-wrapper">
+  
+  <!-- MINIMALIST HEADER -->
+  <header class="community-header">
+    <div class="header-titles">
+      <h2>Syntax Share</h2>
+      <p>Connect with experts and resolve coding doubts live.</p>
+      <div class="header-meta-row">
+        <span class="meta-chip"><i class="fas fa-users"></i> Community Help Desk</span>
+        <span class="meta-chip soft"><i class="fas fa-bolt"></i> Live Peer Responses</span>
+      </div>
+    </div>
+    <button class="refresh-action" (click)="loadData(false)" [disabled]="refreshing">
+      <i class="fas fa-sync-alt" [class.fa-spin]="refreshing"></i>
+      <span>{{ refreshing ? 'Syncing...' : 'Sync Feed' }}</span>
+    </button>
+  </header>
+
+  <!-- PREMIUM POST CREATOR -->
+  <div class="post-creator-box">
+    <div class="creator-header">
+       <div class="user-avatar-small">{{ getInitials(currentUserName) }}</div>
+       <span class="creator-greeting">Hello, <strong>{{ currentUserName }}</strong>. Share your doubt:</span>
+    </div>
+    
+    <div class="creator-body">
+      <div class="input-grid">
+        <select [(ngModel)]="selectedSubjectId" class="minimal-select">
+          <option [ngValue]="null" disabled>Select Topic</option>
+          <option *ngFor="let sub of subjects" [value]="sub.id">{{ sub.name }}</option>
+        </select>
+        
+        <input type="text" [(ngModel)]="newDoubtText" 
+               class="minimal-input"
+               placeholder="Briefly describe your logic error or bug..." 
+               (keyup.enter)="postDoubt()">
+      </div>
+      
+      <div class="post-footer">
+          <span class="char-hint"><i class="far fa-lightbulb"></i> Avoid sharing private API keys</span>
+          <button class="btn-primary-sm" (click)="postDoubt()" [disabled]="!newDoubtText.trim() || !selectedSubjectId">
+            Post to Feed
+          </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING STATE -->
+  <div *ngIf="loading" class="modern-loader">
+    <i class="fas fa-circle-notch fa-spin"></i>
+    <p>Refreshing community insights...</p>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div *ngIf="!loading && doubts.length === 0" class="empty-state-card">
+    <div class="empty-icon"><i class="far fa-comments"></i></div>
+    <h3>No discussions yet</h3>
+    <p>Be the first one to post a doubt and start the learning conversation.</p>
+  </div>
+
+  <!-- DOUBTS FEED -->
+  <div *ngIf="!loading" class="feed-container">
+    
+    <div *ngFor="let doubt of doubts; trackBy: trackByDoubt; let i = index" class="doubt-card">
+      
+      <!-- Card Header -->
+      <div class="card-header">
+        <div class="author-info">
+          <div class="user-avatar-small">{{ getInitials(doubt.userid?.username) }}</div>
+          <div>
+            <div class="author-name">{{ doubt.userid?.username || 'Member' }}</div>
+            <div class="post-date">{{ doubt.created_at | date:'MMM d, h:mm a' }}</div>
+          </div>
+        </div>
+        <span class="subject-tag">{{ doubt.subjectid?.subjectname || 'General' }}</span>
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body">
+        <p class="question-text">{{ doubt.doubttext }}</p>
+      </div>
+
+      <!-- Solutions Area -->
+      <div class="solutions-wrapper" *ngIf="doubt.solutions && doubt.solutions.length > 0">
+          <span class="sol-count">{{ doubt.solutions.length }} {{ doubt.solutions.length === 1 ? 'REPLY' : 'REPLIES' }}</span>
+          
+          <div *ngFor="let sol of doubt.solutions" class="solution-item">
+              <div class="sol-avatar">
+                  {{ getInitials(sol.userid?.username) }}
+              </div>
+              <div class="sol-bubble">
+                  <div style="font-weight: 700; font-size: 12px; margin-bottom: 4px; color: #1e293b;">
+                    {{ sol.userid?.username || 'Expert' }}
+                  </div>
+                  {{ sol.solution }}
+              </div>
+          </div>
+      </div>
+
+      <!-- Card Actions -->
+      <div class="reply-trigger-bar">
+        <button class="btn-ghost" (click)="toggleReply(doubt)">
+          <i class="far" [ngClass]="doubt.showReply ? 'fa-times-circle' : 'fa-comment-dots'"></i> 
+          <span>{{ doubt.showReply ? 'Cancel' : 'Contribute Solution' }}</span>
+        </button>
+      </div>
+
+      <!-- Reply Box -->
+      <div *ngIf="doubt.showReply" class="premium-reply-area">
+        <div class="reply-input-wrapper">
+            <textarea [(ngModel)]="doubt.tempReply" 
+                      class="reply-textarea"
+                      placeholder="Write your explanation or code fix..." 
+                      (keydown.control.enter)="postSolution(doubt)"></textarea>
+            
+            <div class="reply-actions">
+                <span class="char-hint" style="font-size: 11px;">Press <b>Ctrl + Enter</b> to send</span>
+                <button class="btn-resolve" (click)="postSolution(doubt)" [disabled]="!doubt.tempReply?.trim()">
+                    Post Solution
+                </button>
+            </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="text-align: center; padding: 40px; color: #94a3b8; font-size: 13px;" *ngIf="!loading && doubts.length > 0">
+      <i class="fas fa-check-double"></i> You have viewed all current discussions.
+  </div>
+</div>

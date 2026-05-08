@@ -1,0 +1,274 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="container" [class.dark-mode]="darkModeActive()">
+    <!-- Header -->
+    <header class="seamless-header">
+        <div class="logo-search">
+            <div class="logo">
+                <img src="assets/logo.webp" alt="Institute Logo" class="institute-logo" title="Institute Logo">
+            </div>
+            <div class="search-wrapper modern-search">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="search" 
+                    [placeholder]="activeTab() === 'users' ? 'Search Users...' : activeTab() === 'courses' ? 'Search Courses...' : 'Search...'"
+                    [value]="headerSearchQuery()"
+                    (input)="onHeaderSearch($event)"
+                />
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-profile-pill" title="{{ config.ADMIN_DETAILS.name }}">
+                <div class="user-avatar">
+                    <img [src]="config.ADMIN_DETAILS.profileUrl" alt="Admin">
+                </div>
+                <span class="user-name">{{ config.ADMIN_DETAILS.name }}</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar seamless-sidebar">
+        <nav class="sidebar-nav">
+            <a *ngFor="let link of config.SIDEBAR_LINKS"
+               class="nav-item"
+               [class.active]="activeTab() === link.id" 
+               (click)="navigateTo(link.route, link.id)" 
+               [title]="link.label">
+                <div class="icon-box">
+                    <i [class]="link.icon"></i>
+                </div>
+                <span class="nav-label">{{ link.label }}</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-bottom">
+            <button class="logout-btn-icon" (click)="logoutUser()" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="nav-label">Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Dashboard View -->
+        <div *ngIf="activeTab() === 'dashboard'" class="fade-in">
+            <div class="main-content-header">
+                <h1>Dashboard Overview</h1>
+                <p>Welcome back, {{ config.ADMIN_DETAILS.name }}</p>
+            </div>
+            
+            <div class="card-grid">
+                <div *ngFor="let card of config.ADMIN_CARDS" 
+                    class="card" 
+                    tabindex="0" 
+                    (click)="navigateTo(card.route, card.targetTab)">
+                    
+                    <div class="card-image-wrapper">
+                        <img [src]="'assets/' + card.iconImage" [alt]="card.title" 
+                             onerror="this.src='https://placehold.co/600x400/eef2f6/94a3b8?text=Image'">
+                        <div class="card-overlay">
+                            <h2>{{ card.title }}</h2>
+                            <p>{{ card.subtitle }}</p>
+                        </div>
+                    </div>
+
+                    <div class="card-action">
+                        <button [ngClass]="'btn-' + card.colorClass">
+                            {{ card.buttonText }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applicants View -->
+        <div *ngIf="activeTab() === 'applicants'" class="fade-in">
+            <div class="main-content-header">
+                <h1>Job Applicants</h1>
+                <p>View and manage all received applications.</p>
+            </div>
+
+            <div class="content-container">
+                <div *ngIf="isLoadingApplicants()" class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading applicants...</p>
+                </div>
+
+                <table *ngIf="!isLoadingApplicants()" class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Job ID</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Experience</th>
+                            <th>Applied Date</th>
+                            <th>Resume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let app of applicantsList()">
+                            <td class="font-medium">{{ app.full_name }}</td>
+                            <td><span class="badge badge-indigo">#{{ app.job_id }}</span></td>
+                            <td class="text-muted">{{ app.email }}</td>
+                            <td class="text-muted">{{ app.phone }}</td>
+                            <td>{{ app.work_status }} <span *ngIf="app.work_status === 'Experienced'">({{ app.experience_years }} Yrs)</span></td>
+                            <td class="text-muted">{{ app.applied_at | date:'mediumDate' }}</td>
+                            <td>
+                                <a [href]="app.resume_url" target="_blank" class="link-danger">
+                                    <i class="fas fa-file-pdf"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        <tr *ngIf="applicantsList().length === 0">
+                            <td colspan="7" class="empty-state">
+                                No applications received yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- NEW: Inquiries View -->
+        <div *ngIf="activeTab() === 'inquiries'" class="fade-in">
+            <div class="main-content-header">
+                <h1>Course Inquiries</h1>
+                <p>Track and manage student inquiries from the website.</p>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label><i class="fas fa-book"></i> Course</label>
+                    <input 
+                        type="text" 
+                        placeholder="Filter by Course Name..." 
+                        [value]="filterCourseName()"
+                        (input)="filterCourseName.set($any($event.target).value)"
+                    >
+                </div>
+                <div class="filter-group">
+                    <label><i class="far fa-calendar-alt"></i> From</label>
+                    <input 
+                        type="date" 
+                        [value]="filterStartDate()"
+                        (input)="filterStartDate.set($any($event.target).value)"
+                    >
+                </div>
+                <div class="filter-group">
+                    <label><i class="far fa-calendar-alt"></i> To</label>
+                    <input 
+                        type="date" 
+                        [value]="filterEndDate()"
+                        (input)="filterEndDate.set($any($event.target).value)"
+                    >
+                </div>
+                
+                <!-- Reset Filter -->
+                <button class="btn-reset" (click)="resetFilters()" title="Reset Filters">
+                    <i class="fas fa-undo"></i>
+                </button>
+
+                <div style="flex-grow: 1;"></div>
+
+                <!-- Delete Actions -->
+                <div class="delete-actions" style="display: flex; gap: 10px;">
+                    <!-- Show this button only when dates are selected -->
+                    <button *ngIf="filterStartDate() && filterEndDate()" 
+                            class="btn-danger-outline" 
+                            (click)="deleteByDateRange()"
+                            title="Delete displayed range">
+                        <i class="fas fa-trash-alt"></i> Delete Range
+                    </button>
+                    
+                    <button class="btn-danger" (click)="deleteAllData()" title="Delete ALL Inquiries">
+                        <i class="fas fa-exclamation-triangle"></i> Delete All
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-container">
+                <div *ngIf="isLoadingInquiries()" class="loading-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading inquiries...</p>
+                </div>
+
+                <table *ngIf="!isLoadingInquiries()" class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Interested Course</th>
+                            <th>Contact Email</th>
+                            <th>Phone Number</th>
+                            <th>Inquiry Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let inq of filteredInquiries()">
+                            <td class="font-medium">
+                                <div class="user-cell">
+                                    <div class="avatar-initial">{{ inq.name.charAt(0).toUpperCase() }}</div>
+                                    {{ inq.name }}
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge badge-violet">{{ inq.course_name || 'General' }}</span>
+                            </td>
+                            <td class="text-muted">
+                                <a href="mailto:{{inq.email}}" class="hover-link">{{ inq.email }}</a>
+                            </td>
+                            <td class="text-muted">
+                                <a href="tel:{{inq.phone_number}}" class="hover-link">{{ inq.phone_number }}</a>
+                            </td>
+                            <td class="text-muted">{{ inq.created_at | date:'mediumDate' }} <small>{{ inq.created_at | date:'shortTime' }}</small></td>
+                            <td>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn-icon" title="Mark as Contacted" (click)="markAsContacted()">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                    </button>
+                                    <button class="btn-icon delete-icon" title="Delete Inquiry" (click)="deleteInquiry(inq.id!)">
+                                        <i class="fas fa-trash text-danger"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="filteredInquiries().length === 0">
+                            <td colspan="6" class="empty-state">
+                                No inquiries found matching your filters.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- User Management -->
+        <app-user-management 
+            *ngIf="activeTab() === 'users'"
+            [globalSearchQuery]="headerSearchQuery()"
+        ></app-user-management>
+        
+        <!-- Course Management -->
+        <app-manage-course
+            *ngIf="activeTab() === 'courses'"
+            [globalSearchQuery]="headerSearchQuery()"
+        ></app-manage-course>
+        
+        <!-- Batch Management -->
+        <app-batch-management
+            *ngIf="activeTab() === 'batches'"
+            [globalSearchQuery]="headerSearchQuery()"
+        ></app-batch-management>
+
+        <!-- Upload Career Component -->
+        <app-upload-career 
+            *ngIf="activeTab() === 'upload-careers'"
+        ></app-upload-career>
+        
+    </main>
+</div>

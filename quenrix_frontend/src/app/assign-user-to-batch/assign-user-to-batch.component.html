@@ -1,0 +1,123 @@
+<!-- Form Container -->
+<div class="form-card">
+    
+    <!-- Back Button -->
+    <button (click)="goBack()" class="back-button" title="Go Back">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M11.03 3.25l-7.75 7.75a.75.75 0 000 1.06l7.75 7.75a.75.75 0 101.06-1.06l-6.47-6.47h13.13a.75.75 0 000-1.5H5.62l6.47-6.47a.75.75 0 00-1.06-1.06z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <!-- Header -->
+    <div class="header-section">
+        <h2>Assign User to Batch</h2>
+        <p>Select a course, batch, role, and user to proceed.</p>
+    </div>
+            
+    <!-- Loading Indicator -->
+    <div *ngIf="loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading data...</p>
+    </div>
+    
+    <!-- Assignment Form -->
+    <form [formGroup]="assignmentForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+        
+        <!-- 1. Course Selection -->
+        <div class="form-group">
+            <label for="courseId">Select Course</label>
+            <select 
+                id="courseId" 
+                formControlName="courseId" 
+                class="form-control" 
+                [class.is-invalid]="assignmentForm.get('courseId')?.invalid && assignmentForm.get('courseId')?.touched"
+                [disabled]="courses.length === 0"
+            >
+                <option [ngValue]="null" disabled>-- Select Course --</option>
+                <option *ngFor="let course of courses" [ngValue]="course.courseid">{{ course.coursename }}</option>
+            </select>
+            <div *ngIf="assignmentForm.get('courseId')?.invalid && assignmentForm.get('courseId')?.touched" class="error-message">
+                Please select a course.
+            </div>
+            <p *ngIf="courses.length === 0 && !loading" class="info-message">
+                No active courses found.
+            </p>
+        </div>
+
+        <!-- 2. Batch Selection -->
+        <div class="form-group">
+            <label for="batchId">Select Batch</label>
+            <select 
+                id="batchId" 
+                formControlName="batchId" 
+                class="form-control" 
+                [class.is-invalid]="assignmentForm.get('batchId')?.invalid && assignmentForm.get('batchId')?.touched"
+                [disabled]="assignmentForm.get('batchId')?.disabled || batches.length === 0"
+            >
+                <option [ngValue]="null" disabled>
+                    {{ assignmentForm.get('batchId')?.disabled ? 'Select a Course first' : '-- Select Batch --' }}
+                </option>
+                <option *ngFor="let batch of batches" [ngValue]="batch.batchId">{{ batch.batchName }}</option>
+            </select>
+            <div *ngIf="assignmentForm.get('batchId')?.invalid && assignmentForm.get('batchId')?.touched" class="error-message">
+                Please select a batch.
+            </div>
+            <p *ngIf="batches.length === 0 && assignmentForm.get('courseId')?.value !== null && !assignmentForm.get('batchId')?.disabled && !loading" class="info-message">
+                No batches found for this course.
+            </p>
+        </div>
+
+        <!-- 3. Role Selection -->
+        <div class="form-group">
+            <label for="role">Assign Role</label>
+            <select id="role" formControlName="role" class="form-control" [class.is-invalid]="assignmentForm.get('role')?.invalid && assignmentForm.get('role')?.touched">
+                <option value="student">Student</option>
+                <option value="trainer">Trainer</option>
+            </select>
+            <div *ngIf="assignmentForm.get('role')?.invalid && assignmentForm.get('role')?.touched" class="error-message">
+                Please select a role.
+            </div>
+        </div>
+
+        <!-- 4. User Selection -->
+        <div class="form-group">
+            <label for="userId">Select User ({{ assignmentForm.get('role')?.value | titlecase }})</label>
+            <select 
+                id="userId" 
+                formControlName="userId" 
+                class="form-control" 
+                [class.is-invalid]="assignmentForm.get('userId')?.invalid && assignmentForm.get('userId')?.touched"
+                [disabled]="filteredUsers.length === 0"
+            >
+                <option [ngValue]="null" disabled>
+                    {{ filteredUsers.length === 0 ? 'No users found for this role' : '-- Select User --' }}
+                </option>
+                <option *ngFor="let user of filteredUsers" [ngValue]="user.id">{{ user.username }} (ID: {{ user.id }})</option>
+            </select>
+            <div *ngIf="assignmentForm.get('userId')?.invalid && assignmentForm.get('userId')?.touched" class="error-message">
+                Please select a user.
+            </div>
+        </div>
+
+        <!-- 5. Selected User Details -->
+        <div *ngIf="selectedUserDetail as user" class="user-details-card">
+            <h3>Selected User Details</h3>
+            <p><strong>User ID:</strong> {{ user.id }}</p>
+            <p><strong>Name:</strong> {{ user.username }}</p>
+            <p><strong>Assumed Role:</strong> {{ user.role | uppercase }}</p>
+            <div class="detail-list">
+                <ng-container *ngFor="let item of (user.details | keyvalue)">
+                    <p><strong>{{ item.key | titlecase }}:</strong> {{ $any(item.value).toString() }}</p>
+                </ng-container>
+            </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="form-action">
+            <button type="submit" class="btn-submit" [disabled]="assignmentForm.invalid || assignmentForm.get('batchId')?.disabled">
+                Assign User to Batch
+            </button>
+        </div>
+
+    </form>
+</div>

@@ -1,0 +1,304 @@
+<div class="form-card">
+
+  <!-- Back Button -->
+  <button (click)="goBack()" class="back-button" title="Go Back">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+      <path fill-rule="evenodd" d="M11.03 3.25l-7.75 7.75a.75.75 0 000 1.06l7.75 7.75a.75.75 0 101.06-1.06l-6.47-6.47h13.13a.75.75 0 000-1.5H5.62l6.47-6.47a.75.75 0 00-1.06-1.06z" clip-rule="evenodd"/>
+    </svg>
+  </button>
+
+  <!-- Quenrix Bot FAB -->
+  <button class="bot-fab" (click)="openBot()" title="Generate questions with Quenrix Bot">
+    <span class="bot-fab-icon">✦</span>
+    <span class="bot-fab-label">Quenrix Bot</span>
+  </button>
+
+  <div class="header-section">
+    <h2>Create New Exam</h2>
+    <p>Configure exam details and add questions.</p>
+  </div>
+
+  <div *ngIf="isLoading" class="info-box loading-box">
+    <p>Processing… please wait.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ STEP 1 ═══ -->
+  <ng-container *ngIf="step === 1">
+    <div class="step-title">Step 1: Exam Details</div>
+
+    <form #metadataForm="ngForm" (ngSubmit)="onProceed(metadataForm)">
+
+      <div class="form-group">
+        <label for="examName">Exam Name</label>
+        <input id="examName" type="text" class="input-field" name="examName"
+               [(ngModel)]="examMetadata.examName" required
+               placeholder="e.g., DevOps Fundamentals Test"/>
+      </div>
+
+      <div class="form-group">
+        <label for="courseId">Course</label>
+        <select id="courseId" class="input-field" name="courseid"
+                [(ngModel)]="examMetadata.courseid" (change)="onCourseSelect()" required>
+          <option [ngValue]="null" disabled>Select Course</option>
+          <option *ngFor="let course of courses" [ngValue]="course.courseid">
+            {{ course.coursename }} (ID: {{ course.courseid }})
+          </option>
+        </select>
+        <div *ngIf="courses.length === 0 && !isLoading" class="info-box error-box" style="margin-top:10px;">
+          <p>Courses not loaded.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="batchId">Batch</label>
+        <select id="batchId" class="input-field" name="batchId"
+                [(ngModel)]="examMetadata.batchId" required
+                [disabled]="!examMetadata.courseid || batches.length === 0">
+          <option [ngValue]="null" disabled>Select Batch</option>
+          <option *ngFor="let batch of batches" [ngValue]="batch.batchId">
+            {{ batch.batchName }} (ID: {{ batch.batchId }})
+          </option>
+        </select>
+        <div *ngIf="examMetadata.courseid && batches.length === 0 && !isLoading" class="info-box error-box" style="margin-top:10px;">
+          <p>No batches found for this course.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="subjectId">Subject</label>
+        <select id="subjectId" class="input-field" name="subjectId"
+                [(ngModel)]="examMetadata.subjectId" required
+                [disabled]="!examMetadata.courseid || subjects.length === 0">
+          <option [ngValue]="null" disabled>Select Subject</option>
+          <option *ngFor="let subject of subjects" [ngValue]="subject.subjectid">
+            {{ subject.subjectname }} (ID: {{ subject.subjectid }})
+          </option>
+        </select>
+        <div *ngIf="examMetadata.courseid && subjects.length === 0 && !isLoading" class="info-box error-box" style="margin-top:10px;">
+          <p>No subjects found for this course.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="start">Start Time</label>
+        <input id="start" type="datetime-local" class="input-field" name="start"
+               [(ngModel)]="examMetadata.start" [min]="minDate" required/>
+        <small class="field-hint">Select a future date and time.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="end">End Time</label>
+        <input id="end" type="datetime-local" class="input-field" name="end"
+               [(ngModel)]="examMetadata.end" [min]="examMetadata.start || minDate" required/>
+        <small class="field-hint">Must be after Start Time.</small>
+      </div>
+
+      <div class="btn-group">
+        <button type="submit" class="primary-btn" [disabled]="metadataForm.invalid || isLoading">
+          Proceed to Questions &rarr;
+        </button>
+      </div>
+    </form>
+  </ng-container>
+
+  <!-- ═══════════════════════════════════════════════════════ STEP 2 ═══ -->
+  <ng-container *ngIf="step === 2">
+    <div class="step-title">Step 2: Add Questions</div>
+
+    <form #examForm="ngForm" (ngSubmit)="onSubmit(examForm)">
+
+      <div *ngFor="let q of questions; let i = index; trackBy: trackByIndex" class="question-card">
+        <div class="question-card-header">
+          <h3>Question {{ i + 1 }}</h3>
+          <span [class]="'q-type-badge ' + getTypeBadgeClass(q.questionType)">{{ getTypeLabel(q.questionType) }}</span>
+          <button type="button" class="remove-btn" (click)="removeQuestion(i)"
+                  *ngIf="questions.length > 1" title="Remove question">✕</button>
+        </div>
+
+        <div class="form-group">
+          <label>Question Text</label>
+          <textarea class="input-field" name="questionText_{{i}}"
+                    [(ngModel)]="q.questionText" required
+                    placeholder="Type your question here…"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Type</label>
+          <select class="input-field" name="questionType_{{i}}" [(ngModel)]="q.questionType" required>
+            <option *ngFor="let type of questionTypes" [value]="type">
+              {{ type | titlecase }}
+            </option>
+          </select>
+        </div>
+
+        <!-- MCQ Options -->
+        <div *ngIf="q.questionType === 'mcq'" class="mcq-section">
+          <div *ngFor="let opt of q.options; let j = index; trackBy: trackByIndex" class="option-row">
+            <label>Option {{ j + 1 }}</label>
+            <input type="text" class="input-field" name="option_{{i}}_{{j}}"
+                   [(ngModel)]="q.options[j]" required placeholder="Option text…"/>
+          </div>
+          <div class="form-group" style="margin-top:15px;">
+            <label>Correct Answer</label>
+            <select class="input-field" name="correctOption_{{i}}" [(ngModel)]="q.correctOption" required>
+              <option [ngValue]="null" disabled>Select Correct Option</option>
+              <option *ngFor="let opt of q.options; let j = index; trackBy: trackByIndex" [ngValue]="j">
+                Option {{ j + 1 }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Info for other types -->
+        <div *ngIf="q.questionType !== 'mcq'" class="info-box success-box">
+          <p>No options required for {{ q.questionType | titlecase }} questions.</p>
+        </div>
+
+        <div class="form-group">
+          <label>Points</label>
+          <input type="number" class="input-field" name="points_{{i}}"
+                 [(ngModel)]="q.points" required min="1"/>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button type="button" (click)="onBack()" class="secondary-btn">Back</button>
+        <button type="button" (click)="addMore()" class="secondary-btn">+ Add Question</button>
+        <button type="submit" [disabled]="!examForm.valid || isLoading" class="primary-btn">Create Exam</button>
+      </div>
+    </form>
+  </ng-container>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════ QUENRIX BOT MODAL OVERLAY ══ -->
+<div class="bot-overlay" *ngIf="isBotOpen" (click)="closeBot()"></div>
+
+<div class="bot-modal" *ngIf="isBotOpen" role="dialog" aria-labelledby="botModalTitle">
+
+  <!-- ── Modal Header ──────────────────────────────────────────────────────── -->
+  <div class="bot-modal-header">
+    <div class="bot-header-left">
+      <div class="bot-avatar">✦</div>
+      <div>
+        <h2 id="botModalTitle">Quenrix Bot</h2>
+        <p>AI-powered question generator</p>
+      </div>
+    </div>
+    <button class="bot-close-btn" (click)="closeBot()" title="Close">✕</button>
+  </div>
+
+  <!-- ── Idle / Config State ───────────────────────────────────────────────── -->
+  <div class="bot-modal-body" *ngIf="botState === 'idle'">
+
+    <div class="bot-subject-chip" *ngIf="selectedSubjectName">
+      <span>📚</span> Subject: <strong>{{ selectedSubjectName }}</strong>
+    </div>
+    <div class="bot-subject-chip bot-subject-chip--warn" *ngIf="!selectedSubjectName">
+      <span>⚠️</span> No subject selected — you can still generate questions.
+    </div>
+
+    <!-- Topic prompt -->
+    <div class="bot-form-group">
+      <label class="bot-label">Topic / Prompt</label>
+      <textarea
+        class="bot-textarea"
+        [(ngModel)]="botConfig.topic"
+        placeholder="e.g. 'Closures and higher-order functions in JavaScript' or 'Binary trees: insertion and traversal'"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <!-- Question type selector -->
+    <div class="bot-form-group">
+      <label class="bot-label">Question Type</label>
+      <div class="bot-type-grid">
+        <button
+          *ngFor="let opt of botQuestionTypeOptions"
+          type="button"
+          class="bot-type-card"
+          [class.bot-type-card--active]="botConfig.questionType === opt.value"
+          (click)="botConfig.questionType = opt.value"
+        >
+          <span class="bot-type-icon">{{ opt.icon }}</span>
+          <span class="bot-type-name">{{ opt.label }}</span>
+          <span class="bot-type-desc">{{ opt.desc }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Count -->
+    <div class="bot-form-group">
+      <label class="bot-label">Number of Questions: <strong>{{ botConfig.count }}</strong></label>
+      <div class="bot-count-row">
+        <span class="bot-count-hint">1</span>
+        <input type="range" class="bot-range" min="1" max="15" step="1" [(ngModel)]="botConfig.count"/>
+        <span class="bot-count-hint">15</span>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="bot-error" *ngIf="botErrorMessage">{{ botErrorMessage }}</div>
+
+    <!-- Generate button -->
+    <button type="button" class="bot-generate-btn" (click)="onBotGenerate()">
+      <span>✦</span> Generate Questions
+    </button>
+  </div>
+
+  <!-- ── Generating / Loading State ──────────────────────────────────────────── -->
+  <div class="bot-modal-body bot-loading-body" *ngIf="botState === 'generating'">
+    <div class="bot-spinner">
+      <div class="bot-spinner-ring"></div>
+      <div class="bot-spinner-core">✦</div>
+    </div>
+    <p class="bot-loading-title">Generating Questions…</p>
+    <p class="bot-loading-sub">Quenrix Bot is crafting {{ botConfig.count }} {{ botConfig.questionType }} question(s) for you.</p>
+  </div>
+
+  <!-- ── Preview State ─────────────────────────────────────────────────────── -->
+  <div class="bot-modal-body" *ngIf="botState === 'preview'">
+
+    <div class="bot-preview-header">
+      <div class="bot-preview-badge">
+        <span>✦</span> {{ botGeneratedQuestions.length }} Question(s) Generated
+      </div>
+      <p class="bot-preview-note">Review before adding to your exam.</p>
+    </div>
+
+    <div class="bot-preview-list">
+      <div *ngFor="let q of botGeneratedQuestions; let i = index" class="bot-preview-item">
+        <div class="bot-preview-item-header">
+          <span class="bot-preview-num">Q{{ i + 1 }}</span>
+          <span [class]="'q-type-badge ' + getTypeBadgeClass(q.questionType)">{{ getTypeLabel(q.questionType) }}</span>
+          <span class="bot-preview-pts">{{ q.points }} pts</span>
+        </div>
+        <p class="bot-preview-text">{{ q.questionText }}</p>
+
+        <!-- MCQ options preview -->
+        <div class="bot-preview-options" *ngIf="q.questionType === 'mcq'">
+          <div
+            *ngFor="let opt of q.options; let j = index"
+            class="bot-preview-option"
+            [class.bot-preview-option--correct]="j === q.correctOption"
+          >
+            <span class="bot-preview-option-letter">{{ ['A','B','C','D'][j] }}</span>
+            <span>{{ opt }}</span>
+            <span class="bot-correct-tick" *ngIf="j === q.correctOption">✓ Correct</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bot-preview-actions">
+      <button type="button" class="bot-regen-btn" (click)="onBotRegenerate()">
+        ↺ Regenerate
+      </button>
+      <button type="button" class="bot-confirm-btn" (click)="onBotConfirm()">
+        ✓ OK — Add to Exam
+      </button>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,76 @@
+<div class="form-card">
+
+  <!-- Back Button -->
+  <button (click)="goBack()" class="back-button" title="Go Back">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" d="M11.03 3.25l-7.75 7.75a.75.75 0 000 1.06l7.75 7.75a.75.75 0 101.06-1.06l-6.47-6.47h13.13a.75.75 0 000-1.5H5.62l6.47-6.47a.75.75 0 00-1.06-1.06z" clip-rule="evenodd" />
+      </svg>
+  </button>
+
+  <div class="header-section">
+    <h2>Upload Notes</h2>
+    <p>Manually upload subject notes, lab manuals, and assignments.</p>
+  </div>
+  
+  <form [formGroup]="noteForm" (ngSubmit)="onSubmit()">
+    
+    <!-- Subject Input -->
+    <div class="form-group">
+      <label>Subject Name</label>
+      <input 
+        type="text" 
+        formControlName="subject" 
+        placeholder="e.g. Full Stack Development"
+        class="form-control"
+      >
+      <small class="hint">Type the exact subject name.</small>
+    </div>
+
+    <!-- Topic / Title Input -->
+    <div class="form-group">
+      <label>Topic / Title</label>
+      <input 
+        type="text" 
+        formControlName="title" 
+        placeholder="e.g. Introduction to Angular"
+        class="form-control"
+      >
+    </div>
+
+    <!-- Category & Description -->
+    <div class="form-row">
+      <div class="form-group half">
+        <label>Category</label>
+        <select formControlName="category" class="form-control">
+          <option *ngFor="let cat of categories" [value]="cat">{{cat}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description (Optional)</label>
+      <textarea formControlName="description" rows="3" class="form-control" placeholder="Brief details about the document..."></textarea>
+    </div>
+
+    <!-- File Input -->
+    <div class="form-group">
+      <label>PDF File</label>
+      <input type="file" (change)="onFileSelected($event)" accept="application/pdf" class="form-control-file">
+      <div *ngIf="selectedFile()" class="file-info">Selected: {{ selectedFile()?.name }}</div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div *ngIf="uploadProgress() > 0 && uploadProgress() < 100" class="progress-bar">
+      <div class="fill" [style.width.%]="uploadProgress()"></div>
+    </div>
+
+    <!-- Submit Button -->
+    <div>
+      <button type="submit" [disabled]="isSubmitting()" class="btn-submit">
+        <span *ngIf="isSubmitting()" class="spinner"></span>
+        <span>{{ isSubmitting() ? 'Uploading...' : 'Upload Note' }}</span>
+      </button>
+    </div>
+
+  </form>
+</div>

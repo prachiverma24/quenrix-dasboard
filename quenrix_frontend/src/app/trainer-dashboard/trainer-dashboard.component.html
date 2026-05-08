@@ -1,0 +1,148 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" />
+<div class="container">
+  <header>
+    <div class="logo-search">
+      <div class="logo"><img src="assets/logo.webp" alt="Logo" class="institute-logo"></div>
+      <div class="search-wrapper">
+        <input type="search" placeholder="Search curriculum, students..." />
+        <i class="fas fa-search"></i>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="btn-request" (click)="goToProfileSetupForm()">
+        <i class="fas fa-user-edit"></i> <span>Setup Profile</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="dashboard-grid">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <a [class.active]="activePage === 'dashboard'" (click)="setActivePage('dashboard')">
+          <i class="fas fa-home"></i> <span>Home</span>
+        </a>
+        <a [class.active]="activePage === 'batches'" (click)="setActivePage('batches')">
+          <i class="fas fa-users"></i> <span>Batches</span>
+        </a>
+        <a [class.active]="activePage === 'shorts'" (click)="setActivePage('shorts')" style="color: #ec4899;">
+          <i class="fas fa-play-circle" style="font-size: 26px;"></i> <span>Shorts</span>
+        </a>
+        <a [class.active]="activePage === 'generate-resume'" (click)="goToResumeView()">
+          <i class="fas fa-file-alt"></i> <span>Resume</span>
+        </a>
+        <a [class.active]="activePage === 'syntaxshare'" (click)="setActivePage('syntaxshare')">
+          <i class="fas fa-comments"></i> <span>Doubt Hub</span>
+        </a>
+        <a (click)="logout()" class="logout-link" style="color: #ef4444; margin-top: auto;">
+          <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <ng-container *ngIf="activePage === 'dashboard'">
+        <!-- Profile Section -->
+        <section class="premium-profile-card">
+          <div class="profile-content-wrapper">
+            <div class="profile-upload-container" (click)="triggerProfileUpload()">
+              <div class="premium-profile-ring">
+                <div class="attractive-profile-circle">
+                  <img *ngIf="uploadedProfileImage" [src]="uploadedProfileImage" class="uploaded-profile-img">
+                  <span *ngIf="!uploadedProfileImage" class="profile-initial-text">{{ profileInitial }}</span>
+                </div>
+              </div>
+              <input type="file" #fileInput (change)="onProfileImageSelected($event)" style="display: none;">
+            </div>
+            <div class="profile-text-content">
+              <span class="status-badge">Senior Trainer</span>
+              <h2 class="student-name-text">{{ trainerName }}</h2>
+              <p class="greeting-message">{{ greeting }}</p>
+              <div class="date-badge"><i class="far fa-calendar-alt"></i> {{ currentDayOfWeek }}, {{ currentDay }} {{ currentMonth }}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Stats Grid -->
+        <section class="stats-cards-container">
+          <div *ngFor="let card of quickAccessCards" class="stat-card" [ngClass]="card.colorClass" (click)="handleQuickCardClick(card.route)">
+            <p class="title">{{ card.title }}</p>
+            <p class="value">{{ card.value }}</p>
+            <div class="footer-info"><span>{{ card.subText }}</span><i [class]="card.icon" [style.color]="card.color"></i></div>
+          </div>
+        </section>
+      </ng-container>
+
+      <ng-container *ngIf="activePage === 'batches'">
+        <app-course-batch-management 
+          [userId]="trainerId" 
+          [initialBatches]="trainerAssignedBatches"
+          (backToDashboard)="setActivePage('dashboard')">
+        </app-course-batch-management>
+      </ng-container>
+
+      <ng-container *ngIf="activePage === 'shorts'"><div class="no-data">Shorts Content Loading...</div></ng-container>
+      
+      <ng-container *ngIf="activePage === 'generate-resume'">
+          <app-generate-ats-resume [isDashboardEmbed]="true"></app-generate-ats-resume>
+      </ng-container>
+
+      <ng-container *ngIf="activePage === 'syntaxshare'"><app-syntaxshare></app-syntaxshare></ng-container>
+    </main>
+
+    <aside class="right-schedule-card">
+      <div class="current-time-display"><p class="current-time-text">{{ currentTime }}</p></div>
+      <div class="calendar-controls">
+        <button (click)="navigateCalendar(-1)">&lt;</button>
+        <p>{{ selectedMonthYear }}</p>
+        <button (click)="navigateCalendar(1)">&gt;</button>
+      </div>
+      <div class="calendar-weekdays"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>
+      <div class="calendar-days">
+        <div *ngFor="let day of calendarDays" [class.inactive]="day.disabled" [class.active]="day.selected" (click)="!day.disabled && onDateSelect(day.fullDate)">{{ day.date }}</div>
+      </div>
+      <div class="schedule-list">
+        <h5>Today's Schedule</h5>
+        <div *ngIf="scheduleDetails.length === 0" class="no-schedule-message">No live sessions for today.</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Profile Completion Modal -->
+  <div *ngIf="showProfileCompletionModal" class="modal-overlay">
+    <div class="premium-modal">
+      <div class="modal-header" style="text-align: center; margin-bottom: 20px;">
+        <div class="header-icon" style="font-size: 50px; color: #6366f1; margin-bottom: 15px;">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <h2 style="margin: 0; color: #1e293b;">Profile Incomplete!</h2>
+        <p style="color: #64748b; margin-top: 10px;">Please update your details to unlock all features of the trainer dashboard.</p>
+      </div>
+      <div class="modal-footer" style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn-submit" (click)="goToProfileSetupForm()" style="width: 100%;">
+          Update Profile Now
+        </button>
+        <button class="btn-cancel" (click)="dismissProfileCompletionModal()" style="width: 100%; background: transparent;">
+          Maybe Later
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Join Meeting Modal -->
+  <div *ngIf="showJoinMeetingModal" class="modal-overlay">
+    <div class="premium-exam-modal" style="max-width: 500px; background: white; border-radius: 24px; padding: 25px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="margin: 0;"><i class="fas fa-video" style="color: #10B981;"></i> Host Session</h3>
+        <button (click)="closeJoinMeetingModal()" style="border: none; background: #f1f5f9; border-radius: 8px; width: 32px; height: 32px; cursor: pointer;"><i class="fas fa-times"></i></button>
+      </div>
+      <div *ngFor="let b of selectedBatchDetails" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid #f1f5f9; border-radius: 12px; margin-bottom: 10px;">
+        <div>
+          <div style="font-weight: 700;">{{ b.batch_name }}</div>
+          <div style="font-size: 12px; color: #64748b;">{{ b.timing }} • {{ b.mode }}</div>
+        </div>
+        <button (click)="joinMeeting(b.zoom_join_url)" style="background: #10B981; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 600;">Start</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="message" [class]="'message-box ' + messageType">{{ message }}</div>

@@ -1,0 +1,225 @@
+<div class="form-card">
+
+    <!-- Back Button -->
+    <button (click)="goBack()" class="action-button back-button" title="Go Back">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M11.03 3.25l-7.75 7.75a.75.75 0 000 1.06l7.75 7.75a.75.75 0 101.06-1.06l-6.47-6.47h13.13a.75.75 0 000-1.5H5.62l6.47-6.47a.75.75 0 00-1.06-1.06z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <!-- Hamburger Button (To View List) -->
+    <button (click)="togglePanel()" class="action-button list-button" title="View Active Jobs">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+
+    <!-- Header -->
+    <div class="header-section">
+        <h2>Post New Job Vacancy</h2>
+        <p>Enter job details to broadcast a new opportunity.</p>
+    </div>
+
+    <!-- Job Creation Form -->
+    <form (ngSubmit)="createJob()">
+        
+        <!-- Job Title -->
+        <div class="form-group">
+            <label for="jobtitle">Job Title <span class="required">*</span></label>
+            <input 
+                id="jobtitle" 
+                type="text" 
+                class="input-field"
+                name="jobtitle" 
+                [(ngModel)]="jobData.jobtitle" 
+                required 
+                placeholder="e.g. Senior Backend Developer"
+            >
+        </div>
+
+        <!-- Company -->
+        <div class="form-group">
+            <label for="company">Company Name <span class="required">*</span></label>
+            <input 
+                id="company" 
+                type="text" 
+                class="input-field"
+                name="company" 
+                [(ngModel)]="jobData.company" 
+                required 
+                placeholder="e.g. Tech Solutions Inc."
+            >
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+            <label for="location">Location</label>
+            <input 
+                id="location" 
+                type="text" 
+                class="input-field"
+                name="location" 
+                [(ngModel)]="jobData.location" 
+                placeholder="e.g. Bangalore / Remote"
+            >
+        </div>
+
+        <!-- Row: Type & Exp -->
+        <div class="form-group" style="display: flex; gap: 15px;">
+            <div style="flex: 2;">
+                <label for="job_type">Job Type</label>
+                <select 
+                    id="job_type" 
+                    class="input-field"
+                    name="job_type" 
+                    [(ngModel)]="jobData.job_type" 
+                    required
+                >
+                    <option *ngFor="let type of jobTypes" [ngValue]="type">
+                        {{ type }}
+                    </option>
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label for="reqexp">Exp. (Yrs)</label>
+                <input 
+                    id="reqexp" 
+                    type="number" 
+                    class="input-field"
+                    name="reqexp" 
+                    [(ngModel)]="jobData.reqexp" 
+                    min="0"
+                >
+            </div>
+        </div>
+
+        <!-- Row: HR Info -->
+        <div class="form-group" style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <label for="hr_email">HR Email</label>
+                <input 
+                    id="hr_email" 
+                    type="email" 
+                    class="input-field"
+                    name="hr_email" 
+                    [(ngModel)]="jobData.hr_email" 
+                    placeholder="hr@company.com"
+                >
+            </div>
+            <div style="flex: 1;">
+                <label for="hr_phone">HR Phone</label>
+                <input 
+                    id="hr_phone" 
+                    type="tel" 
+                    class="input-field"
+                    name="hr_phone" 
+                    [(ngModel)]="jobData.hr_phone" 
+                    placeholder="+91-..."
+                >
+            </div>
+        </div>
+
+        <!-- Row: Passed Out Year -->
+        <div class="form-group" style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <label for="from_passed_out_year">From Year</label>
+                <input 
+                    id="from_passed_out_year" 
+                    type="number" 
+                    class="input-field"
+                    name="from_passed_out_year" 
+                    [(ngModel)]="jobData.from_passed_out_year" 
+                >
+            </div>
+            <div style="flex: 1;">
+                <label for="to_passed_out_year">To Year</label>
+                <input 
+                    id="to_passed_out_year" 
+                    type="number" 
+                    class="input-field"
+                    name="to_passed_out_year" 
+                    [(ngModel)]="jobData.to_passed_out_year" 
+                >
+            </div>
+        </div>
+
+        <!-- Job Description -->
+        <div class="form-group">
+            <label for="job_description">Job Description <span class="required">*</span></label>
+            <textarea 
+                id="job_description" 
+                class="input-field"
+                name="job_description" 
+                [(ngModel)]="jobData.job_description" 
+                required 
+                rows="4"
+                placeholder="Describe roles, responsibilities, and requirements..."
+            ></textarea>
+        </div>
+
+        <!-- Row: Date & Active -->
+        <div class="form-group" style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="flex: 1; padding-right: 15px;">
+                <label for="apply_before_date">Apply Before</label>
+                <input 
+                    id="apply_before_date" 
+                    type="date" 
+                    class="input-field"
+                    name="apply_before_date" 
+                    [(ngModel)]="jobData.apply_before_date" 
+                >
+            </div>
+            <div style="padding-bottom: 12px;">
+                <label for="is_active" style="display: inline-flex; align-items: center; cursor: pointer;">
+                    <input 
+                        id="is_active" 
+                        type="checkbox" 
+                        name="is_active" 
+                        [(ngModel)]="jobData.is_active" 
+                        style="width: 18px; height: 18px; margin-right: 8px; accent-color: var(--primary-green);"
+                    >
+                    Is Active?
+                </label>
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-button">
+            Post Job Vacancy
+        </button>
+
+    </form>
+</div>
+
+<!-- Sliding Side Panel for Job List -->
+<div class="side-panel" [ngClass]="{'open': isPanelOpen}">
+    <div class="panel-header">
+        <h3>Active Jobs ({{ filteredJobs.length }})</h3>
+        <button (click)="togglePanel()" class="close-btn">&times;</button>
+    </div>
+
+    <div class="job-list">
+        <div *ngIf="isLoadingJobs" style="text-align: center; color: #666; margin-top: 20px;">
+            Loading jobs...
+        </div>
+
+        <div *ngIf="!isLoadingJobs && filteredJobs.length === 0" style="text-align: center; color: #666; margin-top: 20px;">
+            No jobs found.
+        </div>
+
+        <div *ngFor="let job of filteredJobs" class="job-item">
+            <div class="job-title">{{ job.jobtitle }}</div>
+            <div class="job-company">{{ job.company }}</div>
+            <div class="job-meta">
+                <span>{{ job.location }}</span> | 
+                <span>{{ job.job_type }}</span>
+            </div>
+            <div class="job-meta" style="justify-content: space-between; align-items: center; width: 100%;">
+                <span>Exp: {{ job.reqexp }}+ Yrs</span>
+                <span class="status-badge" [ngClass]="job.is_active ? 'status-active' : 'status-inactive'">
+                    {{ job.is_active ? 'Active' : 'Inactive' }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

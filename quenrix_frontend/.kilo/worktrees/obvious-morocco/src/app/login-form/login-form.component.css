@@ -1,0 +1,242 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700;900&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+:host {
+    --primary-color: #554451;
+    --accent-color: #e09f3e;
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text-dark: #1a1a1a;
+    --text-light: #444444;
+}
+
+/* Page Wrapper */
+.login-page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Glassmorphism Card */
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    padding: 40px 30px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Background Image covering the whole form */
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/assets/logo.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+    z-index: -1;
+}
+
+/* Back Button */
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.back-button:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Header Content */
+.header-content {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.welcome-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-light);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.main-heading {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin: 0;
+    letter-spacing: 4px;
+    position: relative;
+    display: inline-block;
+}
+
+.main-heading::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 15%;
+    width: 70%;
+    height: 4px;
+    background: var(--accent-color);
+    border-radius: 2px;
+}
+
+/* Input Styles */
+.form-group {
+    margin-bottom: 22px;
+    position: relative;
+}
+
+label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.text-input {
+    width: 100%;
+    padding: 14px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.15);
+    background: #ffffff; /* Solid white as requested */
+    font-size: 1rem;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(224, 159, 62, 0.2);
+}
+
+.text-input.with-left-icon { padding-left: 48px; }
+.text-input.with-right-icon { padding-right: 48px; }
+
+/* Left Icon */
+.input-icon.left-icon {
+    position: absolute;
+    left: 15px;
+    color: var(--text-light);
+    pointer-events: none;
+    display: flex;
+    z-index: 5;
+}
+
+.input-icon.left-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Eye Icon / Password Toggle */
+.password-toggle-btn {
+    position: absolute;
+    right: 15px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    z-index: 10; /* Ensure it stays above the input */
+}
+
+.password-toggle-btn:hover {
+    color: var(--primary-color);
+}
+
+.password-toggle-btn svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2; /* Make the icon more visible */
+}
+
+/* Button & Links */
+.login-button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: var(--primary-color);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 10px 20px -5px rgba(85, 68, 81, 0.4);
+}
+
+.login-button:hover:not(:disabled) {
+    background: #3d313a;
+    transform: translateY(-2px);
+}
+
+.links-container {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.links-container a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.error-message-box {
+    background: #fff5f5;
+    border: 1px solid #feb2b2;
+    color: #c53030;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    text-align: center;
+}
