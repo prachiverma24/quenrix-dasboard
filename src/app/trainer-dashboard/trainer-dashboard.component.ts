@@ -43,6 +43,7 @@ export class TrainerDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInputRef!: ElementRef;
 
   activePage: string = 'dashboard';
+  activeTab: string = 'Schedule'; // For right panel tabs
   loadingDashboardData: boolean = true;
   
   // Clock & Greeting
@@ -123,7 +124,14 @@ export class TrainerDashboardComponent implements OnInit, OnDestroy {
     this.initializeCalendar();
     this.initializeShorts();
 
-    // 2. Fetch Data
+    // 2. Mock some schedule data for "Command Center" look
+    this.scheduleDetails = [
+      { date: new Date().toISOString(), desc: 'Advanced React Architecture', type: 'class' },
+      { date: new Date().toISOString(), desc: 'Doubt Clearing Session - B4', type: 'meeting' },
+      { date: new Date().toISOString(), desc: 'Curriculum Review Meeting', type: 'admin' }
+    ];
+
+    // 3. Fetch Data
     this.fetchTrainerDataFromStorage();
     this.checkProfileCompletion();
   }

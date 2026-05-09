@@ -51,6 +51,7 @@ import { StatsSectionComponent } from './stats-section/stats-section.component';
 import { CoursePreviewSectionComponent } from './course-preview-section/course-preview-section.component';
 import { FinalCtaSectionComponent } from './final-cta-section/final-cta-section.component';
 import { DemoClassesSectionComponent } from './demo-classes-section/demo-classes-section.component';
+import { LearningHubComponent } from './learning-hub/learning-hub.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { DemoClassesSectionComponent } from './demo-classes-section/demo-classes
     StatsSectionComponent,
     CoursePreviewSectionComponent,
     FinalCtaSectionComponent,
-    DemoClassesSectionComponent
+    DemoClassesSectionComponent,
+    LearningHubComponent
   ],
   imports: [
     MonacoEditorModule.forRoot({
