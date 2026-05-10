@@ -72,57 +72,148 @@ export class NavbarComponent implements OnInit, OnDestroy {
   previewTitle = '';
   previewTextContent = '';
   previewDescription = '';
+  previewTextLines: string[] = [];
 
   private readonly dummyNotes: Note[] = [
     {
       id: 9001,
-      title: 'HTML Quick Revision Sheet',
-      description: 'Semantic tags, forms, media and accessibility quick notes.',
+      title: 'HTML Topper Notes (Rank 1)',
+      description: 'Complete HTML handwritten notes by batch topper with interview questions.',
       category: 'Lecture Note',
       subject: 'HTML',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       uploaded_at: '2026-04-10T10:00:00Z',
-      preview_content: 'HTML Revision Quick Notes\n• Semantic tags: header, nav, main, section, article, footer\n• Forms: label + input linking, required and pattern validation\n• Media: responsive images, alt text, accessible embeds\n• Accessibility: aria-labels, heading hierarchy, keyboard focus states'
+      preview_content: 'HTML Topper Notes\n• Semantic tags: header, nav, main, section, article, footer\n• Forms: label + input linking, required and pattern validation\n• Media: responsive images, alt text, accessible embeds\n• Accessibility: aria-labels, heading hierarchy, keyboard focus states'
     },
     {
       id: 9002,
-      title: 'CSS Layout Practice Assignment',
-      description: 'Flexbox + Grid tasks with responsive breakpoints.',
-      category: 'Assignment',
+      title: 'CSS Topper Notes (Rank 1)',
+      description: 'Advanced CSS layouts, Grid, Flexbox, and Animations by batch topper.',
+      category: 'Lecture Note',
       subject: 'CSS',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       uploaded_at: '2026-04-11T11:00:00Z',
-      preview_content: 'CSS Layout Assignment\n• Build 3 card responsive grid with CSS Grid\n• Add sticky navbar and mobile drawer using flexbox\n• Create reusable utility classes for spacing and typography\n• Use media queries for 1200px, 768px and 480px breakpoints'
+      preview_content: 'CSS Topper Notes\n• Build 3 card responsive grid with CSS Grid\n• Add sticky navbar and mobile drawer using flexbox\n• Create reusable utility classes for spacing and typography\n• Use media queries for 1200px, 768px and 480px breakpoints'
     },
     {
       id: 9003,
-      title: 'JavaScript DOM Lab Manual',
-      description: 'Hands-on exercises for events, forms and validation.',
-      category: 'Lab Manual',
+      title: 'JavaScript DOM Topper Notes',
+      description: 'Deep dive into JS DOM manipulation, events, and async programming by batch topper.',
+      category: 'Lecture Note',
       subject: 'JavaScript',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       uploaded_at: '2026-04-12T12:00:00Z',
-      preview_content: 'JavaScript DOM Lab\n• Query selectors and event listeners\n• Form validation with custom error messaging\n• Dynamic list rendering with add/edit/delete actions\n• LocalStorage integration for state persistence'
+      preview_content: 'JavaScript Topper Notes\n• Query selectors and event listeners\n• Form validation with custom error messaging\n• Dynamic list rendering with add/edit/delete actions\n• LocalStorage integration for state persistence'
     },
     {
       id: 9004,
-      title: 'Python Interview Question Bank',
-      description: 'Top beginner to intermediate questions with answers.',
-      category: 'Question Paper',
+      title: 'Python Topper Handwritten Notes',
+      description: 'Python basics to advanced with data structures. Official topper notes.',
+      category: 'Lecture Note',
       subject: 'Python',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       uploaded_at: '2026-04-13T13:00:00Z',
-      preview_content: 'Python Interview Set\n• OOP and decorators basics\n• File handling and exception management\n• Common DSA patterns (array, hashmap, two-pointer)\n• 25 interview questions with short answer hints'
+      preview_content: 'Python Topper Notes\n• OOP and decorators basics\n• File handling and exception management\n• Common DSA patterns (array, hashmap, two-pointer)\n• 25 interview questions with short answer hints'
     },
     {
       id: 9005,
-      title: 'SQL Joins Cheat Sheet',
-      description: 'INNER/LEFT/RIGHT joins with visual query examples.',
+      title: 'SQL Topper Revision Notes',
+      description: 'Complex queries, indexing, and normalization notes from the top scorer.',
       category: 'Lecture Note',
       subject: 'SQL',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       uploaded_at: '2026-04-14T14:00:00Z',
-      preview_content: 'SQL Joins Cheat Sheet\n• INNER vs LEFT vs RIGHT vs FULL joins\n• GROUP BY with HAVING and aggregate functions\n• Subqueries, EXISTS, and CTE usage\n• Index basics and query optimization tips'
+      preview_content: 'SQL Topper Notes\n• INNER vs LEFT vs RIGHT vs FULL joins\n• GROUP BY with HAVING and aggregate functions\n• Subqueries, EXISTS, and CTE usage\n• Index basics and query optimization tips'
+    },
+    {
+      id: 9006,
+      title: 'React.js Topper Notes (Rank 1)',
+      description: 'React Hooks, Context API, Redux, and Next.js fundamentals from batch topper.',
+      category: 'Lecture Note',
+      subject: 'React',
+      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      uploaded_at: '2026-04-15T10:00:00Z',
+      preview_content: 'React.js Topper Notes\n• useState, useEffect, useRef, and custom hooks\n• Context API vs Redux Toolkit\n• Next.js Server Components and Routing\n• Interview questions on React lifecycle and rendering'
+    },
+    {
+      id: 9007,
+      title: 'Node.js & Express Topper Notes',
+      description: 'Backend routing, middleware, authentication (JWT), and API design.',
+      category: 'Lecture Note',
+      subject: 'Node.js',
+      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      uploaded_at: '2026-04-16T11:00:00Z',
+      preview_content: 'Node.js Topper Notes\n• Event Loop and Asynchronous processing\n• Express.js middleware and route handling\n• JWT authentication and bcrypt password hashing\n• RESTful API best practices'
+    },
+    {
+      id: 9008,
+      title: 'MongoDB Topper Notes',
+      description: 'NoSQL concepts, Mongoose ODM, Aggregation Pipeline, and Indexing.',
+      category: 'Lecture Note',
+      subject: 'MongoDB',
+      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      uploaded_at: '2026-04-17T12:00:00Z',
+      preview_content: 'MongoDB Topper Notes\n• Document vs Relational databases\n• Mongoose schemas and models\n• Aggregation pipelines ($match, $group, $lookup)\n• Optimizing queries with indexes'
+    },
+    {
+      id: 9009,
+      title: 'Java OOPs & Collections Topper Notes',
+      description: 'Core Java, OOP principles, Collections Framework, and Multithreading.',
+      category: 'Lecture Note',
+      subject: 'Java',
+      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      uploaded_at: '2026-04-18T13:00:00Z',
+      preview_content: 'Java Topper Notes\n• Encapsulation, Inheritance, Polymorphism, Abstraction\n• HashMap, ArrayList, LinkedList internals\n• Multithreading and Concurrency\n• Exception handling best practices'
+    },
+    {
+      id: 9010,
+      title: 'C++ & STL Topper Notes',
+      description: 'Pointers, Memory Management, and Standard Template Library (STL).',
+      category: 'Lecture Note',
+      subject: 'C++',
+      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      uploaded_at: '2026-04-19T14:00:00Z',
+      preview_content: 'C++ Topper Notes\n• Pointers, References, and Memory Leaks\n• Object-Oriented Programming in C++\n• Vectors, Maps, Sets, and STL Algorithms\n• Operator Overloading and Templates'
+    },
+    {
+      id: 9011,
+      title: 'DSA Topper Notes (Rank 1)',
+      description: 'Data Structures and Algorithms notes with top 100 interview problems.',
+      category: 'Lecture Note',
+      subject: 'DSA',
+      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      uploaded_at: '2026-04-20T10:00:00Z',
+      preview_content: 'DSA Topper Notes\n• Arrays, Linked Lists, Stacks, Queues\n• Trees (BST, AVL, Segment Tree) and Graphs\n• Dynamic Programming and Greedy Algorithms\n• Time and Space Complexity Analysis'
+    },
+    {
+      id: 9012,
+      title: 'Git & GitHub Topper Notes',
+      description: 'Version control basics, branching, merging, and resolving conflicts.',
+      category: 'Lecture Note',
+      subject: 'Git',
+      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      uploaded_at: '2026-04-21T11:00:00Z',
+      preview_content: 'Git & GitHub Topper Notes\n• git init, add, commit, push, pull\n• Branching strategies and Pull Requests\n• Resolving merge conflicts\n• Rebase vs Merge differences'
+    },
+    {
+      id: 9013,
+      title: 'Docker & AWS Topper Notes',
+      description: 'Containerization basics, Dockerfiles, and AWS cloud deployment.',
+      category: 'Lecture Note',
+      subject: 'Docker',
+      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      uploaded_at: '2026-04-22T12:00:00Z',
+      preview_content: 'Docker & AWS Topper Notes\n• Docker images, containers, and Dockerfile commands\n• Docker Compose for multi-container apps\n• AWS EC2, S3, and RDS basics\n• CI/CD pipeline concepts'
+    },
+    {
+      id: 9014,
+      title: 'Angular Topper Notes (Rank 1)',
+      description: 'Components, Directives, Services, RxJS, and Routing in Angular.',
+      category: 'Lecture Note',
+      subject: 'Angular',
+      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      uploaded_at: '2026-04-23T13:00:00Z',
+      preview_content: 'Angular Topper Notes\n• Data binding and structural directives\n• Dependency Injection and Services\n• Reactive Forms and Form Validation\n• RxJS Observables and Operators'
     }
   ];
 
@@ -264,8 +355,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   loadSubjects() {
     this.notesService.getAllSubjects().subscribe({
       next: (subjects) => {
-        this.syllabusOptions = subjects && subjects.length > 0
-          ? subjects
+        const validSubjects = subjects ? subjects.filter(s => s && s.trim().length > 0) : [];
+        this.syllabusOptions = validSubjects.length > 0
+          ? validSubjects
           : [...new Set(this.dummyNotes.map(note => note.subject))];
         if (this.syllabusOptions.length > 0) {
            this.selectedSyllabus = this.syllabusOptions[0];
@@ -364,6 +456,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.previewTitle = note.title;
       this.previewDescription = note.description || '';
       this.previewTextContent = note.preview_content || this.buildDefaultPreview(note);
+      this.previewTextLines = this.previewTextContent.split('\n').filter(line => line.trim().length > 0);
       this.previewUrl = null;
       this.isPreviewOpen = true;
       document.body.style.overflow = 'hidden';

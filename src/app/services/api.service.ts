@@ -49,6 +49,9 @@ export interface StudentBatchDetails {
     userid: string;
     batch_name: string;
     course_id: number;
+    timing?: string;
+    mode?: string;
+    zoom_join_url?: string;
 }
 
 export interface Student {

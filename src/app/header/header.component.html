@@ -74,32 +74,7 @@
 
     <!-- RIGHT: Desktop Login & Mobile Toggle -->
     <div class="actions-container right-group">
-      <div class="lang-toggle desktop-only" role="group" [attr.aria-label]="t('header.language')">
-        <button
-          type="button"
-          class="lang-btn"
-          [class.active]="currentLanguage === 'en'"
-          (click)="setLanguage('en')">
-          EN
-        </button>
-        <button
-          type="button"
-          class="lang-btn"
-          [class.active]="currentLanguage === 'hi'"
-          (click)="setLanguage('hi')">
-          हिंदी
-        </button>
-      </div>
 
-      <!-- Theme Toggle (Desktop) -->
-      <button
-        type="button"
-        class="theme-toggle-btn desktop-only"
-        [attr.aria-label]="currentTheme === 'dark' ? 'Switch to light' : 'Switch to dark'"
-        (click)="toggleTheme($event)">
-        <span *ngIf="currentTheme === 'dark'" class="icon">☀️</span>
-        <span *ngIf="currentTheme === 'light'" class="icon">🌙</span>
-      </button>
 
       <a routerLink="/login" class="login-btn desktop-only">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -128,30 +103,7 @@
       </div>
       
       <div class="mobile-links">
-        <div class="mobile-language-switch">
-          <span class="mobile-language-label">{{ t('header.language') }}</span>
-          <div class="lang-toggle" role="group" [attr.aria-label]="t('header.language')">
-            <button
-              type="button"
-              class="lang-btn"
-              [class.active]="currentLanguage === 'en'"
-              (click)="setLanguage('en')">
-              EN
-            </button>
-            <button
-              type="button"
-              class="lang-btn"
-              [class.active]="currentLanguage === 'hi'"
-              (click)="setLanguage('hi')">
-              हिंदी
-            </button>
-          </div>
-          <!-- Mobile Theme Toggle -->
-          <button class="mobile-theme-btn" type="button" (click)="toggleTheme($event)" [attr.aria-label]="currentTheme === 'dark' ? 'Switch to light' : 'Switch to dark'">
-            <span *ngIf="currentTheme === 'dark'">☀️</span>
-            <span *ngIf="currentTheme === 'light'">🌙</span>
-          </button>
-        </div>
+
 
         <a class="mobile-item has-arrow" (click)="openMobileCourses()">
           <span class="flex-center">

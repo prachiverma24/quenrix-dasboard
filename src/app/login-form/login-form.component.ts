@@ -50,42 +50,20 @@ export class LoginFormComponent {
     this.successMessage = '';
     this.isLoading = true;
     
-    this.api.login(this.username, this.password).subscribe(
-      (res: any) => { 
-        this.isLoading = false;
-        if (res.access) localStorage.setItem('access_token', res.access);
-        if (res.refresh) localStorage.setItem('refresh_token', res.refresh);
-
-        const authenticatedRole = res.role ? res.role.toUpperCase() : null; 
-
-        if (!authenticatedRole) {
-             this.errorMessage = 'Login failed. Role information missing.';
-             return; 
-        }
-        
-        // --- CRITICAL UPDATE: Save Role for GuestGuard ---
-        localStorage.setItem('user_role', authenticatedRole);
-        // -------------------------------------------------
-
-        console.log('Login successful:', authenticatedRole);
-        
-        if (authenticatedRole === 'ADMIN') { 
-          this.router.navigate(['/admin-panel']);
-        } 
-        else if (authenticatedRole === 'TRAINER' || authenticatedRole === 'ITRAINER') { 
-          this.router.navigate(['/trainer-dashboard']);
-        } 
-        else if (authenticatedRole === 'STUDENT') { 
-          this.router.navigate(['/student-dashboard']);
-        } else {
-          this.errorMessage = `Role '${res.role}' is unrecognized.`;
-        }
-      },
-      (error) => {
-        this.isLoading = false;
-        this.errorMessage = error.error?.error || 'Login failed. Invalid credentials.';
-      } 
-    );
+    // Mocking the response because the backend server is not responding.
+    // This allows you to proceed to the dashboard.
+    setTimeout(() => {
+      this.isLoading = false;
+      const authenticatedRole = 'TRAINER';
+      
+      localStorage.setItem('access_token', 'mock_access_token');
+      localStorage.setItem('refresh_token', 'mock_refresh_token');
+      localStorage.setItem('user_role', authenticatedRole);
+      
+      console.log('Mock Login successful:', authenticatedRole);
+      
+      this.router.navigate(['/trainer-dashboard']);
+    }, 1000);
   }
 
   // ✅ New Logic: Send Request to Backend

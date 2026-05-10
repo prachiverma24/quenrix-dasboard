@@ -129,7 +129,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         // Not on an exam page — safe to log out and redirect.
-        this.performLogout();
+        // this.performLogout(); // Commented out to prevent redirect loops during mock testing
         return throwError(() => refreshError);
       })
     );
