@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  --primary-accent: #7C5CFF;
+  --button-highlight: #6C63A8;
+  --card-highlight: #4B3F8F;
+  --light-accent: #C2B6FF;
+}
+
+/* Glass card utility */
+.glass-card {
+  background: rgba(75, 63, 143, 0.15); /* Using Card Highlight with opacity */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(194, 182, 255, 0.1); /* Using Light Accent */
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(124, 92, 255, 0.15);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.03);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 92, 255, 0.4);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 92, 255, 0.7);
+}
+
+/* Sidebar active glow */
+.sidebar-active {
+  background: linear-gradient(135deg, rgba(124,92,255,0.35), rgba(194,182,255,0.2));
+  border: 1px solid rgba(124, 92, 255, 0.4);
+  box-shadow: 0 0 14px rgba(124, 92, 255, 0.3);
+}
+
+/* Stats card glow on hover */
+.stat-card:hover {
+  box-shadow: 0 0 25px rgba(124, 92, 255, 0.35), 0 8px 30px rgba(0,0,0,0.35);
+}
+
+/* Progress bar animation */
+@keyframes progressFill {
+  from { width: 0%; }
+  to { width: var(--progress); }
+}
+
+.progress-bar {
+  animation: progressFill 1.2s ease forwards;
+}
+
+/* Calendar day hover */
+.cal-day:hover:not(.cal-day-empty) {
+  background: rgba(124, 92, 255, 0.25);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Notification badge pulse */
+.notif-badge {
+  animation: pulse2 2s infinite;
+}
+
+/* AI banner shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
