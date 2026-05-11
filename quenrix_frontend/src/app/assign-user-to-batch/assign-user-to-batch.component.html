@@ -100,13 +100,13 @@
         </div>
 
         <!-- 5. Selected User Details -->
-        <div *ngIf="selectedUserDetail as user" class="user-details-card">
+        <div *ngIf="selectedUserDetail" class="user-details-card">
             <h3>Selected User Details</h3>
-            <p><strong>User ID:</strong> {{ user.id }}</p>
-            <p><strong>Name:</strong> {{ user.username }}</p>
-            <p><strong>Assumed Role:</strong> {{ user.role | uppercase }}</p>
+            <p><strong>User ID:</strong> {{ selectedUserDetail.id }}</p>
+            <p><strong>Name:</strong> {{ selectedUserDetail.username }}</p>
+            <p><strong>Assumed Role:</strong> {{ selectedUserDetail.role | uppercase }}</p>
             <div class="detail-list">
-                <ng-container *ngFor="let item of (user.details | keyvalue)">
+                <ng-container *ngFor="let item of (selectedUserDetail.details | keyvalue)">
                     <p><strong>{{ item.key | titlecase }}:</strong> {{ $any(item.value).toString() }}</p>
                 </ng-container>
             </div>

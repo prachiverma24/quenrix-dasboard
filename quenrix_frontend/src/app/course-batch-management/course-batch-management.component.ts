@@ -1,13 +1,10 @@
 import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { interval, Subscription, of } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { ApiService, StudentBatchDetails } from 'src/app/services/api.service';
 import { CreateCourseService, Subject } from 'src/app/services/create-course.service';
 @Component({
   selector: 'app-course-batch-management',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './course-batch-management.component.html',
   styleUrls: ['./course-batch-management.component.css']
 })

@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { marked } from 'marked';
+import { CodexaChatService } from 'src/app/codexaservice/codexa-chat.service';
 import { QuestionStateService } from 'src/app/codexaservice/question-state.service';
-import { CodexaChatService } from 'src/app/services/codexa-chat.service';
 
 interface ChatMessage {
   role: 'user' | 'codexa';
@@ -14,8 +12,6 @@ interface ChatMessage {
 
 @Component({
   selector: 'app-codexaai',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
   templateUrl: './codexaai.component.html',
   styleUrls: ['./codexaai.component.css']
 })

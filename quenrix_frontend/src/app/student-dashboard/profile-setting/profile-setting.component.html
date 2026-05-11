@@ -8,8 +8,8 @@
   </div>
 
   <!-- Message Box for notifications (Top-right corner) -->
-  <div *ngIf="message" [class]="'message-box ' + message!.type">
-    {{ message!.text }}
+  <div *ngIf="message" [class]="'message-box ' + message.type">
+    {{ message.text }}
     <button class="close-message" (click)="message = null">&times;</button>
   </div>
 
@@ -68,7 +68,7 @@
     <div class="col-right">
       
       <!-- General Settings Form -->
-      <form class="settings-form card-section" [formGroup]="profileForm">
+      <div class="settings-form card-section" [formGroup]="profileForm">
         <h3><i class="fas fa-user-edit"></i> General Settings</h3>
         <div class="form-group">
           <label for="fullName">Full Name</label>
@@ -98,10 +98,10 @@
             <option value="None">None</option>
           </select>
         </div>
-      </form>
+      </div>
       
       <!-- Security Settings -->
-      <form class="security-section card-section" [formGroup]="securityForm">
+      <div class="security-section card-section" [formGroup]="securityForm">
         <h3><i class="fas fa-lock"></i> Security & Privacy</h3>
         
         <!-- Password Change -->
@@ -132,11 +132,11 @@
         <button class="btn-secondary" (click)="saveSecurityChanges()" [disabled]="securityForm.invalid">
           <i class="fas fa-key"></i> Update Security
         </button>
-      </form>
+      </div>
 
       <!-- Enrolled Courses List -->
       <div class="courses-section card-section">
-        <h3><i class="fas fa-book"></i> Enrolled Courses ({{ profileData.courses.length || 0 }})</h3>
+        <h3><i class="fas fa-book"></i> Enrolled Courses ({{ profileData.courses.length }})</h3>
         <div class="course-list">
           <div *ngFor="let course of profileData.courses" class="course-item">
             <div class="course-icon" [style.background-color]="course.colorClass">

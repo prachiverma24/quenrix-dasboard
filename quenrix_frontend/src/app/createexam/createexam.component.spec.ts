@@ -1,19 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CreateExamComponent } from './createexam.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 
-describe('CreateExamComponent', () => {
-  let component: CreateExamComponent;
-  let fixture: ComponentFixture<CreateExamComponent>;
+import { CreateexamComponent } from './createexam.component';
+
+describe('CreateexamComponent', () => {
+  let component: CreateexamComponent;
+  let fixture: ComponentFixture<CreateexamComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CreateExamComponent],
-      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, RouterTestingModule]
+      declarations: [CreateexamComponent]
     });
-    fixture = TestBed.createComponent(CreateExamComponent);
+    fixture = TestBed.createComponent(CreateexamComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

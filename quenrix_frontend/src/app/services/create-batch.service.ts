@@ -16,7 +16,6 @@ export interface BatchDetail {
   startDate?: string; 
   timing?: string;     
   mode?: string;       
-  zoom_join_url?: string;
 }
 
 export interface CreateBatchPayload {

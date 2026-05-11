@@ -1,7 +1,4 @@
 import { Component, OnInit, OnDestroy, OnChanges, SimpleChanges, Input, Output, EventEmitter, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { examAPi } from '../services/createexam.service';
 import { ApiService } from '../services/api.service';
 import { Subscription, interval, of, forkJoin } from 'rxjs';
@@ -56,8 +53,6 @@ interface DetailedAnswer {
 
 @Component({
   selector: 'app-attend-exam',
-  standalone: true,
-  imports: [CommonModule, FormsModule, MonacoEditorModule],
   templateUrl: './attend-exam.component.html',
   styleUrls: ['./attend-exam.component.css']
 })

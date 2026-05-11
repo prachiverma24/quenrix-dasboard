@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ManageNotesService } from 'src/app/services/manage-notes.service';
 import { HttpEventType } from '@angular/common/http';
@@ -10,7 +9,7 @@ import { AlertService } from '../services/alert.service'; // Import AlertService
 @Component({
   selector: 'app-upload-notes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MonacoEditorModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './upload-notes.component.html',
   styleUrls: ['./upload-notes.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -98,8 +97,6 @@ export class UploadNotesComponent {
   }
 
   goBack() {
-    this.router.navigate(['/admin/admin-panel']);
+    this.router.navigate(['/admin-panel']);
   }
 }
-
-

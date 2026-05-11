@@ -1,6 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { marked } from 'marked';
@@ -8,8 +6,6 @@ import { QuestionStateService } from 'src/app/codexaservice/question-state.servi
 
 @Component({
   selector: 'app-questions',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.css']
 })

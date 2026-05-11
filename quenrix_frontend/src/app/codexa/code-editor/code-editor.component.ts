@@ -5,17 +5,12 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { CodeExecutionService } from 'src/app/services/code-execution.service';
-import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 declare const monaco: any;
 
 @Component({
   selector: 'app-code-editor',
-  standalone: true,
-  imports: [CommonModule, FormsModule, MonacoEditorModule],
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.css']
 })

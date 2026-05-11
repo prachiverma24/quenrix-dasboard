@@ -5,14 +5,10 @@ import { debounceTime, distinctUntilChanged, takeUntil, finalize, catchError } f
 import { ResumeService, SkillMaster, ProficiencyLevel, SetupData, ApiPayload } from '../services/create-resume.service'; 
 import { AlertService } from '../services/alert.service'; 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
+import { Router } from '@angular/router'; 
 
 @Component({
   selector: 'app-setup-profile',
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './setup-profile.component.html',
   styleUrls: ['./setup-profile.component.css']
 })
@@ -43,13 +39,6 @@ export class SetupProfileComponent implements OnInit, OnDestroy {
   skillMasterList = signal<SkillMaster[]>([]);
   proficiencyList = signal<ProficiencyLevel[]>([]);
   techStackList = signal<{tech_stackid: number, techname: string}[]>([]); 
-
-  private readonly fallbackProficiencies: ProficiencyLevel[] = [
-    { id: 1, levelName: 'Beginner' },
-    { id: 2, levelName: 'Intermediate' },
-    { id: 3, levelName: 'Advanced' },
-    { id: 4, levelName: 'Expert' }
-  ];
   
   skillSearchControl = new FormControl('');
   filteredSuggestions = signal<string[]>([]);
@@ -102,11 +91,7 @@ export class SetupProfileComponent implements OnInit, OnDestroy {
     this.resumeService.getSetupData().subscribe({
       next: (data: SetupData) => {
         if(data?.skills) this.skillMasterList.set(data.skills.map((s: any) => ({ id: s.skillmasterid, skillName: s.skillname })));
-        if (data?.proficiencies && data.proficiencies.length > 0) {
-          this.proficiencyList.set(data.proficiencies.map((p: any) => ({ id: p.proficiencyid, levelName: p.levelname })));
-        } else {
-          this.proficiencyList.set(this.fallbackProficiencies);
-        }
+        if(data?.proficiencies) this.proficiencyList.set(data.proficiencies.map((p: any) => ({ id: p.proficiencyid, levelName: p.levelname })));
         if(data?.techStacks) this.techStackList.set(data.techStacks);
       },
       error: () => this.alertService.error('Could not load technical data.')
@@ -321,12 +306,11 @@ export class SetupProfileComponent implements OnInit, OnDestroy {
   goBack(): void {
     const role = this.userRole();
     if (role === 'trainer') {
-      this.router.navigate(['/trainer/trainer-dashboard']);
+      this.router.navigate(['/trainer-dashboard']);
     } else {
-      this.router.navigate(['/student/student-dashboard']);
+      this.router.navigate(['/student-dashboard']);
     }
   }
 
   ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }
 }
-

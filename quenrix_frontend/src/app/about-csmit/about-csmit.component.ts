@@ -1,11 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { LanguageService } from '../services/language.service';
 
 @Component({
   selector: 'app-about-csmit',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './about-csmit.component.html',
   styleUrls: ['./about-csmit.component.css']
 })

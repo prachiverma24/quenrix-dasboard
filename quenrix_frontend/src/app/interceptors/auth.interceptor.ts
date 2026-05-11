@@ -10,7 +10,7 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
@@ -96,7 +96,6 @@ export class AuthInterceptor implements HttpInterceptor {
     // Call the backend to get a new access token using the refresh token.
     // auth_interceptor.ts line ~80
     return this.http.post<{ access: string }>(`${environment.apiBaseUrl}/api/token/refresh/`, {
-      refresh: refreshToken
     }).pipe(
       switchMap((tokenResponse: { access: string }) => {
         this.isRefreshing = false;
@@ -130,7 +129,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         // Not on an exam page — safe to log out and redirect.
-        this.performLogout();
+        // this.performLogout(); // Commented out to prevent redirect loops during mock testing
         return throwError(() => refreshError);
       })
     );

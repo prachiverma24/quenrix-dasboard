@@ -1,13 +1,9 @@
 import { Component, OnInit, inject, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UiStateService } from '../services/ui-state.service';
-import { AboutCsmitComponent } from '../about-csmit/about-csmit.component';
 
 @Component({
   selector: 'app-section',
-  standalone: true,
-  imports: [CommonModule, AboutCsmitComponent],
   templateUrl: './section.component.html',
   styleUrls: ['./section.component.css']
 })

@@ -72,7 +72,7 @@ export class AssignUserToBatchComponent implements OnInit {
 
   // Go Back Method
   goBack(): void {
-    this.router.navigate(['/admin/admin-panel']); 
+    this.router.navigate(['/admin-panel']); 
   }
 
   loadInitialData(): void {

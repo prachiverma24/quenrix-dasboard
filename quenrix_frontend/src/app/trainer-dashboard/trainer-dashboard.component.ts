@@ -6,7 +6,6 @@ import { ApiService, StudentBatchDetails, LoginResponse } from '../services/api.
 import { CreateBatchService } from '../services/create-batch.service';
 import { ResumeService } from '../services/create-resume.service';
 
-import { NavigationService } from '../services/navigation.service';
 interface ScheduleItem {
   date: string; 
   desc: string;
@@ -44,6 +43,7 @@ export class TrainerDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInputRef!: ElementRef;
 
   activePage: string = 'dashboard';
+  activeTab: string = 'Schedule'; // For right panel tabs
   loadingDashboardData: boolean = true;
   
   // Clock & Greeting
@@ -114,9 +114,8 @@ export class TrainerDashboardComponent implements OnInit, OnDestroy {
     private apiService: ApiService,
     private batchService: CreateBatchService,
     private resumeService: ResumeService,
-    private sanitizer: DomSanitizer,
-    private navigationService: NavigationService
-) {}
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit(): void {
     // 1. Synchronous UI Setup
@@ -125,7 +124,14 @@ export class TrainerDashboardComponent implements OnInit, OnDestroy {
     this.initializeCalendar();
     this.initializeShorts();
 
-    // 2. Fetch Data
+    // 2. Mock some schedule data for "Command Center" look
+    this.scheduleDetails = [
+      { date: new Date().toISOString(), desc: 'Advanced React Architecture', type: 'class' },
+      { date: new Date().toISOString(), desc: 'Doubt Clearing Session - B4', type: 'meeting' },
+      { date: new Date().toISOString(), desc: 'Curriculum Review Meeting', type: 'admin' }
+    ];
+
+    // 3. Fetch Data
     this.fetchTrainerDataFromStorage();
     this.checkProfileCompletion();
   }
@@ -170,16 +176,25 @@ export class TrainerDashboardComponent implements OnInit, OnDestroy {
   }
 
   private setTrainerDetails(name: string, id: string): void {
-      this.trainerName = name;
+    const sanitizedName = this.getDisplayName(name);
+    this.trainerName = sanitizedName;
       this.trainerId = id;
-      this.profileInitial = this.getProfileInitial(name);
+    this.profileInitial = this.getProfileInitial(sanitizedName);
       this.trainerProfileData = {
-          full_name: name,
+      full_name: sanitizedName,
           email: '', // Can be fetched if needed
           trainer_id: id,
           profileImageUrl: '',
           profileInitial: this.profileInitial
       };
+  }
+
+  private getDisplayName(name: string): string {
+    const trimmed = (name || '').trim();
+    if (!trimmed || /not\s*found/i.test(trimmed)) {
+      return 'Trainer';
+    }
+    return trimmed;
   }
 
   // --- Optimized Profile Sync ---
@@ -262,11 +277,10 @@ export class TrainerDashboardComponent implements OnInit, OnDestroy {
   }
 
   goToProfileSetupForm(): void {
-    window.location.href = '/setup-profile';
+    window.location.href = 'setup-profile';
   }
 
   logout(): void {
-    this.navigationService.clearUser();
     localStorage.clear();
     sessionStorage.clear();
     window.location.href = 'login';
@@ -322,7 +336,8 @@ export class TrainerDashboardComponent implements OnInit, OnDestroy {
     for (let i = 0; i < firstDay; i++) this.calendarDays.push({ date: '', disabled: true });
     for (let i = 1; i <= totalDays; i++) {
         const d = new Date(year, month, i);
-        this.calendarDays.push({ date: i, disabled: false, selected: d.toDateString() === new Date().toDateString(), fullDate: d });
+        const isSelected = this.selectedScheduleDate ? d.toDateString() === this.selectedScheduleDate.toDateString() : false;
+        this.calendarDays.push({ date: i, disabled: false, selected: isSelected, fullDate: d });
     }
   }
 
@@ -335,11 +350,13 @@ export class TrainerDashboardComponent implements OnInit, OnDestroy {
     if (date) {
         this.selectedScheduleDate = date;
         this.scheduleDetails = [];
+        // Update selection state for UI
+        this.calendarDays.forEach(day => {
+            if (day.fullDate) {
+                day.selected = day.fullDate.toDateString() === date.toDateString();
+            }
+        });
+        this.cdr.detectChanges();
     }
   }
 }
-
-
-
-
-

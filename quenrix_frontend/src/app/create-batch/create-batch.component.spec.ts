@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { CreateBatchComponent } from './create-batch.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CreateBatchComponent', () => {
   let component: CreateBatchComponent;
@@ -10,8 +8,7 @@ describe('CreateBatchComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CreateBatchComponent],
-      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, RouterTestingModule]
+      declarations: [CreateBatchComponent]
     });
     fixture = TestBed.createComponent(CreateBatchComponent);
     component = fixture.componentInstance;

@@ -1,12 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { StudentProfileData } from '../student-dashboard.component';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-profile-setting',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './profile-setting.component.html',
   styleUrls: ['./profile-setting.component.css']
 })
