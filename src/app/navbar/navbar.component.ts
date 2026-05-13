@@ -83,7 +83,57 @@ export class NavbarComponent implements OnInit, OnDestroy {
       subject: 'HTML',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       uploaded_at: '2026-04-10T10:00:00Z',
-      preview_content: 'HTML Topper Notes\n• Semantic tags: header, nav, main, section, article, footer\n• Forms: label + input linking, required and pattern validation\n• Media: responsive images, alt text, accessible embeds\n• Accessibility: aria-labels, heading hierarchy, keyboard focus states'
+      preview_content: `<div style="font-family: 'Inter', sans-serif; color: #1e293b;">
+  <h1 style="text-align: center; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">HTML</h1>
+  <p style="text-align: center; color: #64748b; font-size: 0.9rem;">Date: 20/05/2024</p>
+
+  <p>HTML (HyperText Markup Language) is the standard language used to create and structure web pages.</p>
+
+  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem;">1. WHAT IS HTML?</div>
+  <ul>
+    <li>HTML stands for HyperText Markup Language.</li>
+    <li>It describes the structure of a web page.</li>
+    <li>HTML elements are the building blocks of web pages.</li>
+    <li>HTML is not a programming language.</li>
+  </ul>
+
+  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">2. BASIC HTML STRUCTURE</div>
+  <div style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; background: #f8fafc; font-family: monospace;">
+    &lt;!DOCTYPE html&gt;<br>
+    &lt;html lang="en"&gt;<br>
+    &lt;head&gt;<br>
+    &nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;<br>
+    &nbsp;&nbsp;&lt;title&gt;My Page&lt;/title&gt;<br>
+    &lt;/head&gt;<br>
+    &lt;body&gt;<br>
+    &nbsp;&nbsp;&lt;h1&gt;Hello, World!&lt;/h1&gt;<br>
+    &nbsp;&nbsp;&lt;p&gt;This is a paragraph.&lt;/p&gt;<br>
+    &lt;/body&gt;<br>
+    &lt;/html&gt;
+  </div>
+
+  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">3. COMMON HTML TAGS</div>
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem;">
+    <thead>
+      <tr style="background: #f8fafc;">
+        <th style="border: 1px solid #e2e8f0; padding: 0.75rem; text-align: left;">Tag</th>
+        <th style="border: 1px solid #e2e8f0; padding: 0.75rem; text-align: left;">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;h1&gt; to &lt;h6&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Headings</td></tr>
+      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;p&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Paragraph</td></tr>
+      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;a&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Anchor / Link</td></tr>
+      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;img&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Image</td></tr>
+      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Lists</td></tr>
+      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;div&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Division / Container</td></tr>
+    </tbody>
+  </table>
+
+  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">4. HTML ATTRIBUTES</div>
+  <p>Attributes provide additional information about HTML elements. Written in the opening tag as <code>name="value"</code>.</p>
+  <p>Example: <code>&lt;a href="https://example.com"&gt;Visit Site&lt;/a&gt;</code></p>
+</div>`
     },
     {
       id: 9002,
@@ -93,7 +143,38 @@ export class NavbarComponent implements OnInit, OnDestroy {
       subject: 'CSS',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       uploaded_at: '2026-04-11T11:00:00Z',
-      preview_content: 'CSS Topper Notes\n• Build 3 card responsive grid with CSS Grid\n• Add sticky navbar and mobile drawer using flexbox\n• Create reusable utility classes for spacing and typography\n• Use media queries for 1200px, 768px and 480px breakpoints'
+      preview_content: `<div style="font-family: 'Inter', sans-serif; color: #1e293b;">
+  <h1 style="text-align: center; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">CSS</h1>
+  <p style="text-align: center; color: #64748b; font-size: 0.9rem;">Date: 21/05/2024</p>
+
+  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem;">1. CSS SELECTORS</div>
+  <ul>
+    <li><strong>Universal Selector:</strong> <code>* { margin: 0; }</code></li>
+    <li><strong>Element Selector:</strong> <code>p { color: red; }</code></li>
+    <li><strong>Class Selector:</strong> <code>.box { background: blue; }</code></li>
+    <li><strong>ID Selector:</strong> <code>#header { width: 100%; }</code></li>
+  </ul>
+
+  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">2. FLEXBOX CHEATSHEET</div>
+  <p>Flexbox is used for 1D layouts (Row or Column).</p>
+  <div style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; background: #f8fafc; font-family: monospace;">
+    .container {<br>
+    &nbsp;&nbsp;display: flex;<br>
+    &nbsp;&nbsp;justify-content: center; /* Horizonal */<br>
+    &nbsp;&nbsp;align-items: center; /* Vertical */<br>
+    }
+  </div>
+
+  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">3. CSS GRID CHEATSHEET</div>
+  <p>Grid is used for 2D layouts (Rows and Columns).</p>
+  <div style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; background: #f8fafc; font-family: monospace;">
+    .grid {<br>
+    &nbsp;&nbsp;display: grid;<br>
+    &nbsp;&nbsp;grid-template-columns: repeat(3, 1fr);<br>
+    &nbsp;&nbsp;gap: 10px;<br>
+    }
+  </div>
+</div>`
     },
     {
       id: 9003,

@@ -40,8 +40,8 @@
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   z-index: -1; 
-  /* Changed to white */
-  background-color: #ffffff;
+  /* Transparent initially to blend with hero */
+  background-color: transparent;
   transition: all var(--transition-fast);
 }
 

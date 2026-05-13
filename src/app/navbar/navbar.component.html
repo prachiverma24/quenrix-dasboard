@@ -217,9 +217,9 @@
     <div class="pdf-body">
       <iframe *ngIf="previewUrl" [src]="previewUrl" class="pdf-frame" frameborder="0"></iframe>
 
-      <div *ngIf="!previewUrl" class="note-preview-fallback">
+      <div *ngIf="!previewUrl" class="note-preview-fallback topper-style">
         <p *ngIf="previewDescription">{{ previewDescription }}</p>
-        <div>{{ previewTextContent }}</div>
+        <div [innerHTML]="previewTextContent"></div>
       </div>
     </div>
   </div>

@@ -1,0 +1,118 @@
+<section class="fs" #sectionRef>
+
+  <!-- Mouse-follow glow -->
+  <div class="mouse-glow" #mouseGlow></div>
+
+  <!-- Particle canvas -->
+  <canvas class="particle-canvas" #canvas></canvas>
+
+  <!-- Animated blob mesh -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- Grid overlay -->
+  <div class="grid-overlay"></div>
+
+  <div class="fs-inner">
+
+    <!-- ── Section Header ───────────────────────────────── -->
+    <div class="fs-header" [class.visible]="headerVisible">
+
+      <div class="fs-eyebrow">
+        <span class="eyebrow-dot"></span>
+        <span>Platform Features</span>
+        <span class="eyebrow-line"></span>
+      </div>
+
+      <h2 class="fs-title">
+        Everything You Need to<br>
+        <span class="title-grad">Get Hired Faster</span>
+      </h2>
+
+      <p class="fs-sub">
+        AI-powered tools, expert mentorship, and real-world practice —
+        <br class="desktop-br">engineered to accelerate your tech career.
+      </p>
+
+      <div class="header-glow-divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+      </div>
+
+    </div>
+
+    <!-- ── Feature Cards ────────────────────────────────── -->
+    <div class="fs-grid">
+      <div
+        *ngFor="let f of features; let i = index"
+        class="fc"
+        [class.visible]="cardsVisible"
+        [style]="f.accentVar"
+        [style.transition-delay]="(i * 60) + 'ms'"
+        #cardEl
+        (mousemove)="onCardMouseMove($event, cardEl)"
+        (mouseleave)="onCardMouseLeave(cardEl)"
+      >
+        <!-- Animated border ring -->
+        <div class="fc-ring"></div>
+
+        <!-- Inner glow (follows mouse) -->
+        <div class="card-inner-glow"></div>
+
+        <!-- Top accent line -->
+        <div class="fc-top-line"></div>
+
+        <!-- Icon / Illustration -->
+        <div class="fc-icon">
+          <div class="icon-ring"></div>
+          
+          <!-- AI Mentor -->
+          <img *ngIf="f.id === 'ai'" src="assets/ai_mentor_support.png" [alt]="f.title" class="fc-img">
+          
+          <!-- Premium Notes -->
+          <img *ngIf="f.id === 'notes'" src="assets/premium_notes.png" [alt]="f.title" class="fc-img">
+          
+          <!-- Mock Interviews -->
+          <img *ngIf="f.id === 'interview'" src="assets/mock_interviews.png" [alt]="f.title" class="fc-img">
+          
+          <!-- DSA Problems -->
+          <img *ngIf="f.id === 'coding'" src="assets/dsa_problems.png" [alt]="f.title" class="fc-img">
+          
+          <!-- ATS Resume -->
+          <img *ngIf="f.id === 'resume'" src="assets/ats_resume_templates.png" [alt]="f.title" class="fc-img">
+          
+          <!-- Placement Assistance -->
+          <img *ngIf="f.id === 'placement'" src="assets/placement_assistance.png" [alt]="f.title" class="fc-img">
+          
+          <!-- Real Industry Projects -->
+          <img *ngIf="f.id === 'projects'" src="assets/real_industry_projects.png" [alt]="f.title" class="fc-img">
+          
+          <!-- Skill Certificates -->
+          <img *ngIf="f.id === 'cert'" src="assets/skill_certificates.png" [alt]="f.title" class="fc-img">
+        </div>
+
+        <!-- Content -->
+        <h3 class="fc-title">{{ f.title }}</h3>
+        <p class="fc-desc">{{ f.desc }}</p>
+
+        <!-- Footer -->
+        <div class="fc-foot">
+          <div class="fc-stat">
+            <span class="stat-num">{{ f.stat }}</span>
+            <span class="stat-lbl">{{ f.statLabel }}</span>
+          </div>
+          <span class="fc-tag">{{ f.tag }}</span>
+          <span class="fc-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+
+
+  </div>
+</section>
