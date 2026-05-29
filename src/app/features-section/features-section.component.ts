@@ -101,7 +101,57 @@ export class FeaturesSectionComponent implements OnInit, AfterViewInit, OnDestro
     { number: '24/7', label: 'AI Support'        },
   ];
 
-  ngOnInit(): void {}
+  // --- Calculator State ---
+  selectedCourse: string = 'fullstack';
+  experienceYears: number = 0;
+  estimatedSalary: number = 5;
+  potentialRole: string = 'Junior Engineer / Associate';
+  hiringCompanies: string = 'Infosys, Capgemini, TCS, Amazon';
+  requiredSkills: string[] = ['React', 'Node.js', 'Express', 'MongoDB'];
+
+  ngOnInit(): void {
+    this.onCalculatorChange();
+  }
+
+  onCalculatorChange() {
+    let base = 5;
+    let multiplier = 1.8;
+    let max = 25;
+    
+    if (this.selectedCourse === 'fullstack') {
+      base = 5.2; multiplier = 1.95; max = 24.8;
+      this.hiringCompanies = 'Infosys, Capgemini, TCS, Amazon';
+      this.requiredSkills = ['React', 'Node.js', 'Express', 'MongoDB', 'System Design'];
+    } else if (this.selectedCourse === 'datascience') {
+      base = 6.0; multiplier = 2.2; max = 28.5;
+      this.hiringCompanies = 'Google, Microsoft, Accenture, IBM';
+      this.requiredSkills = ['Python', 'SQL', 'PyTorch', 'Pandas', 'PowerBI'];
+    } else if (this.selectedCourse === 'cybersecurity') {
+      base = 5.8; multiplier = 2.05; max = 26.2;
+      this.hiringCompanies = 'PwC, Deloitte, Cisco, CrowdStrike';
+      this.requiredSkills = ['Ethical Hacking', 'Penetration Testing', 'Network Security', 'SIEM'];
+    } else if (this.selectedCourse === 'cloud') {
+      base = 6.4; multiplier = 2.5; max = 31.5;
+      this.hiringCompanies = 'AWS, Azure, Oracle, Netflix';
+      this.requiredSkills = ['Docker', 'Kubernetes', 'AWS', 'Terraform', 'CI/CD'];
+    }
+    
+    // Calculate salary
+    this.estimatedSalary = Math.min(base + (this.experienceYears * multiplier), max);
+    // Standardize to 1 decimal place
+    this.estimatedSalary = Math.round(this.estimatedSalary * 10) / 10;
+    
+    // Determine role
+    if (this.experienceYears <= 2) {
+      this.potentialRole = 'Junior Engineer / Associate';
+    } else if (this.experienceYears <= 5) {
+      this.potentialRole = 'Mid-level Engineer / Consultant';
+    } else if (this.experienceYears <= 8) {
+      this.potentialRole = 'Senior Software Engineer / Tech Lead';
+    } else {
+      this.potentialRole = 'Lead Solutions Architect / Engineering Manager';
+    }
+  }
 
   ngAfterViewInit(): void {
     this.initObserver();

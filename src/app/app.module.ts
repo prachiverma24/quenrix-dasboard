@@ -54,6 +54,7 @@ import { DemoClassesSectionComponent } from './demo-classes-section/demo-classes
 import { LearningHubComponent } from './learning-hub/learning-hub.component';
 import { FeaturesSectionComponent } from './features-section/features-section.component';
 import { CoursesPageComponent } from './courses-page/courses-page.component';
+import { NotesViewerComponent } from './notes-viewer/notes-viewer.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { CoursesPageComponent } from './courses-page/courses-page.component';
     DemoClassesSectionComponent,
     LearningHubComponent,
     FeaturesSectionComponent,
-    CoursesPageComponent
+    CoursesPageComponent,
+    NotesViewerComponent
   ],
   imports: [
     MonacoEditorModule.forRoot({

@@ -26,6 +26,8 @@
     padding: 4rem 0 1.8rem 0;
     position: relative;
     overflow: hidden;
+    border-top: 1px solid rgba(139, 92, 246, 0.15);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02), 0 -10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .site-footer::before {
@@ -118,8 +120,8 @@
 
 .footer-cta.primary {
     color: #ffffff;
-    background: linear-gradient(135deg, #7c3aed, #5b36c6);
-    box-shadow: 0 10px 24px rgba(109, 66, 213, 0.35);
+    background: #8B5CF6;
+    box-shadow: 0 10px 24px rgba(139, 92, 246, 0.35);
 }
 
 .footer-cta.secondary {
@@ -384,8 +386,8 @@
     bottom: 25px;
     right: 25px;
     width: 55px; height: 55px;
-    background-color: #6a43c5;
-    background: linear-gradient(135deg, #6a43c5 0%, #5a34b9 100%);
+    background-color: #8B5CF6;
+    background: #8B5CF6;
     color: var(--text-white);
     border: none;
     border-radius: 50%;
@@ -404,8 +406,8 @@
 }
 
 .scroll-to-top:hover {
-    background-color: #5f37bf;
-    background: linear-gradient(135deg, #5f37bf 0%, #4f2faa 100%);
+    background-color: #7C3AED;
+    background: #7C3AED;
     transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(90, 52, 185, 0.55);
 }

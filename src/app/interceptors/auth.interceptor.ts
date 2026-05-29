@@ -96,6 +96,7 @@ export class AuthInterceptor implements HttpInterceptor {
     // Call the backend to get a new access token using the refresh token.
     // auth_interceptor.ts line ~80
     return this.http.post<{ access: string }>(`${environment.apiBaseUrl}/api/token/refresh/`, {
+      refresh: refreshToken
     }).pipe(
       switchMap((tokenResponse: { access: string }) => {
         this.isRefreshing = false;
@@ -114,6 +115,11 @@ export class AuthInterceptor implements HttpInterceptor {
         // The refresh token itself is invalid or expired.
         // The user's session is completely expired — they must log in again.
         this.isRefreshing = false;
+
+        // Notify all waiting requests that the refresh failed so they don't hang
+        this.refreshTokenSubject.error(refreshError);
+        // Reset the subject for future use
+        this.refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
         // IMPORTANT: Do NOT log the user out if they are currently in the middle of an exam.
         // Losing exam progress would be a very bad experience.

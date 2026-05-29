@@ -168,7 +168,7 @@
 }
 
 .doubt-card {
-    background: linear-gradient(135deg, #6C5CE7, #4B3F8F) !important;
+    background: linear-gradient(135deg, #4B3F8F, #4B3F8F) !important;
     color: white !important;
     border: none !important;
     border-radius: var(--radius-xl);

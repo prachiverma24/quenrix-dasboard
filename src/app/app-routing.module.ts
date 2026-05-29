@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginFormComponent } from './login-form/login-form.component';
+import { CoursesPageComponent } from './courses-page/courses-page.component';
+
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { TrainerFormComponent } from './trainer-form/trainer-form.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
@@ -28,6 +30,7 @@ import { SetupProfileComponent } from './setup-profile/setup-profile.component';
 import { TrainerDashboardComponent } from './trainer-dashboard/trainer-dashboard.component';
 import { GuestGuard } from './guest.guard';
 import { AuthGuard } from './auth.guard';
+import { NotesViewerComponent } from './notes-viewer/notes-viewer.component';
 
 
 
@@ -43,6 +46,15 @@ const routes: Routes = [
     component: LandingPageComponent,
     canActivate: [GuestGuard] 
   },
+  { 
+    path: 'courses', 
+    component: CoursesPageComponent 
+  },
+  { 
+    path: 'course-catalog', 
+    component: CoursesPageComponent 
+  },
+
   { 
     path: 'login', 
     component: LoginFormComponent,
@@ -84,7 +96,8 @@ const routes: Routes = [
   {path:'careers',component:CareersComponent},
   {path:'course-batch-management',component:CourseBatchManagementComponent},
   {path:'syntaxshare',component:SyntaxshareComponent},
-  {path:'home',component:HomeComponent}
+  {path:'home',component:HomeComponent},
+  {path:'study-material',component:NotesViewerComponent}
 ];
 
 @NgModule({

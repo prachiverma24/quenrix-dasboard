@@ -187,7 +187,7 @@
   transition: all .2s;
   box-shadow: 0 4px 14px rgba(0,0,0,.15);
 }
-.btn-primary  { background: linear-gradient(135deg, #8B7CF6, #6C5CE7) !important; color: #fff !important; }
+.btn-primary  { background: linear-gradient(135deg, #4B3F8F, #4B3F8F) !important; color: #fff !important; }
 .btn-secondary{ background: #fff; color: #334155; border: 1.5px solid #e2e8f0; }
 .btn-primary:hover  { opacity: .9; transform: translateY(-1px); }
 .btn-secondary:hover{ background: #f8fafc; transform: translateY(-1px); }
@@ -473,11 +473,11 @@
 .theme-startup section { padding: 14px 36px; }
 .theme-startup h2 {
   font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
-  color: #4B3F8F !important; border-bottom: 2px solid #8B7CF6 !important;
+  color: #4B3F8F !important; border-bottom: 2px solid #4B3F8F !important;
   padding-bottom: 4px; margin-bottom: 10px;
 }
 .theme-startup p, .theme-startup li { font-size: 13px; color: #292524; line-height: 1.65; }
-.theme-startup .experience-item { margin-bottom: 12px; border-left: 3px solid #8B7CF6 !important; padding-left: 12px; }
+.theme-startup .experience-item { margin-bottom: 12px; border-left: 3px solid #4B3F8F !important; padding-left: 12px; }
 .theme-startup .title-row { display: flex; justify-content: space-between; flex-wrap: wrap; }
 .theme-startup .title-row strong { font-size: 13px; font-weight: 700; color: #1c1917; }
 .theme-startup .title-row span   { font-size: 11.5px; color: #78716c; }
@@ -485,7 +485,7 @@
 .theme-startup .skill-list { list-style: none; padding: 0; }
 .theme-startup .skill-item { font-size: 12.5px; margin-bottom: 3px; }
 .theme-startup .project-list { list-style: none; padding: 0; }
-.theme-startup .project-list li { margin-bottom: 12px; border-left: 3px solid #8B7CF6 !important; padding-left: 12px; }
+.theme-startup .project-list li { margin-bottom: 12px; border-left: 3px solid #4B3F8F !important; padding-left: 12px; }
 
 /* ============================================================
    THEME: ACADEMIC SERIF
@@ -533,26 +533,26 @@
 .theme-elegant .contact-info { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #e2e8f0 !important; }
 .theme-elegant .contact-info a { color: #e2e8f0 !important; }
 .theme-elegant .initials-badge {
-  background: #6C5CE7 !important; border-radius: 50%; width: 64px; height: 64px; flex-shrink: 0;
+  background: #4B3F8F !important; border-radius: 50%; width: 64px; height: 64px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   font-size: 1.4rem; font-weight: 600; color: #fff !important;
 }
 .theme-elegant section { padding: 14px 36px; }
 .theme-elegant h2 {
   font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  color: #4B3F8F !important; border-bottom: 2px solid #8B7CF6 !important;
+  color: #4B3F8F !important; border-bottom: 2px solid #4B3F8F !important;
   padding-bottom: 3px; margin-bottom: 10px;
 }
 .theme-elegant p, .theme-elegant li { font-size: 13px; color: #1c1917; line-height: 1.65; }
-.theme-elegant .experience-item { margin-bottom: 12px; border-left: 3px solid #6C5CE7 !important; padding-left: 10px; }
+.theme-elegant .experience-item { margin-bottom: 12px; border-left: 3px solid #4B3F8F !important; padding-left: 10px; }
 .theme-elegant .title-row { display: flex; justify-content: space-between; flex-wrap: wrap; }
 .theme-elegant .title-row strong { font-size: 13px; color: #4B3F8F !important; }
-.theme-elegant .title-row span   { font-size: 11.5px; color: #6C5CE7 !important; }
+.theme-elegant .title-row span   { font-size: 11.5px; color: #4B3F8F !important; }
 .theme-elegant .skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
 .theme-elegant .skill-list { list-style: none; padding: 0; }
 .theme-elegant .skill-item { font-size: 12.5px; margin-bottom: 3px; }
 .theme-elegant .project-list { list-style: none; padding: 0; }
-.theme-elegant .project-list li { margin-bottom: 12px; border-left: 3px solid #6C5CE7 !important; padding-left: 10px; }
+.theme-elegant .project-list li { margin-bottom: 12px; border-left: 3px solid #4B3F8F !important; padding-left: 10px; }
 
 /* ============================================================
    MOBILE RESPONSIVE

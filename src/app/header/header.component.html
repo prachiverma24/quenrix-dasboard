@@ -1,6 +1,6 @@
 <header
   class="site-header"
-  [class.scrolled]="isHeaderScrolled"
+  [class.scrolled]="isHeaderScrolled || activePage !== 'home'"
   [class.menu-open]="isMenuOpen">
 
   <div class="container header-container">

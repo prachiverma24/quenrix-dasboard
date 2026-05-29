@@ -20,7 +20,7 @@
 }
 
 .form-card {
-    background: linear-gradient(135deg, #6C5CE7, #4B3F8F) !important;
+    background: linear-gradient(135deg, #4B3F8F, #4B3F8F) !important;
     color: white !important;
     border-radius: 24px;
     padding: 40px;
@@ -132,7 +132,7 @@
     font-weight: 800;
     color: white !important;
     margin-bottom: 30px;
-    border-left: 5px solid #8B7CF6 !important;
+    border-left: 5px solid #4B3F8F !important;
     padding-left: 15px;
     line-height: 1;
 }

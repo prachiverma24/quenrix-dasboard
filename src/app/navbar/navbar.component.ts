@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, NgZone, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, timeout } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BatchDetail, Course, CreateBatchService } from '../services/create-batch.service';
 import { SuccessStoriesService, SuccessStory } from '../services/success-stories.service';
@@ -9,6 +10,26 @@ import { UiStateService } from '../services/ui-state.service';
 import { InquiryService } from '../services/inquiry.service'; 
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LanguageService } from '../services/language.service';
+import { htmlNotes } from '../services/notes-data/html-notes.data';
+import { cssNotes } from '../services/notes-data/css-notes.data';
+import { jsNotes } from '../services/notes-data/js-notes.data';
+import { reactNotes } from '../services/notes-data/react-notes.data';
+import { nodeNotes } from '../services/notes-data/node-notes.data';
+import { sqlNotes } from '../services/notes-data/sql-notes.data';
+import { mongodbNotes } from '../services/notes-data/mongodb-notes.data';
+
+function buildPreview(topic: any): string {
+  let content = `<div style="font-family: 'Inter', sans-serif; color: #334155; line-height: 1.6;">
+    <h1 style="text-align: center; color: #0f172a; border-bottom: 2px solid rgba(108, 74, 182, 0.3); padding-bottom: 0.5rem;">${topic.title}</h1>
+    <p style="text-align: center; color: #64748b; font-size: 1rem; margin-bottom: 2rem;">${topic.description}</p>`;
+  
+  topic.chapters.forEach((ch: any) => {
+    content += `<div style="background: #f1f5f9; padding: 0.75rem; border-radius: 8px; font-weight: bold; margin-bottom: 1rem; margin-top: 2.5rem; color: #4f46e5; font-size: 1.2rem; border-left: 4px solid #4f46e5;">${ch.title}</div>`;
+    content += `<div class="reader-body">${ch.content}</div>`;
+  });
+  content += `</div>`;
+  return content;
+}
 
 @Component({
   selector: 'app-navbar',
@@ -25,6 +46,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private sanitizer = inject(DomSanitizer);
   private languageService = inject(LanguageService);
+  private router = inject(Router);
 
   selectedFeature: 'batch' | 'notes' | 'success' = 'batch';
   isLoading = true;
@@ -74,7 +96,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   previewDescription = '';
   previewTextLines: string[] = [];
 
-  private readonly dummyNotes: Note[] = [
+  private dummyNotes: Note[] = [
     {
       id: 9001,
       title: 'HTML Topper Notes (Rank 1)',
@@ -83,218 +105,67 @@ export class NavbarComponent implements OnInit, OnDestroy {
       subject: 'HTML',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       uploaded_at: '2026-04-10T10:00:00Z',
-      preview_content: `<div style="font-family: 'Inter', sans-serif; color: #1e293b;">
-  <h1 style="text-align: center; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">HTML</h1>
-  <p style="text-align: center; color: #64748b; font-size: 0.9rem;">Date: 20/05/2024</p>
-
-  <p>HTML (HyperText Markup Language) is the standard language used to create and structure web pages.</p>
-
-  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem;">1. WHAT IS HTML?</div>
-  <ul>
-    <li>HTML stands for HyperText Markup Language.</li>
-    <li>It describes the structure of a web page.</li>
-    <li>HTML elements are the building blocks of web pages.</li>
-    <li>HTML is not a programming language.</li>
-  </ul>
-
-  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">2. BASIC HTML STRUCTURE</div>
-  <div style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; background: #f8fafc; font-family: monospace;">
-    &lt;!DOCTYPE html&gt;<br>
-    &lt;html lang="en"&gt;<br>
-    &lt;head&gt;<br>
-    &nbsp;&nbsp;&lt;meta charset="UTF-8"&gt;<br>
-    &nbsp;&nbsp;&lt;title&gt;My Page&lt;/title&gt;<br>
-    &lt;/head&gt;<br>
-    &lt;body&gt;<br>
-    &nbsp;&nbsp;&lt;h1&gt;Hello, World!&lt;/h1&gt;<br>
-    &nbsp;&nbsp;&lt;p&gt;This is a paragraph.&lt;/p&gt;<br>
-    &lt;/body&gt;<br>
-    &lt;/html&gt;
-  </div>
-
-  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">3. COMMON HTML TAGS</div>
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem;">
-    <thead>
-      <tr style="background: #f8fafc;">
-        <th style="border: 1px solid #e2e8f0; padding: 0.75rem; text-align: left;">Tag</th>
-        <th style="border: 1px solid #e2e8f0; padding: 0.75rem; text-align: left;">Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;h1&gt; to &lt;h6&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Headings</td></tr>
-      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;p&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Paragraph</td></tr>
-      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;a&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Anchor / Link</td></tr>
-      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;img&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Image</td></tr>
-      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Lists</td></tr>
-      <tr><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">&lt;div&gt;</td><td style="border: 1px solid #e2e8f0; padding: 0.75rem;">Division / Container</td></tr>
-    </tbody>
-  </table>
-
-  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">4. HTML ATTRIBUTES</div>
-  <p>Attributes provide additional information about HTML elements. Written in the opening tag as <code>name="value"</code>.</p>
-  <p>Example: <code>&lt;a href="https://example.com"&gt;Visit Site&lt;/a&gt;</code></p>
-</div>`
+      preview_content: buildPreview(htmlNotes)
     },
     {
       id: 9002,
-      title: 'CSS Topper Notes (Rank 1)',
-      description: 'Advanced CSS layouts, Grid, Flexbox, and Animations by batch topper.',
+      title: 'CSS Masterclass Notes',
+      description: 'Advanced CSS3, Flexbox, Grid, and Animations.',
       category: 'Lecture Note',
       subject: 'CSS',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-11T11:00:00Z',
-      preview_content: `<div style="font-family: 'Inter', sans-serif; color: #1e293b;">
-  <h1 style="text-align: center; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem;">CSS</h1>
-  <p style="text-align: center; color: #64748b; font-size: 0.9rem;">Date: 21/05/2024</p>
-
-  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem;">1. CSS SELECTORS</div>
-  <ul>
-    <li><strong>Universal Selector:</strong> <code>* { margin: 0; }</code></li>
-    <li><strong>Element Selector:</strong> <code>p { color: red; }</code></li>
-    <li><strong>Class Selector:</strong> <code>.box { background: blue; }</code></li>
-    <li><strong>ID Selector:</strong> <code>#header { width: 100%; }</code></li>
-  </ul>
-
-  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">2. FLEXBOX CHEATSHEET</div>
-  <p>Flexbox is used for 1D layouts (Row or Column).</p>
-  <div style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; background: #f8fafc; font-family: monospace;">
-    .container {<br>
-    &nbsp;&nbsp;display: flex;<br>
-    &nbsp;&nbsp;justify-content: center; /* Horizonal */<br>
-    &nbsp;&nbsp;align-items: center; /* Vertical */<br>
-    }
-  </div>
-
-  <div style="background: #fef08a; padding: 0.5rem; border-radius: 4px; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem;">3. CSS GRID CHEATSHEET</div>
-  <p>Grid is used for 2D layouts (Rows and Columns).</p>
-  <div style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; background: #f8fafc; font-family: monospace;">
-    .grid {<br>
-    &nbsp;&nbsp;display: grid;<br>
-    &nbsp;&nbsp;grid-template-columns: repeat(3, 1fr);<br>
-    &nbsp;&nbsp;gap: 10px;<br>
-    }
-  </div>
-</div>`
+      uploaded_at: '2026-04-11T10:00:00Z',
+      preview_content: buildPreview(cssNotes)
     },
     {
       id: 9003,
-      title: 'JavaScript DOM Topper Notes',
-      description: 'Deep dive into JS DOM manipulation, events, and async programming by batch topper.',
+      title: 'JavaScript Deep Dive Notes',
+      description: 'ES6+, Closures, Promises, Async/Await.',
       category: 'Lecture Note',
       subject: 'JavaScript',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-12T12:00:00Z',
-      preview_content: 'JavaScript Topper Notes\n• Query selectors and event listeners\n• Form validation with custom error messaging\n• Dynamic list rendering with add/edit/delete actions\n• LocalStorage integration for state persistence'
+      uploaded_at: '2026-04-12T10:00:00Z',
+      preview_content: buildPreview(jsNotes)
     },
     {
       id: 9004,
-      title: 'Python Topper Handwritten Notes',
-      description: 'Python basics to advanced with data structures. Official topper notes.',
-      category: 'Lecture Note',
-      subject: 'Python',
-      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-13T13:00:00Z',
-      preview_content: 'Python Topper Notes\n• OOP and decorators basics\n• File handling and exception management\n• Common DSA patterns (array, hashmap, two-pointer)\n• 25 interview questions with short answer hints'
-    },
-    {
-      id: 9005,
-      title: 'SQL Topper Revision Notes',
-      description: 'Complex queries, indexing, and normalization notes from the top scorer.',
-      category: 'Lecture Note',
-      subject: 'SQL',
-      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-14T14:00:00Z',
-      preview_content: 'SQL Topper Notes\n• INNER vs LEFT vs RIGHT vs FULL joins\n• GROUP BY with HAVING and aggregate functions\n• Subqueries, EXISTS, and CTE usage\n• Index basics and query optimization tips'
-    },
-    {
-      id: 9006,
-      title: 'React.js Topper Notes (Rank 1)',
-      description: 'React Hooks, Context API, Redux, and Next.js fundamentals from batch topper.',
+      title: 'React.js Topper Notes',
+      description: 'Hooks, Context API, Redux, and Performance Optimization.',
       category: 'Lecture Note',
       subject: 'React',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-15T10:00:00Z',
-      preview_content: 'React.js Topper Notes\n• useState, useEffect, useRef, and custom hooks\n• Context API vs Redux Toolkit\n• Next.js Server Components and Routing\n• Interview questions on React lifecycle and rendering'
+      uploaded_at: '2026-04-13T10:00:00Z',
+      preview_content: buildPreview(reactNotes)
     },
     {
-      id: 9007,
+      id: 9005,
       title: 'Node.js & Express Topper Notes',
-      description: 'Backend routing, middleware, authentication (JWT), and API design.',
+      description: 'Event Loop, Middleware, Authentication, and REST APIs.',
       category: 'Lecture Note',
-      subject: 'Node.js',
+      subject: 'Node',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-16T11:00:00Z',
-      preview_content: 'Node.js Topper Notes\n• Event Loop and Asynchronous processing\n• Express.js middleware and route handling\n• JWT authentication and bcrypt password hashing\n• RESTful API best practices'
+      uploaded_at: '2026-04-14T11:00:00Z',
+      preview_content: buildPreview(nodeNotes)
+    },
+    {
+      id: 9006,
+      title: 'SQL Topper Notes',
+      description: 'Joins, Subqueries, Indexing, and Normalization.',
+      category: 'Lecture Note',
+      subject: 'SQL',
+      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      uploaded_at: '2026-04-15T10:00:00Z',
+      preview_content: buildPreview(sqlNotes)
     },
     {
       id: 9008,
       title: 'MongoDB Topper Notes',
-      description: 'NoSQL concepts, Mongoose ODM, Aggregation Pipeline, and Indexing.',
+      description: 'NoSQL basics, Aggregation Framework, and Indexing.',
       category: 'Lecture Note',
       subject: 'MongoDB',
       pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       uploaded_at: '2026-04-17T12:00:00Z',
-      preview_content: 'MongoDB Topper Notes\n• Document vs Relational databases\n• Mongoose schemas and models\n• Aggregation pipelines ($match, $group, $lookup)\n• Optimizing queries with indexes'
-    },
-    {
-      id: 9009,
-      title: 'Java OOPs & Collections Topper Notes',
-      description: 'Core Java, OOP principles, Collections Framework, and Multithreading.',
-      category: 'Lecture Note',
-      subject: 'Java',
-      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-18T13:00:00Z',
-      preview_content: 'Java Topper Notes\n• Encapsulation, Inheritance, Polymorphism, Abstraction\n• HashMap, ArrayList, LinkedList internals\n• Multithreading and Concurrency\n• Exception handling best practices'
-    },
-    {
-      id: 9010,
-      title: 'C++ & STL Topper Notes',
-      description: 'Pointers, Memory Management, and Standard Template Library (STL).',
-      category: 'Lecture Note',
-      subject: 'C++',
-      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-19T14:00:00Z',
-      preview_content: 'C++ Topper Notes\n• Pointers, References, and Memory Leaks\n• Object-Oriented Programming in C++\n• Vectors, Maps, Sets, and STL Algorithms\n• Operator Overloading and Templates'
-    },
-    {
-      id: 9011,
-      title: 'DSA Topper Notes (Rank 1)',
-      description: 'Data Structures and Algorithms notes with top 100 interview problems.',
-      category: 'Lecture Note',
-      subject: 'DSA',
-      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-20T10:00:00Z',
-      preview_content: 'DSA Topper Notes\n• Arrays, Linked Lists, Stacks, Queues\n• Trees (BST, AVL, Segment Tree) and Graphs\n• Dynamic Programming and Greedy Algorithms\n• Time and Space Complexity Analysis'
-    },
-    {
-      id: 9012,
-      title: 'Git & GitHub Topper Notes',
-      description: 'Version control basics, branching, merging, and resolving conflicts.',
-      category: 'Lecture Note',
-      subject: 'Git',
-      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-21T11:00:00Z',
-      preview_content: 'Git & GitHub Topper Notes\n• git init, add, commit, push, pull\n• Branching strategies and Pull Requests\n• Resolving merge conflicts\n• Rebase vs Merge differences'
-    },
-    {
-      id: 9013,
-      title: 'Docker & AWS Topper Notes',
-      description: 'Containerization basics, Dockerfiles, and AWS cloud deployment.',
-      category: 'Lecture Note',
-      subject: 'Docker',
-      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-22T12:00:00Z',
-      preview_content: 'Docker & AWS Topper Notes\n• Docker images, containers, and Dockerfile commands\n• Docker Compose for multi-container apps\n• AWS EC2, S3, and RDS basics\n• CI/CD pipeline concepts'
-    },
-    {
-      id: 9014,
-      title: 'Angular Topper Notes (Rank 1)',
-      description: 'Components, Directives, Services, RxJS, and Routing in Angular.',
-      category: 'Lecture Note',
-      subject: 'Angular',
-      pdf_url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      uploaded_at: '2026-04-23T13:00:00Z',
-      preview_content: 'Angular Topper Notes\n• Data binding and structural directives\n• Dependency Injection and Services\n• Reactive Forms and Form Validation\n• RxJS Observables and Operators'
+      preview_content: buildPreview(mongodbNotes)
     }
   ];
 
@@ -338,6 +209,27 @@ export class NavbarComponent implements OnInit, OnDestroy {
       quote: 'Real-world assignments aur mentor feedback ne mujhe production-level coding soch di.',
       image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=500&q=80',
       logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Capgemini_201x_logo.svg'
+    }
+  ];
+
+  private readonly dummyBatches = [
+    {
+      courseName: 'Full Stack Web Development',
+      startDate: '2026-06-01',
+      time: '10:00 AM - 12:00 PM',
+      mode: 'Online',
+      description: 'Master HTML, CSS, JavaScript, React, and Node.js with hands-on projects.',
+      tags: ['Enrolling Now', 'Online', '100% Placement'],
+      imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+      courseName: 'Data Science & Machine Learning',
+      startDate: '2026-06-15',
+      time: '02:00 PM - 04:00 PM',
+      mode: 'Hybrid',
+      description: 'Learn Python, SQL, Machine Learning, and Data Visualization.',
+      tags: ['Enrolling Now', 'Hybrid', 'Top Rated'],
+      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80'
     }
   ];
 
@@ -434,7 +326,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   // --- Notes Logic ---
   loadSubjects() {
-    this.notesService.getAllSubjects().subscribe({
+    this.notesService.getAllSubjects().pipe(
+      timeout(3000),
+      catchError(err => {
+        console.warn('Failed or timed out loading subjects', err);
+        return of(null);
+      })
+    ).subscribe({
       next: (subjects) => {
         const validSubjects = subjects ? subjects.filter(s => s && s.trim().length > 0) : [];
         this.syllabusOptions = validSubjects.length > 0
@@ -443,11 +341,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
         if (this.syllabusOptions.length > 0) {
            this.selectedSyllabus = this.syllabusOptions[0];
         }
+        this.loadAllNotes();
       },
       error: (err) => {
         console.error('Failed to load subjects', err);
         this.syllabusOptions = [...new Set(this.dummyNotes.map(note => note.subject))];
         this.selectedSyllabus = this.syllabusOptions[0] || '';
+        this.loadAllNotes();
       }
     });
   }
@@ -455,38 +355,50 @@ export class NavbarComponent implements OnInit, OnDestroy {
   selectFeature(feature: 'batch' | 'notes' | 'success') {
     this.selectedFeature = feature;
     if (feature === 'notes') {
-      if (this.selectedSyllabus) {
-        this.fetchNotesBySubject(this.selectedSyllabus);
-      } else if (this.syllabusOptions.length > 0) {
-        this.selectedSyllabus = this.syllabusOptions[0];
-        this.fetchNotesBySubject(this.selectedSyllabus);
-      }
+      this.applyNoteFilter();
     }
   }
 
   onSyllabusChange(newSubject: string) {
     this.selectedSyllabus = newSubject;
-    if (this.selectedFeature === 'notes') {
-        this.fetchNotesBySubject(newSubject);
-    }
+    this.noteSearchTerm = ''; // Clear search when changing subject
+    this.applyNoteFilter();
   }
 
-  fetchNotesBySubject(subject: string) {
-    this.isLoadingNotes = true;
-    this.stopNoteScroll(); 
-    this.notesList = []; 
+  masterNotes: Note[] = [];
 
-    this.notesService.getNotes(subject).subscribe({
+  loadAllNotes() {
+    this.isLoadingNotes = true;
+    this.stopNoteScroll();
+    this.notesList = [];
+
+    this.notesService.getNotes().pipe(
+      timeout(3000),
+      catchError(err => {
+        console.warn('Failed or timed out fetching all notes', err);
+        return of(null);
+      })
+    ).subscribe({
       next: (data) => {
-        const fallbackNotes = this.getDummyNotesBySubject(subject);
-        this.allNotes = data && data.length > 0 ? data : fallbackNotes;
+        const backendNotes = data || [];
+        this.masterNotes = [...backendNotes, ...this.dummyNotes];
+
+        // Unique ID de-duplication
+        const seen = new Set();
+        this.masterNotes = this.masterNotes.filter(note => {
+          if (!note.id) return true;
+          const duplicate = seen.has(note.id);
+          seen.add(note.id);
+          return !duplicate;
+        });
+
         this.applyNoteFilter();
         this.isLoadingNotes = false;
         setTimeout(() => this.startNoteScroll(), 500);
       },
       error: (err) => {
-        console.error('Error fetching notes:', err);
-        this.allNotes = this.getDummyNotesBySubject(subject);
+        console.error('Error fetching all notes:', err);
+        this.masterNotes = [...this.dummyNotes];
         this.applyNoteFilter();
         this.isLoadingNotes = false;
         setTimeout(() => this.startNoteScroll(), 300);
@@ -508,11 +420,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
     const term = this.noteSearchTerm.trim().toLowerCase();
 
     if (!term) {
-      this.notesList = [...this.allNotes];
+      // Filter strictly by selected syllabus/subject
+      const subjectLower = this.selectedSyllabus.toLowerCase();
+      this.notesList = this.masterNotes.filter(
+        note => note.subject?.toLowerCase() === subjectLower
+      );
       return;
     }
 
-    this.notesList = this.allNotes.filter((note) => {
+    // Filter globally across all subjects
+    this.notesList = this.masterNotes.filter((note) => {
       const title = note.title?.toLowerCase() ?? '';
       const description = note.description?.toLowerCase() ?? '';
       const category = note.category?.toLowerCase() ?? '';
@@ -533,6 +450,23 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   // --- Preview Modal Logic ---
   openPreviewModal(note: Note) {
+    const subjectLower = note.subject?.toLowerCase() || '';
+    const topicsMap: { [key: string]: string } = {
+      'html': 'html',
+      'css': 'css',
+      'javascript': 'js',
+      'js': 'js',
+      'react': 'react',
+      'node': 'node',
+      'sql': 'sql',
+      'mongodb': 'mongodb'
+    };
+
+    if (topicsMap[subjectLower]) {
+      this.router.navigate(['/study-material'], { queryParams: { topic: topicsMap[subjectLower] } });
+      return;
+    }
+
     if (!note.id || note.id >= 9000) {
       this.previewTitle = note.title;
       this.previewDescription = note.description || '';
@@ -598,12 +532,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   fetchRealTimeBatches() {
     this.isLoading = true;
-    this.batchService.getCourses().subscribe({
+    this.batchService.getCourses().pipe(
+      timeout(3000),
+      catchError(err => {
+        console.warn('Failed or timed out fetching courses', err);
+        return of([]);
+      })
+    ).subscribe({
       next: (courses: Course[]) => {
-        if (courses.length === 0) { this.handleEmptyBatches(); return; }
+        if (!courses || courses.length === 0) { this.handleEmptyBatches(); return; }
         
         const batchRequests = courses.map(course => 
           this.batchService.getBatchesByCourse(course.courseid).pipe(
+            timeout(3000),
             catchError(err => {
               console.warn(`Could not fetch batches for course ${course.courseid}`, err);
               return of([]); 
@@ -713,9 +654,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   handleEmptyBatches() {
-    this.upcomingBatches = [];
-    this.featuredBatch = null;
+    this.upcomingBatches = [...this.dummyBatches];
+    this.featuredBatch = this.upcomingBatches[0];
     this.isLoading = false;
+    this.startBatchRotation();
   }
 
   startBatchRotation() {
@@ -734,7 +676,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   fetchSuccessStories() {
       this.isLoadingStories = true;
-      this.successService.getStories().subscribe({
+      this.successService.getStories().pipe(
+        timeout(3000),
+        catchError(err => {
+          console.warn('Failed or timed out fetching stories', err);
+          return of(null);
+        })
+      ).subscribe({
           next: (data) => { 
             this.successStories = data && data.length > 0 ? data : [...this.dummyStories];
             this.isLoadingStories = false; 

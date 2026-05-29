@@ -13,7 +13,6 @@ export class FooterComponent {
   private languageService = inject(LanguageService);
 
   isScrolled = false;
-  isChatOpen = false; 
 
   constructor() {}
 
@@ -26,9 +25,6 @@ export class FooterComponent {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  toggleChat() {
-    this.isChatOpen = !this.isChatOpen;
-  }
 
   handleAction(action: string) {
     this.uiService.triggerAction(action);

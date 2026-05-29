@@ -1,9 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Global light-theme lock for homepage consistency */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+@import 'aos/dist/aos.css';
 
 :root {
-	color-scheme: only light;
+	color-scheme: light;
 }
 
 html,
@@ -11,8 +16,11 @@ body {
 	margin: 0;
 	padding: 0;
 	min-height: 100%;
-	background: #ffffff !important;
-	color: #4B3F8F;
+	width: 100%;
+	max-width: 100vw;
+	overflow-x: hidden;
+	background: linear-gradient(120deg, #f7f4ff 0%, #ffffff 100%);
+	color: #1f1f28;
 	font-family: 'Inter', sans-serif;
 	color-scheme: light;
 }
@@ -20,18 +28,11 @@ body {
 app-root {
 	display: block;
 	min-height: 100vh;
-	background: #ffffff !important;
 }
 
-.landing-page,
-.hero-section,
-.stats-section,
-.feature-dashboard-section {
-	background-color: #ffffff !important;
-	color: #311f37 !important;
-}
+/* Removed overrides to allow dark theme components to render correctly */
 
-/* Keep controls light even when OS/browser is dark */
+
 input,
 select,
 textarea,
@@ -43,32 +44,32 @@ input,
 select,
 textarea {
 	background: #ffffff;
-	color: #311f37;
-	border: 1px solid #e5e7eb;
+	color: #1f1f28;
+	border: 1px solid #e8defd;
 }
 
 a {
 	color: inherit;
 }
 
+
 :root {
-    --primary-purple: #4B3F8F;
-    --secondary-purple: #6C5CE7;
-    --light-purple: #8B7CF6;
-    --hover-purple: #5A4BB7;
-    --gradient-purple: linear-gradient(135deg, #6C5CE7, #4B3F8F);
-	--glass-card-bg:
-		linear-gradient(135deg, rgba(147, 7, 142, 0.45) 0%, rgba(175, 34, 194, 0.67) 42%, rgba(255, 255, 255, 0.52) 100%),
-		linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.22));
-	--glass-card-border: rgba(194, 182, 255, 0.42);
-	--glass-card-shadow: 0 22px 55px rgba(190, 39, 170, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.42);
-	--glass-card-hover-shadow: 0 28px 70px rgba(88, 28, 135, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    --primary-purple: #8B5CF6;
+    --secondary-purple: #7C3AED;
+    --light-purple: #22D3EE;
+    --hover-purple: #7C3AED;
+    --gradient-purple: #8B5CF6;
+	--glass-card-bg: #ffffff;
+	--glass-card-border: #efeff6;
+	--glass-card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+	--glass-card-hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --text-main: #1f1f28;
+    --text-light: #636374;
 }
 
 .form-card,
 .user-details-card,
 .cta-card,
-.demo-card,
 .bento-card,
 .guidance-card,
 .story-card,
@@ -84,7 +85,6 @@ a {
 .batch-card,
 .exam-entry-card,
 .radio-card,
-.batch-card-hero,
 .success-card,
 .question-card,
 .bot-type-card,
@@ -113,7 +113,6 @@ a {
 .form-card:hover,
 .user-details-card:hover,
 .cta-card:hover,
-.demo-card:hover,
 .bento-card:hover,
 .guidance-card:hover,
 .story-card:hover,
@@ -129,7 +128,6 @@ a {
 .batch-card:hover,
 .exam-entry-card:hover,
 .radio-card:hover,
-.batch-card-hero:hover,
 .success-card:hover,
 .question-card:hover,
 .bot-type-card:hover,
@@ -263,14 +261,10 @@ a {
 
 	html,
 	body,
-	app-root,
-	.landing-page,
-	.hero-section,
-	.stats-section,
-	.feature-dashboard-section {
-		background-color: #f6f7fb !important;
-		color: #1f2937 !important;
-	}
+	app-root {
+	background-color: transparent !important;
+	color: #1f1f28 !important;
+}
 
 	.site-header,
 	.site-header::before,
@@ -384,7 +378,7 @@ app-trainer-dashboard .btn-primary-gradient,
 app-student-dashboard .btn-submit,
 app-trainer-dashboard .btn-submit {
 	color: #FFFFFF !important;
-	background: #6C63A8 !important;
+	background: #4B3F8F !important;
 	border: 0 !important;
 	border-radius: 14px !important;
 	box-shadow: 0 10px 20px rgba(75, 63, 143, 0.3) !important;
@@ -467,8 +461,8 @@ app-trainer-dashboard .sidebar-nav a:hover {
 app-student-dashboard .sidebar-nav a.active,
 app-trainer-dashboard .sidebar-nav a.active {
 	color: #FFFFFF !important;
-	background: linear-gradient(135deg, #8B7CF6, #6C5CE7) !important;
-	box-shadow: 0 4px 15px rgba(139, 124, 246, 0.5) !important;
+	background: #4B3F8F !important;
+	box-shadow: 0 4px 15px rgba(75, 63, 143, 0.5) !important;
 }
 
 app-student-dashboard .sidebar-nav a.active i,
@@ -568,7 +562,7 @@ app-trainer-dashboard .profile-content-wrapper {
 
 app-student-dashboard .premium-profile-ring,
 app-trainer-dashboard .premium-profile-ring {
-	background: linear-gradient(135deg, #6C5CE7, #4B3F8F) !important;
+	background: #4B3F8F !important;
 	box-shadow: 0 0 28px rgba(75, 63, 143, 0.42) !important;
 	animation: none !important;
 }
@@ -779,7 +773,7 @@ app-trainer-dashboard .calendar-days div:hover:not(.active):not(.inactive) {
 app-student-dashboard .calendar-days div.active,
 app-trainer-dashboard .calendar-days div.active {
 	color: #FFFFFF !important;
-	background: linear-gradient(135deg, #6C5CE7, #4B3F8F) !important;
+	background: #4B3F8F !important;
 	box-shadow: 0 0 20px rgba(75, 63, 143, 0.58), 0 8px 20px rgba(0, 0, 0, 0.28) !important;
 }
 
@@ -969,4 +963,176 @@ app-trainer-dashboard .premium-modal p {
 	app-trainer-dashboard .stats-cards-container {
 		grid-template-columns: 1fr !important;
 	}
+}
+
+/* ==========================================================================
+   PREMIUM ULTRA GLOWING GLASSMORPHIC STYLES & CYBERPUNK PALETTE
+   ========================================================================== */
+.glass-morphic {
+	background: rgba(30, 20, 60, 0.45) !important;
+	border: 1px solid rgba(139, 92, 246, 0.3) !important;
+	box-shadow: 
+		0 30px 60px rgba(0, 0, 0, 0.4),
+		inset 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+	backdrop-filter: blur(20px) saturate(160%) !important;
+	-webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+}
+
+/* Floating background gradient circles for immersive cinematic depth */
+.cinematic-orb {
+	position: absolute;
+	border-radius: 50%;
+	filter: blur(120px);
+	mix-blend-mode: screen;
+	z-index: 0;
+	pointer-events: none;
+	opacity: 0.45;
+}
+.cinematic-orb-purple {
+	background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
+}
+.cinematic-orb-cyan {
+	background: radial-gradient(circle, rgba(34, 211, 238, 0.3) 0%, transparent 70%);
+}
+.cinematic-orb-pink {
+	background: radial-gradient(circle, rgba(236, 72, 153, 0.25) 0%, transparent 70%);
+}
+
+/* Keyframe animations for active micro-interactions */
+@keyframes orbFloatCycle {
+	0% {
+		transform: translate(0, 0) scale(1);
+	}
+	33% {
+		transform: translate(30px, -50px) scale(1.1);
+	}
+	66% {
+		transform: translate(-20px, 20px) scale(0.95);
+	}
+	100% {
+		transform: translate(0, 0) scale(1);
+	}
+}
+
+.animate-orb-slow {
+	animation: orbFloatCycle 18s ease-in-out infinite;
+}
+
+.animate-orb-slower {
+	animation: orbFloatCycle 24s ease-in-out infinite reverse;
+}
+
+/* --- RESPONSIVE FIXES FOR TRAINER DASHBOARD --- */
+@media (max-width: 1200px) {
+    app-trainer-dashboard .dashboard-grid,
+    app-student-dashboard .dashboard-grid {
+        flex-wrap: wrap !important;
+        padding-right: 30px !important;
+    }
+    app-trainer-dashboard .right-panel,
+    app-student-dashboard .right-panel {
+        width: 100% !important;
+        position: static !important;
+        height: auto !important;
+        order: 3 !important;
+        margin-top: 20px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    app-trainer-dashboard header,
+    app-student-dashboard header {
+        padding: 0 15px !important;
+        flex-direction: column !important;
+        height: auto !important;
+        padding-top: 15px !important;
+        padding-bottom: 15px !important;
+        gap: 15px !important;
+    }
+    app-trainer-dashboard .logo-search,
+    app-student-dashboard .logo-search {
+        width: 100% !important;
+        justify-content: space-between !important;
+    }
+    app-trainer-dashboard .search-wrapper,
+    app-student-dashboard .search-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 1 !important;
+        margin-left: 15px !important;
+    }
+    app-trainer-dashboard .dashboard-grid,
+    app-student-dashboard .dashboard-grid {
+        padding: 20px 15px !important;
+        gap: 20px !important;
+    }
+    app-trainer-dashboard .sidebar,
+    app-student-dashboard .sidebar {
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 70px !important;
+        border-radius: 20px 20px 0 0 !important;
+        padding: 10px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-around !important;
+        z-index: 1000 !important;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.1) !important;
+    }
+    app-trainer-dashboard .sidebar-nav,
+    app-student-dashboard .sidebar-nav {
+        flex-direction: row !important;
+        width: 100% !important;
+        justify-content: space-around !important;
+        gap: 5px !important;
+    }
+    app-trainer-dashboard .sidebar-nav a,
+    app-student-dashboard .sidebar-nav a {
+        flex-direction: column !important;
+        justify-content: center !important;
+        padding: 5px !important;
+        min-height: 0 !important;
+        font-size: 10px !important;
+        gap: 5px !important;
+    }
+    app-trainer-dashboard .sidebar-nav a i,
+    app-student-dashboard .sidebar-nav a i {
+        font-size: 18px !important;
+    }
+    app-trainer-dashboard .logout-btn,
+    app-student-dashboard .logout-btn {
+        margin-top: 0 !important;
+        border-top: none !important;
+        padding-top: 5px !important;
+    }
+    app-trainer-dashboard .main-content,
+    app-student-dashboard .main-content {
+        padding-bottom: 80px !important; /* space for bottom nav */
+    }
+    app-trainer-dashboard .profile-card,
+    app-student-dashboard .profile-card {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 20px !important;
+        padding: 20px !important;
+    }
+    app-trainer-dashboard .profile-info-wrap,
+    app-student-dashboard .profile-info-wrap {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 15px !important;
+    }
+    app-trainer-dashboard .profile-stats-mini,
+    app-student-dashboard .profile-stats-mini {
+        width: 100% !important;
+        flex-wrap: wrap !important;
+    }
+    app-trainer-dashboard .mini-stat,
+    app-student-dashboard .mini-stat {
+        flex: 1 !important;
+    }
 }
